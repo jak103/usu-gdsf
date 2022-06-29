@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"net/http"
 	"sync"
 
 	"github.com/jak103/usu-gdsf/log"
@@ -39,7 +40,9 @@ func (s *Server) Shutdown() {
 }
 
 func (s *Server) setupMiddleware() {
-	s.echo.Use(middleware.Logger())
+	s.echo.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}\n",
+	}))
 	s.echo.Use(middleware.Gzip())
 	s.echo.Use(middleware.Recover())
 	s.echo.Use(middleware.CORS())
@@ -51,6 +54,16 @@ func (s *Server) setupMiddleware() {
 }
 
 func (s *Server) setupRoutes() {
-	s.echo.GET("/hello", hello)
+	for _, route := range routes {
+		switch route.method {
+		case http.MethodGet:
+			s.echo.GET(route.path, route.handler)
 
+		case http.MethodPost:
+			s.echo.POST(route.path, route.handler)
+
+		default:
+			log.Error("Failed to register unknown method: %v", route.method)
+		}
+	}
 }
