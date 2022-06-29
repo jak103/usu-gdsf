@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: vue-frontend:latest
+    build: ./frontend
+    container_name: vue-frontend
+    working_dir: /frontend
+    volumes:
+      - /frontend/node_modules/
+      - ./frontend:/frontend
+    command: npm run dev
+    ports:
+      - 3000:3000
+    environment:
+      NODE_ENV: development
+
+  backend:
+    image: go-backend:latest
+    build: ./backend
+    container_name: go-backend
+    working_dir: /backend
+    volumes:
+      - ./backend:/backend
+    ports:
+      - 8080:8080
+    environment:
+      - DB_TYPE=mongo
+      - MONGO_URI=mongodb://gdsf:gdsf@db:27017
+    command: gin --appPort 8080 -i run .
+
+
+  db:
+    image: 'mongo'
+    container_name: 'gdsf-db'
+    environment:
+      - MONGO_INITDB_DATABASE=gdsf
+      - MONGO_INITDB_ROOT_USERNAME=gdsf
+      - MONGO_INITDB_ROOT_PASSWORD=gdsf
+    volumes:
+      - mongo-volume:/data/db
+    ports:
+      - '27017-27019:27017-27019'
+
+volumes:
+  mongo-volume:
