@@ -2,4 +2,4 @@
 
 DevOps is awesome!
 
-Also, Ocarina of Time > Breath of the Wild
+To start the project with docker-compose, simply run `docker-compose up -d`
