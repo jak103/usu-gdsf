@@ -1,4 +1,7 @@
 ## Go ignores
+#ignore gin-bin
+gin-bin
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
