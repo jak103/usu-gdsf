@@ -7,7 +7,7 @@ import (
 )
 
 func game(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Successful game get")
+	return c.JSON(http.StatusOK, "Successful game get!")
 }
 
 func init() {
