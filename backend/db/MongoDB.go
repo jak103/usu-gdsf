@@ -71,6 +71,6 @@ func init() {
 	registerDB(&DB{
 		name:        "MONGO",
 		description: "Mongo database for dev connections",
-		UnoDB:       new(mongoDB),
+		GdsfDB:      new(mongoDB),
 	})
 }
