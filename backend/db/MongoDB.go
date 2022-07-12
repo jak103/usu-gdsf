@@ -23,6 +23,8 @@ type mongoDB struct {
 func (db *mongoDB) GetAllGames() (*[]model.Game, error) {
 	games := make([]model.Game, 0)
 
+	var thing = CreateGamesFromJson()
+
 	cursor, err := db.games.Find(context.Background(), bson.M{}, nil)
 	if err != nil {
 		return nil, err
@@ -68,6 +70,7 @@ func (db *mongoDB) connect() {
 }
 
 func init() {
+	var bla = CreateGamesFromJson()
 	registerDB(&DB{
 		name:        "MONGO",
 		description: "Mongo database for dev connections",
