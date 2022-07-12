@@ -3,7 +3,7 @@
 gin-bin
 
 # Ignore the usu-gsdf executable
-usu-gsdf
+backend/usu-gsdf
 
 # Binaries for programs and plugins
 *.exe
