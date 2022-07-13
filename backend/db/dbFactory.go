@@ -13,14 +13,14 @@ var connectedDB *DB
 
 // registerDB is designed to make a singleton registry for consistent access to the database
 func registerDB(d *DB) {
-	dbRegistry[d.name] = d
+	dbRegistry[d.Name] = d
 }
 
-// DB is a struct wrapper for UnoDB that allows it to be registered. It also provides a consistent return type for the user
+// DB is a struct wrapper for gdsfDB that allows it to be registered. It also provides a consistent return type for the user
 type DB struct {
-	name        string
-	description string
-	Dbinterface // By not declaring a local variable, DB automatically assumes the functions of this instantiated member
+	Name        string
+	Description string
+	StoreDatabase // By not declaring a local variable, DB automatically assumes the functions of this instantiated member
 }
 
 // GetDb factory method to get the Database connection

@@ -6,30 +6,29 @@ import (
 	"os"
 	"time"
 
-	"github.com/jak103/uno/model"
+	"github.com/jak103/usu-gdsf/log"
+	"github.com/jak103/usu-gdsf/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type mongoDB struct {
-	client   *mongo.Client
-	uri      string
-	database *mongo.Database
-	games    *mongo.Collection
-	players  *mongo.Collection
+	client      *mongo.Client
+	database    *mongo.Database
+	gameRecords *mongo.Collection
 }
 
-func (db *mongoDB) GetAllGames() (*[]model.Game, error) {
-	games := make([]model.Game, 0)
+func (db *mongoDB) GetAllGameRecords() (*[]models.GameRecord, error) {
+	games := make([]models.GameRecord, 0)
 
-	cursor, err := db.games.Find(context.Background(), bson.M{}, nil)
+	cursor, err := db.gameRecords.Find(context.Background(), bson.M{}, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	for cursor.Next(context.Background()) {
-		g := model.Game{}
+		g := models.GameRecord{}
 		err := cursor.Decode(&g)
 		if err != nil {
 			panic(err)
@@ -59,18 +58,43 @@ func (db *mongoDB) connect() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	err = client.Connect(ctx)
+	if err = client.Connect(ctx); err != nil {
+		log.Warn("Unable to establish database connection.")
+		return
+	}
 	db.client = client
-	database := client.Database("uno")
+	database := client.Database("usu-gdsf")
 	db.database = database
-	db.games = database.Collection("games")
-	db.players = database.Collection("players")
+	db.gameRecords = database.Collection("gameRecords")
+
+	if count, err := db.gameRecords.CountDocuments(ctx, bson.D{{}}); err != nil {
+		log.Error("There was a problem getting the documents from the Games Record collection: %v", err)
+	} else if count == 0 {
+		log.Debug("No game records currently exist. Seeding the games record collection...")
+
+		docs := []interface{}{}
+
+		for _, v := range CreateGamesFromJson() {
+			doc, err := bson.Marshal(v)
+			if err != nil {
+				log.Error("Error occurred while creating document: %v", err)
+				return
+			}
+			docs = append(docs, doc)
+		}
+
+		if insertManyResult, insertErr := db.gameRecords.InsertMany(ctx, docs); insertErr != nil {
+			log.Error("An error happened while seeding the collection: %v", insertErr)
+		} else {
+			log.Debug("Inserted multiple documents: ", insertManyResult.InsertedIDs)
+		}
+	}
 }
 
 func init() {
 	registerDB(&DB{
-		name:        "MONGO",
-		description: "Mongo database for dev connections",
-		GdsfDB:      new(mongoDB),
+		Name:          "MONGO",
+		Description:   "Mongo database for dev connections",
+		StoreDatabase: new(mongoDB),
 	})
 }
