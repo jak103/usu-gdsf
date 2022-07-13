@@ -1,4 +1,4 @@
-FROM node:18-slim AS client
+FROM node:18-slim AS frontend
 ENV NODE_ENV production
 WORKDIR /frontend
 COPY ./frontend/ ./
@@ -17,6 +17,6 @@ RUN apk --update add ca-certificates
 FROM scratch
 WORKDIR /usu-gdsf
 COPY --from=backend /backend/usu-gdsf /usu-gdsf/usu-gdsf
-COPY --from=client /frontend/dist /frontend/dist
+COPY --from=frontend /frontend/dist /frontend/dist
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 CMD ["/usu-gdsf/usu-gdsf"]
