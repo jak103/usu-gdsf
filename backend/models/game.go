@@ -1,6 +1,6 @@
 package models
 
-type GameRecord struct {
+type Game struct {
 	Name         string
 	Author       string
 	CreationDate string

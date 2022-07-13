@@ -3,6 +3,7 @@ package log
 import (
 	"fmt"
 	"log"
+	"runtime"
 )
 
 var logger Logger
@@ -16,11 +17,11 @@ func (l Logger) Error(message string, v ...any) {
 }
 
 func (l Logger) Warn(message string, v ...any) {
-	l.printMessage("[WARN]", message, v...)
+	l.printMessage("[WARN] ", message, v...)
 }
 
 func (l Logger) Info(message string, v ...any) {
-	l.printMessage("[ERROR]", message, v...)
+	l.printMessage("[INFO] ", message, v...)
 }
 
 func (l Logger) Debug(message string, v ...any) {
@@ -28,7 +29,15 @@ func (l Logger) Debug(message string, v ...any) {
 }
 
 func (l *Logger) printMessage(level, message string, v ...any) {
-	message = fmt.Sprintf(level+" "+message, v...)
+	skip := 3
+	if l.err != nil {
+		skip--
+	}
+
+	_, filename, line, _ := runtime.Caller(skip)
+	location := fmt.Sprintf("[%s:%d]", filename, line)
+
+	message = fmt.Sprintf(level+" "+location+" "+message, v...)
 
 	if l.err != nil {
 		message += fmt.Sprintf(" :: error=%T, message=%s", l.err, l.err.Error())
