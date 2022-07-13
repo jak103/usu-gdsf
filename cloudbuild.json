@@ -17,7 +17,7 @@
         "--image",
         "gcr.io/$PROJECT_ID/usu-gsdf:$COMMIT_SHA",
         "--region",
-        "us-west1",
+        "us-west3",
         "--platform",
         "managed"
       ]
