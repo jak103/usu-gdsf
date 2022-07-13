@@ -7,8 +7,8 @@ import (
 	"syscall"
 
 	"github.com/jak103/usu-gdsf/api"
-	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/db"
+	"github.com/jak103/usu-gdsf/log"
 )
 
 const version = "v0.0.0"
@@ -23,7 +23,17 @@ func main() {
 	go server.Start()
 
 	// Do other stuff here
-	db.GetDb()
+	db, err := db.NewDatabaseFromEnv();
+
+	if err != nil {
+		log.WithError(err).Error("Error starting database...")
+	} else {
+		if cerr := db.Connect(); err != nil {
+			log.WithError(cerr).Error("Error connecting to database...")
+		}
+	}
+
+	
 
 	wg.Wait()
 }

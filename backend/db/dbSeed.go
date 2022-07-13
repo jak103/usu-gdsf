@@ -7,8 +7,8 @@ import (
 	"github.com/jak103/usu-gdsf/log"
 )
 
-func CreateGamesFromJson() []models.GameRecord {
-	result := []models.GameRecord{}
+func CreateGamesFromJson() []models.Game {
+	result := []models.Game{}
 	err := json.Unmarshal([]byte(JSON_SEED_DATA), &result)
 
 	if err != nil {
