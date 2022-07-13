@@ -28,7 +28,15 @@ func gameRecords(c echo.Context) error {
 	}
 }
 
+func newGameHandler(c echo.Context) error {
+	// TODO #5 We should probably actually create a game here
+
+	return c.JSON(http.StatusOK, "New game handler")
+}
+
 func init() {
+	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/game", handler: game})
 	registerRoute(route{method: http.MethodGet, path: "/game/records", handler: gameRecords})
+	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 }

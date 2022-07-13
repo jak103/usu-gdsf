@@ -13,47 +13,56 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type mongoDB struct {
-	client      *mongo.Client
-	database    *mongo.Database
-	gameRecords *mongo.Collection
+var _ Database = (*Mongo)(nil)
+
+type Mongo struct {
+	client   *mongo.Client
+	database *mongo.Database
 }
 
-func (db *mongoDB) GetAllGameRecords() (*[]models.GameRecord, error) {
-	games := make([]models.GameRecord, 0)
+func (db Mongo) GetAllGames() ([]models.Game, error) {
+	games := make([]models.Game, 0)
 
-	cursor, err := db.gameRecords.Find(context.Background(), bson.M{}, nil)
+	gc := db.database.Collection("games")
+	cursor, err := gc.Find(context.Background(), bson.M{}, nil)
 	if err != nil {
+		log.WithError(err).Error("mongo find failed")
 		return nil, err
 	}
 
 	for cursor.Next(context.Background()) {
-		g := models.GameRecord{}
+		g := models.Game{}
 		err := cursor.Decode(&g)
 		if err != nil {
-			panic(err)
+			log.WithError(err).Error("Failed to decode cursor")
+			return nil, err
 		}
 		games = append(games, g)
 	}
 
-	return &games, nil
+	return games, nil
 }
 
 // disconnect disconnects from the remote database
-func (db *mongoDB) disconnect() {
+func (db *Mongo) Disconnect() error {
 	fmt.Println("Disconnecting from the database.")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	if err := db.client.Disconnect(ctx); err != nil {
-		panic(err)
-	}
 	defer cancel()
+
+	if err := db.client.Disconnect(ctx); err != nil {
+		log.WithError(err).Error("Failed to disconnect from mongo")
+		return err
+	}
+
+	return nil
 }
 
 // connect allows the user to connect to the database
-func (db *mongoDB) connect() {
+func (db *Mongo) Connect() error {
 	client, err := mongo.NewClient(options.Client().ApplyURI(os.Getenv("MONGO_URI")))
 	if err != nil {
-		panic(err)
+		log.WithError(err).Error("Failed to create mongo client")
+		return err
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -97,4 +106,16 @@ func init() {
 		Description:   "Mongo database for dev connections",
 		StoreDatabase: new(mongoDB),
 	})
+
+	err = client.Connect(ctx)
+	if err != nil {
+		log.WithError(err).Error("Failed to connect to mongo")
+		return err
+	}
+
+	db.client = client
+	database := client.Database("gdsf") // TODO This should probably be a parameter
+	db.database = database
+
+	return nil
 }
