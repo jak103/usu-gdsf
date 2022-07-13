@@ -66,6 +66,29 @@ func (db *mongoDB) connect() {
 	database := client.Database("usu-gdsf")
 	db.database = database
 	db.gameRecords = database.Collection("gameRecords")
+
+	if count, err := db.gameRecords.CountDocuments(ctx, bson.D{{}}); err != nil {
+		log.Error("There was a problem getting the documents from the Games Record collection: %v", err)
+	} else if count == 0 {
+		log.Debug("No game records currently exist. Seeding the games record collection...")
+
+		docs := []interface{}{}
+
+		for _, v := range CreateGamesFromJson() {
+			doc, err := bson.Marshal(v)
+			if err != nil {
+				log.Error("Error occurred while creating document: %v", err)
+				return
+			}
+			docs = append(docs, doc)
+		}
+
+		if insertManyResult, insertErr := db.gameRecords.InsertMany(ctx, docs); insertErr != nil {
+			log.Error("An error happened while seeding the collection: %v", insertErr)
+		} else {
+			log.Debug("Inserted multiple documents: ", insertManyResult.InsertedIDs)
+		}
+	}
 }
 
 func init() {
