@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,17 +14,15 @@ import (
 )
 
 type mongoDB struct {
-	client   *mongo.Client
-	uri      string
-	database *mongo.Database
-	games    *mongo.Collection
-	players  *mongo.Collection
+	client      *mongo.Client
+	database    *mongo.Database
+	gameRecords *mongo.Collection
 }
 
 func (db *mongoDB) GetAllGameRecords() (*[]models.GameRecord, error) {
 	games := make([]models.GameRecord, 0)
 
-	cursor, err := db.games.Find(context.Background(), bson.M{}, nil)
+	cursor, err := db.gameRecords.Find(context.Background(), bson.M{}, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -59,12 +58,14 @@ func (db *mongoDB) connect() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	err = client.Connect(ctx)
+	if err = client.Connect(ctx); err != nil {
+		log.Warn("Unable to establish database connection.")
+		return
+	}
 	db.client = client
-	database := client.Database("uno")
+	database := client.Database("usu-gdsf")
 	db.database = database
-	db.games = database.Collection("games")
-	db.players = database.Collection("players")
+	db.gameRecords = database.Collection("gameRecords")
 }
 
 func init() {

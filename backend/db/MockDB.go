@@ -5,8 +5,10 @@ import (
 	// "fmt"
 
 	// "github.com/google/uuid"
-	"github.com/jak103/usu-gdsf/models"
+	"strconv"
+
 	"github.com/jak103/usu-gdsf/log"
+	"github.com/jak103/usu-gdsf/models"
 )
 
 // MockDB is an implemenation declaring the unit test db
@@ -26,19 +28,17 @@ func (db *mockDB) GetAllGameRecords() (*[]models.GameRecord, error) {
 
 // Disconnect disconnects from the remote database
 func (db *mockDB) disconnect() {
-	return
 }
 
 // connect allows the user to connect to the database
 func (db *mockDB) connect() {
 	if len(db.gameRecords) == 0 {
-		thing := CreateGamesFromJson()
-
-		for _, v := range thing {
-			log.Debug("", v)
+		for i, v := range CreateGamesFromJson() {
+			db.gameRecords[strconv.Itoa(i)] = v
 		}
+
+		log.Debug("Sample Database initialized.")
 	}
-	return
 }
 
 func init() {
