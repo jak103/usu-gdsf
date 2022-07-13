@@ -29,7 +29,6 @@ services:
       - MONGO_URI=mongodb://gdsf:gdsf@db:27017
     command: gin --appPort 8080 -i run .
 
-
   db:
     image: 'mongo'
     container_name: 'gdsf-db'
