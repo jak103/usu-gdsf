@@ -1,23 +1,61 @@
 package log
 
-import "log"
+import (
+	"fmt"
+	"log"
+)
+
+var logger Logger
+
+type Logger struct {
+	err error
+}
+
+func (l Logger) Error(message string, v ...any) {
+	l.printMessage("[ERROR]", message, v...)
+}
+
+func (l Logger) Warn(message string, v ...any) {
+	l.printMessage("[WARN]", message, v...)
+}
+
+func (l Logger) Info(message string, v ...any) {
+	l.printMessage("[ERROR]", message, v...)
+}
+
+func (l Logger) Debug(message string, v ...any) {
+	l.printMessage("[DEBUG]", message, v...)
+}
+
+func (l *Logger) printMessage(level, message string, v ...any) {
+	message = fmt.Sprintf(level+" "+message, v...)
+
+	if l.err != nil {
+		message += fmt.Sprintf(" :: error=%T, message=%s", l.err, l.err.Error())
+	}
+	log.Println(message)
+	l.err = nil
+}
+
+//----------------------------
+
+func WithError(err error) Logger {
+	logger.err = err
+	return logger
+}
 
 func Error(message string, v ...any) {
-	message = "[ERROR] " + message
-	log.Printf(message, v...)
+	logger.Error(message, v...)
 }
 
 func Warn(message string, v ...any) {
-	message = "[WARN] " + message
-	log.Printf(message, v...)
+	logger.Warn(message, v...)
 }
 
 func Info(message string, v ...any) {
-	message = "[INFO] " + message
-	log.Printf(message, v...)
+	logger.Info(message, v...)
 }
 
 func Debug(message string, v ...any) {
-	message = "[DEBUG] " + message
-	log.Printf(message, v...)
+	logger.Debug(message, v...)
 }
