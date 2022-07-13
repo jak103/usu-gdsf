@@ -16,14 +16,9 @@ type Firestore struct {
 	client *firestore.Client
 }
 
-<<<<<<< HEAD:backend/db/FirestoreDB.go
-func (db *firestoreDB) GetAllGameRecords() (*[]models.GameRecord, error) {
-	games := make([]models.GameRecord, 0)
-=======
 func (db Firestore) GetAllGames() ([]models.Game, error) {
 	games := make([]models.Game, 0)
 	gc := db.client.Collection("games")
->>>>>>> cfdfbb2712e991bd0e65505a5f7bad6a8f66f521:backend/db/firestore.go
 
 	documents := gc.DocumentRefs(context.Background())
 	for {
@@ -33,11 +28,7 @@ func (db Firestore) GetAllGames() ([]models.Game, error) {
 			break
 		}
 
-<<<<<<< HEAD:backend/db/FirestoreDB.go
-		var game models.GameRecord
-=======
 		var game models.Game
->>>>>>> cfdfbb2712e991bd0e65505a5f7bad6a8f66f521:backend/db/firestore.go
 
 		if docSnapshot, _ := docRef.Get(context.Background()); docSnapshot != nil {
 			_ = docSnapshot.DataTo(&game)
@@ -76,14 +67,5 @@ func (db *Firestore) Connect() error {
 	// Etablish Database Collection object
 	db.client = client
 
-<<<<<<< HEAD:backend/db/FirestoreDB.go
-func init() {
-	registerDB(&DB{
-		Name:          "FIRESTORE",
-		Description:   "Production Firestore connection",
-		StoreDatabase: new(firestoreDB),
-	})
-=======
 	return nil
->>>>>>> cfdfbb2712e991bd0e65505a5f7bad6a8f66f521:backend/db/firestore.go
 }

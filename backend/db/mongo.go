@@ -18,6 +18,7 @@ var _ Database = (*Mongo)(nil)
 type Mongo struct {
 	client   *mongo.Client
 	database *mongo.Database
+	games    *mongo.Collection
 }
 
 func (db Mongo) GetAllGames() ([]models.Game, error) {
@@ -68,15 +69,16 @@ func (db *Mongo) Connect() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	if err = client.Connect(ctx); err != nil {
-		log.Warn("Unable to establish database connection.")
-		return
+		log.WithError(err).Warn("Unable to establish database connection.")
+		return err
 	}
 	db.client = client
 	database := client.Database("usu-gdsf")
 	db.database = database
-	db.gameRecords = database.Collection("gameRecords")
+	db.games = database.Collection("games")
 
-	if count, err := db.gameRecords.CountDocuments(ctx, bson.D{{}}); err != nil {
+	// Logic for creating seed data
+	if count, err := db.games.CountDocuments(ctx, bson.D{{}}); err != nil {
 		log.Error("There was a problem getting the documents from the Games Record collection: %v", err)
 	} else if count == 0 {
 		log.Debug("No game records currently exist. Seeding the games record collection...")
@@ -87,35 +89,17 @@ func (db *Mongo) Connect() error {
 			doc, err := bson.Marshal(v)
 			if err != nil {
 				log.Error("Error occurred while creating document: %v", err)
-				return
+				return err
 			}
 			docs = append(docs, doc)
 		}
 
-		if insertManyResult, insertErr := db.gameRecords.InsertMany(ctx, docs); insertErr != nil {
+		if insertManyResult, insertErr := db.games.InsertMany(ctx, docs); insertErr != nil {
 			log.Error("An error happened while seeding the collection: %v", insertErr)
 		} else {
 			log.Debug("Inserted multiple documents: ", insertManyResult.InsertedIDs)
 		}
 	}
-}
-
-func init() {
-	registerDB(&DB{
-		Name:          "MONGO",
-		Description:   "Mongo database for dev connections",
-		StoreDatabase: new(mongoDB),
-	})
-
-	err = client.Connect(ctx)
-	if err != nil {
-		log.WithError(err).Error("Failed to connect to mongo")
-		return err
-	}
-
-	db.client = client
-	database := client.Database("gdsf") // TODO This should probably be a parameter
-	db.database = database
 
 	return nil
 }

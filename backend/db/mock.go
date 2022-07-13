@@ -1,6 +1,8 @@
 package db
 
 import (
+	"strconv"
+
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 )
@@ -23,6 +25,15 @@ func (db Mock) GetAllGames() ([]models.Game, error) {
 
 func (db Mock) Connect() error {
 	log.Info("mock connect")
+
+	if len(db.games) == 0 {
+		for i, v := range CreateGamesFromJson() {
+			db.games[strconv.Itoa(i)] = v
+		}
+	}
+
+	log.Debug("Sample Database Initialized")
+
 	return nil
 }
 
