@@ -41,14 +41,15 @@ func (s *Server) Shutdown() {
 
 func (s *Server) setupMiddleware() {
 	s.echo.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "method=${method}, uri=${uri}, status=${status}\n",
+		Format: "method=${method}, uri=${uri}, status=${status}, host=${host}, latency=${latency_human}, error=${error}\n",
 	}))
+
 	s.echo.Use(middleware.Gzip())
 	s.echo.Use(middleware.Recover())
 	s.echo.Use(middleware.CORS())
 
 	s.echo.Use(middleware.StaticWithConfig(middleware.StaticConfig{
-		Root:  "/client/dist/",
+		Root:  "/frontend/dist",
 		HTML5: true,
 	}))
 }
