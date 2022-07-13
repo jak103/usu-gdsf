@@ -14,8 +14,8 @@
     <v-container fluid>
 
       <!-- If using vue-router -->
-      <!-- <router-view></router-view> -->
-      <HomeView/>
+      <router-view></router-view>
+      <!-- <HomeView/> -->
     </v-container>
   </v-main>
 
