@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"cloud.google.com/go/firestore"
-	"github.com/jak103/uno/model"
+	"github.com/jak103/usu-gdsf/models"
 	"google.golang.org/api/iterator"
 )
 
@@ -15,8 +15,8 @@ type firestoreDB struct {
 	players *firestore.CollectionRef
 }
 
-func (db *firestoreDB) GetAllGames() (*[]model.Game, error) {
-	games := make([]model.Game, 0)
+func (db *firestoreDB) GetAllGameRecords() (*[]models.GameRecord, error) {
+	games := make([]models.GameRecord, 0)
 
 	documents := db.games.DocumentRefs(context.Background())
 	for {
@@ -26,7 +26,7 @@ func (db *firestoreDB) GetAllGames() (*[]model.Game, error) {
 			break
 		}
 
-		var game model.Game
+		var game models.GameRecord
 
 		if docSnapshot, _ := docRef.Get(context.Background()); docSnapshot != nil {
 			_ = docSnapshot.DataTo(&game)
@@ -64,8 +64,8 @@ func (db *firestoreDB) connect() {
 
 func init() {
 	registerDB(&DB{
-		name:        "FIRESTORE",
-		description: "Production Firestore connection",
-		UnoDB:       new(firestoreDB),
+		Name:          "FIRESTORE",
+		Description:   "Production Firestore connection",
+		StoreDatabase: new(firestoreDB),
 	})
 }

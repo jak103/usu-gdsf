@@ -1,14 +1,25 @@
 package db
 
-import "json"
+import (
+	"encoding/json"
 
-func CreateGamesFromJson() GameRecord[] {
-	var result []GameRecord
-	err := json.Unmarshal([]byte(SeedDataString), &result)
+	"github.com/jak103/usu-gdsf/models"
+	"github.com/jak103/usu-gdsf/log"
+)
+
+func CreateGamesFromJson() []models.GameRecord {
+	result := []models.GameRecord{}
+	err := json.Unmarshal([]byte(JSON_SEED_DATA), &result)
+
+	if err != nil {
+		log.Warn("Unable to seed example data.")
+		return nil
+	}
+
 	return result
 }
 
-const string SeedDataString = `[
+const JSON_SEED_DATA = `[
   {
     "name": "Star Wars 1",
     "author": "George Lucas and Disney",

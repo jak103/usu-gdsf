@@ -8,6 +8,7 @@ import (
 
 	"github.com/jak103/usu-gdsf/api"
 	"github.com/jak103/usu-gdsf/log"
+	"github.com/jak103/usu-gdsf/db"
 )
 
 const version = "v0.0.0"
@@ -22,6 +23,7 @@ func main() {
 	go server.Start()
 
 	// Do other stuff here
+	db.GetDb()
 
 	wg.Wait()
 }

@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/jak103/uno/model"
+	"github.com/jak103/usu-gdsf/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -20,10 +20,8 @@ type mongoDB struct {
 	players  *mongo.Collection
 }
 
-func (db *mongoDB) GetAllGames() (*[]model.Game, error) {
-	games := make([]model.Game, 0)
-
-	var thing = CreateGamesFromJson()
+func (db *mongoDB) GetAllGameRecords() (*[]models.GameRecord, error) {
+	games := make([]models.GameRecord, 0)
 
 	cursor, err := db.games.Find(context.Background(), bson.M{}, nil)
 	if err != nil {
@@ -31,7 +29,7 @@ func (db *mongoDB) GetAllGames() (*[]model.Game, error) {
 	}
 
 	for cursor.Next(context.Background()) {
-		g := model.Game{}
+		g := models.GameRecord{}
 		err := cursor.Decode(&g)
 		if err != nil {
 			panic(err)
@@ -70,10 +68,9 @@ func (db *mongoDB) connect() {
 }
 
 func init() {
-	var bla = CreateGamesFromJson()
 	registerDB(&DB{
-		name:        "MONGO",
-		description: "Mongo database for dev connections",
-		GdsfDB:      new(mongoDB),
+		Name:          "MONGO",
+		Description:   "Mongo database for dev connections",
+		StoreDatabase: new(mongoDB),
 	})
 }
