@@ -20,22 +20,32 @@ func main() {
 	server := api.NewServer(wg)
 	setupCloseHandler(server)
 
+	if err := setupDatabaseConnection(); err != nil {
+		log.WithError(err).Error("Error setting up database connection...")
+		panic()
+	}
+
 	go server.Start()
 
 	// Do other stuff here
+
+	wg.Wait()
+}
+
+func setupDatabaseConnection() error {
 	db, err := db.NewDatabaseFromEnv();
 
 	if err != nil {
 		log.WithError(err).Error("Error starting database...")
+		return err
 	} else {
-		if cerr := db.Connect(); err != nil {
+		if cerr := db.Connect(); cerr != nil {
 			log.WithError(cerr).Error("Error connecting to database...")
+			return cerr
 		}
 	}
 
-	
-
-	wg.Wait()
+	return nil
 }
 
 func setupCloseHandler(s *api.Server) {
