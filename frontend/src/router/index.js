@@ -18,7 +18,7 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
-      path: '/info',
+      path: '/info/:id',
       name: 'info',
       component: () => import('../views/GameInfo.vue')
     },
@@ -26,7 +26,7 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: () => import('../views/AdminPage.vue')
-    }
+    },
   ]
 })
 
