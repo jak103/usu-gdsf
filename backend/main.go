@@ -22,7 +22,7 @@ func main() {
 
 	if err := setupDatabaseConnection(); err != nil {
 		log.WithError(err).Error("Error setting up database connection...")
-		panic()
+		panic("Database not connected")
 	}
 
 	go server.Start()
