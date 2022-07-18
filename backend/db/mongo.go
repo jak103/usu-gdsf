@@ -18,6 +18,7 @@ var _ Database = (*Mongo)(nil)
 type Mongo struct {
 	client   *mongo.Client
 	database *mongo.Database
+	games    *mongo.Collection
 }
 
 func (db Mongo) GetAllGames() ([]models.Game, error) {
@@ -67,16 +68,38 @@ func (db *Mongo) Connect() error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-
-	err = client.Connect(ctx)
-	if err != nil {
-		log.WithError(err).Error("Failed to connect to mongo")
+	if err = client.Connect(ctx); err != nil {
+		log.WithError(err).Warn("Unable to establish database connection.")
 		return err
 	}
-
 	db.client = client
-	database := client.Database("gdsf") // TODO This should probably be a parameter
+	database := client.Database("usu-gdsf")
 	db.database = database
+	db.games = database.Collection("games")
+
+	// Logic for creating seed data
+	if count, err := db.games.CountDocuments(ctx, bson.D{{}}); err != nil {
+		log.Error("There was a problem getting the documents from the Games Record collection: %v", err)
+	} else if count == 0 {
+		log.Debug("No game records currently exist. Seeding the games record collection...")
+
+		docs := []interface{}{}
+
+		for _, v := range CreateGamesFromJson() {
+			doc, err := bson.Marshal(v)
+			if err != nil {
+				log.Error("Error occurred while creating document: %v", err)
+				return err
+			}
+			docs = append(docs, doc)
+		}
+
+		if insertManyResult, insertErr := db.games.InsertMany(ctx, docs); insertErr != nil {
+			log.Error("An error happened while seeding the collection: %v", insertErr)
+		} else {
+			log.Debug("Inserted multiple documents: ", insertManyResult.InsertedIDs)
+		}
+	}
 
 	return nil
 }
