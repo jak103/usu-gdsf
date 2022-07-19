@@ -24,13 +24,13 @@ func getAllGames(c echo.Context) error {
 		log.Error("An error occurred while getting game records: %v", err)
 		return err
 	} else {
-		return c.JSON(http.StatusOK, []interface{}{ result })
+		return c.JSON(http.StatusOK, []interface{}{result})
 	}
 }
 
 func newGameHandler(c echo.Context) error {
 	// TODO #5 We should probably actually create a game here
-
+	// Demo, a change so git picks it up
 	return c.JSON(http.StatusOK, "New game handler")
 }
 
