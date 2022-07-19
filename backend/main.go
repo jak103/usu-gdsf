@@ -33,7 +33,7 @@ func main() {
 }
 
 func setupDatabaseConnection() error {
-	db, err := db.NewDatabaseFromEnv();
+	db, err := db.NewDatabaseFromEnv()
 
 	if err != nil {
 		log.WithError(err).Error("Error starting database...")
