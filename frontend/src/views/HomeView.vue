@@ -25,6 +25,10 @@
     <v-row class="ma-2">
       <GameList></GameList>
     </v-row>
+
+    <v-row class="ma-2">
+        <GameCardView></GameCardView>
+    </v-row>
   </v-container>
 </template>
 
@@ -32,6 +36,7 @@
 import { defineComponent } from 'vue';
 import GameCarousel from '../components/GameCarousel.vue';
 import GameList from '../components/GameList.vue'
+import GameCardView from '../components/GameCardView.vue'
 
 
 export default defineComponent({
@@ -39,7 +44,8 @@ export default defineComponent({
 
   components: {
     GameCarousel,
-    GameList
+    GameList,
+    GameCardView
   },
 
   computed: {
