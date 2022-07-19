@@ -24,7 +24,7 @@ func getAllGames(c echo.Context) error {
 		log.Error("An error occurred while getting game records: %v", err)
 		return err
 	} else {
-		return c.JSON(http.StatusOK, []interface{}{ result }
+		return c.JSON(http.StatusOK, []interface{}{result})
 	}
 }
 
