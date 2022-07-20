@@ -16,22 +16,23 @@
     </v-container>
   </v-main>
 
-  <v-footer color="teal" app>
-    Bottom navigation info and copyright stuff. &copy; 2022
-  </v-footer>
+  <Footer/>
+
   </v-app>
 </template>
 
 <script>
 import HomeView from './views/HomeView.vue'
 import NavMenu from './components/NavMenu.vue'
+import Footer from './components/Footer.vue'
 
 export default {
   name: 'App',
 
   components: {
     HomeView,
-    NavMenu
+    NavMenu,
+    Footer
 },
 
   data: () => ({
