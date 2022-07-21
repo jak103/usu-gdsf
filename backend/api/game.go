@@ -30,7 +30,7 @@ func getAllGames(c echo.Context) error {
 
 func newGameHandler(c echo.Context) error {
 	// TODO #5 We should probably actually create a game here
-
+	// Demo, a change so git picks it up
 	return c.JSON(http.StatusOK, "New game handler")
 }
 
