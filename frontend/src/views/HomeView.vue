@@ -10,7 +10,7 @@
     <!-- Break out Games by: Semester, Type -->
     <v-row class="ma-2">
       <v-col cols="6">
-        <GameList></GameList>
+        <FilteredGameList></FilteredGameList>
       </v-col>
 
       <v-divider vertical></v-divider>
@@ -32,6 +32,7 @@
 import { defineComponent } from 'vue';
 import GameCarousel from '../components/GameCarousel.vue';
 import GameList from '../components/GameList.vue'
+import FilteredGameList from '../components/FilteredGameList.vue';
 
 
 export default defineComponent({
@@ -39,8 +40,9 @@ export default defineComponent({
 
   components: {
     GameCarousel,
-    GameList
-  },
+    GameList,
+    FilteredGameList
+},
 
   computed: {
 
