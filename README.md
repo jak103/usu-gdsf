@@ -1,4 +1,3 @@
-# usu-gdsf (Backend Team-1)
 [![Go](https://github.com/jak103/usu-gdsf/actions/workflows/go.yml/badge.svg)](https://github.com/jak103/usu-gdsf/actions/workflows/go.yml)
 
 # usu-gdsf
