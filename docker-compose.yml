@@ -28,6 +28,9 @@ services:
       - DB_TYPE=mongo
       - RUN_ENV=mongo
       - MONGO_URI=mongodb://gdsf:gdsf@db:27017
+      - TOKEN_HASHING_KEY='ZUDx!8@76Dri!TI#v1O#Zh!IrzS%8FJZtCNmxqMo'
+      - ACCESS_TOKEN_LIFETIME_MINS=5
+      - REFRESH_TOKEN_LIFETIME_DAYS=15
     command: gin --appPort 8080 -i run .
 
   db:

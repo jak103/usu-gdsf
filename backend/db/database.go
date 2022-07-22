@@ -2,8 +2,8 @@ package db
 
 import (
 	"errors"
-	"os"
 
+	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 )
@@ -25,12 +25,7 @@ type Database interface {
 
 func NewDatabaseFromEnv() (Database, error) {
 	if connection == nil {
-		runningEnv, wasSet := os.LookupEnv("RUN_ENV")
-
-		if !wasSet || len(runningEnv) == 0 {
-			log.Error("Environment variable RUN_ENV was not set correctly")
-			return nil, errors.New("RUN_ENV not set")
-		}
+		runningEnv := config.RunEnv
 
 		switch runningEnv {
 		case MOCK:
