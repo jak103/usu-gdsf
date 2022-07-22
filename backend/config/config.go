@@ -16,8 +16,8 @@ var FirestoreProjectId string
 
 // Authentication
 var TokenHashingKey string
-var AccessTokenLifetimeMins int
-var RefeshTokenLifetimeDays int
+var AccessTokenLifetimeMins int64
+var RefreshTokenLifetimeDays int64
 
 func init() {
 	log.Info("Running configuration init")
@@ -32,8 +32,8 @@ func init() {
 	}
 	
 	TokenHashingKey = getEnvVarString("TOKEN_HASHING_KEY")
-	AccessTokenLifetimeMins = getEnvVarInt("ACCESS_TOKEN_LIFETIME_MINS")
-	RefeshTokenLifetimeDays = getEnvVarInt("REFRESH_TOKEN_LIFETIME_DAYS")
+	AccessTokenLifetimeMins = getEnvVarInt64("ACCESS_TOKEN_LIFETIME_MINS")
+	RefreshTokenLifetimeDays = getEnvVarInt64("REFRESH_TOKEN_LIFETIME_DAYS")
 }
 
 func getEnvVarString(key string) string {
@@ -47,7 +47,7 @@ func getEnvVarString(key string) string {
 	return envVar
 }
 
-func getEnvVarInt(key string) int {
+func getEnvVarInt64(key string) int64 {
 	envVarStr := getEnvVarString(key)
 	envVarInt, err := strconv.Atoi(envVarStr)
 
@@ -56,5 +56,5 @@ func getEnvVarInt(key string) int {
 		os.Exit(1)
 	}
 
-	return envVarInt
+	return int64(envVarInt)
 }
