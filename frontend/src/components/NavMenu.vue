@@ -36,8 +36,6 @@
       >My Account</v-tooltip>
     </v-list-item>
 
-    <!-- TODO: Add another entry here somehow for the logged in user, when logged in. -->
-
     <v-divider></v-divider>
 
     <v-list-item
