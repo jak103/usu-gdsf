@@ -21,10 +21,10 @@ const (
 )
 
 type TokenClaims struct {
-	Type       TokenType `json:typ`
-	Expiration int64     `json:exp`
-	UserId     int64     `json:uid`
-	UserEmail  string    `json:eml`
+	Type       TokenType
+	Expiration int64    
+	UserId     int64    
+	UserEmail  string   
 }
 
 type TokenParams struct {
