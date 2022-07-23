@@ -40,6 +40,7 @@
 
     <v-list-item
       prepend-icon="mdi-magnify"
+      link
     >
       <v-tooltip
         v-if="rail"
