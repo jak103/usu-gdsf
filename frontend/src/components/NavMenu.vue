@@ -11,10 +11,10 @@
     <v-list nav>
       <v-list-item to="/">Home</v-list-item>
       <v-list-item to="/about">About</v-list-item>
-      <v-list-item v-if="appBarDisplay" :to="`/info/${defaultGame}`">Game</v-list-item>
+      <v-list-item @click="gameSelected = !gameSelected"> Games </v-list-item>
+      <v-list-item v-if="gameSelected" :to="`/info/${defaultGame}`">Game</v-list-item>
     </v-list>
-
-      <v-btn to="/admin" color="secondary">Login</v-btn>
+    <v-btn to="/admin" color="secondary">Login</v-btn>
   </div>
 </template>
 
@@ -26,17 +26,9 @@ export default defineComponent({
   name: 'NavMenu',
 
   data: () => ({
-    defaultGame: 1
+    defaultGame: 1,
+    gameSelected: false,
   }),
-
-  computed: {
-    appBarDisplay() {
-      return this.$router.currentRoute.value.path !== '/';
-    }
-  },
-
-  components: {
-
-  },
+  
 });
 </script>
