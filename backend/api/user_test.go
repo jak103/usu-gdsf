@@ -10,9 +10,11 @@ import (
 )
 
 func AssertResponseCode(t *testing.T, method string, path string, expectedCode int) bool {
+	var s Server = *NewServer(&sync.WaitGroup{})
+	s.Start()
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(method, path, nil)
-	S.echo.ServeHTTP(recorder, request)
+	s.echo.ServeHTTP(recorder, request)
 	return expectedCode == recorder.Code
 }
 

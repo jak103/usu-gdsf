@@ -1,9 +1,0 @@
-package api
-
-var S *Server
-var Bob String
-
-init{
-	S = *NewServer(&sync.WaitGroup{})
-	s.Start()
-}
