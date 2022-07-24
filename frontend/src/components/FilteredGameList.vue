@@ -1,28 +1,93 @@
 <template>
-  <v-container>
-    <v-list v-for="item in getFilteredList()">
-        <v-card>
-            {{item.id}}
-        </v-card>
+  <v-container fluid>
+    <!--This is a drop down if we want it idk-->
+      <v-select
+          @change="testFunction"
+          v-model="filter"
+          label="Select a Filter"
+          :items="options"
+          solo
+        ></v-select>
+        this is something
+    {{this.filter}}
+    <!-- <v-virtual-scroll> -->
+    <v-list v-for="game in this.filteredList">
+     <!-- gameOverview="game.gameOverview" rating="game.rating" image="game.image" showGameOverview -->
+        <GameCard :gameTitle=game.gameTitle :gameOverview=game.gameOverview :rating=game.rating :image=game.image showGameOverview></GameCard>
     </v-list>
+    <!-- </v-virtual-scroll> -->
   </v-container>
 </template>
 
 <script>
-export default {
-  name: 'FilteredGameList',
-  
-  data: () => ({
-    something: 'This is where we will implement a filtered game list... We will need to pass in props.',
-    // filteredList: getFilteredList()
-  }),
-  
-  methods: {
-    getFilteredList: function() {
-        // TODO get lists of games based on determined filter
-        return [{id: 1}, {id: 2}]
-    }
+import GameCard from './GameCard.vue'
 
-  }
+export const ratings = {
+  MOST_POPULAR: 'Most Popular',
+  TOP_RATED: 'Top Rated'
+}
+export default {
+    name: "FilteredGameList",
+    data: () => ({
+        something: "This is where we will implement a filtered game list... We will need to pass in props.",
+        // filteredList: getFilteredList()
+        filteredList: [],
+        options: [
+          ratings.MOST_POPULAR,
+          ratings.TOP_RATED
+        ], 
+        filter: ratings.MOST_POPULAR
+    }),
+    methods: {
+        testFunction :function () {
+          console.log("CLICKING CLICKING CLICKING")
+        },
+        getFilteredList: function (filter) {
+          console.log("GET FILTEReD LIST")
+            if (filter == ratings.MOST_POPULAR) {
+              this.filteredList = this.getMostPopular()
+            }
+            else if (filter == ratings.TOP_RATED) {
+              this.filteredList = this.getTopRated()
+            }
+        },
+
+        getTopRated: function() {
+          //TODO run some query or something
+          return [
+            { 
+              gameTitle: 'Cat Attack', 
+              gameOverview: 'Craig the cat embarks on an adventure', 
+              rating: 4,
+              image: 'https://cdn.theatlantic.com/media/mt/science/cat_caviar.jpg'
+            },
+            { 
+              gameTitle: 'Big Blue Game',
+              rating: 3,
+              gameOverview: 'This game is big. This game is blue. This game is fun.', 
+              image: 'https://st2.depositphotos.com/2927537/7025/i/950/depositphotos_70253417-stock-photo-funny-monkey-with-a-red.jpg'
+            }
+          ];
+        },
+
+        getMostPopular: function() {
+          //TODO run some query or something
+          return [
+            { 
+              gameTitle: 'Big Blue Game',
+              rating: 3,
+              gameOverview: 'This game is big. This game is blue. This game is fun.', 
+              image: 'https://st2.depositphotos.com/2927537/7025/i/950/depositphotos_70253417-stock-photo-funny-monkey-with-a-red.jpg'
+            },
+            { 
+              gameTitle: 'Cat Attack', 
+              gameOverview: 'Craig the cat embarks on an adventure', 
+              rating: 4,
+              image: 'https://cdn.theatlantic.com/media/mt/science/cat_caviar.jpg'
+            }
+          ];
+        },
+    },
+    components: { GameCard }
 }
 </script>
