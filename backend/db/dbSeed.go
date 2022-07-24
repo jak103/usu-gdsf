@@ -3,8 +3,8 @@ package db
 import (
 	"encoding/json"
 
-	"github.com/jak103/usu-gdsf/models"
 	"github.com/jak103/usu-gdsf/log"
+	"github.com/jak103/usu-gdsf/models"
 )
 
 func CreateGamesFromJson() []models.Game {
@@ -15,609 +15,106 @@ func CreateGamesFromJson() []models.Game {
 		log.Warn("Unable to seed example data.")
 		return nil
 	}
-
 	return result
 }
 
-const JSON_SEED_DATA = `[
-  {
-    "name": "Star Wars 1",
-    "author": "George Lucas and Disney",
-    "creationDate": "5/25/1977",
-    "version": "1.0.1"
-  },
-  {
-    "name": "Star Wars 2",
-    "author": "George Lucas and Disney",
-    "creationDate": "5/26/1977",
-    "version": "1.0.2"
-  },
-  {
-    "name": "Star Wars 3",
-    "author": "George Lucas and Disney",
-    "creationDate": "5/27/1977",
-    "version": "1.0.3"
-  },
-  {
-    "name": "Star Wars 4",
-    "author": "George Lucas and Disney",
-    "creationDate": "5/28/1977",
-    "version": "1.0.4"
-  },
-  {
-    "name": "Star Wars 5",
-    "author": "George Lucas and Disney",
-    "creationDate": "5/29/1977",
-    "version": "1.0.5"
-  },
-  {
-    "name": "Star Wars 6",
-    "author": "George Lucas and Disney",
-    "creationDate": "5/30/1977",
-    "version": "1.0.6"
-  },
-  {
-    "name": "Star Wars 7",
-    "author": "George Lucas and Disney",
-    "creationDate": "5/31/1977",
-    "version": "1.0.7"
-  },
-  {
-    "name": "Star Wars 8",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/1/1977",
-    "version": "1.0.8"
-  },
-  {
-    "name": "Star Wars 9",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/2/1977",
-    "version": "1.0.9"
-  },
-  {
-    "name": "Star Wars 10",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/3/1977",
-    "version": "1.0.10"
-  },
-  {
-    "name": "Star Wars 11",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/4/1977",
-    "version": "1.0.11"
-  },
-  {
-    "name": "Star Wars 12",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/5/1977",
-    "version": "1.0.12"
-  },
-  {
-    "name": "Star Wars 13",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/6/1977",
-    "version": "1.0.13"
-  },
-  {
-    "name": "Star Wars 14",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/7/1977",
-    "version": "1.0.14"
-  },
-  {
-    "name": "Star Wars 15",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/8/1977",
-    "version": "1.0.15"
-  },
-  {
-    "name": "Star Wars 16",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/9/1977",
-    "version": "1.0.16"
-  },
-  {
-    "name": "Star Wars 17",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/10/1977",
-    "version": "1.0.17"
-  },
-  {
-    "name": "Star Wars 18",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/11/1977",
-    "version": "1.0.18"
-  },
-  {
-    "name": "Star Wars 19",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/12/1977",
-    "version": "1.0.19"
-  },
-  {
-    "name": "Star Wars 20",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/13/1977",
-    "version": "1.0.20"
-  },
-  {
-    "name": "Star Wars 21",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/14/1977",
-    "version": "1.0.21"
-  },
-  {
-    "name": "Star Wars 22",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/15/1977",
-    "version": "1.0.22"
-  },
-  {
-    "name": "Star Wars 23",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/16/1977",
-    "version": "1.0.23"
-  },
-  {
-    "name": "Star Wars 24",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/17/1977",
-    "version": "1.0.24"
-  },
-  {
-    "name": "Star Wars 25",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/18/1977",
-    "version": "1.0.25"
-  },
-  {
-    "name": "Star Wars 26",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/19/1977",
-    "version": "1.0.26"
-  },
-  {
-    "name": "Star Wars 27",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/20/1977",
-    "version": "1.0.27"
-  },
-  {
-    "name": "Star Wars 28",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/21/1977",
-    "version": "1.0.28"
-  },
-  {
-    "name": "Star Wars 29",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/22/1977",
-    "version": "1.0.29"
-  },
-  {
-    "name": "Star Wars 30",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/23/1977",
-    "version": "1.0.30"
-  },
-  {
-    "name": "Star Wars 31",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/24/1977",
-    "version": "1.0.31"
-  },
-  {
-    "name": "Star Wars 32",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/25/1977",
-    "version": "1.0.32"
-  },
-  {
-    "name": "Star Wars 33",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/26/1977",
-    "version": "1.0.33"
-  },
-  {
-    "name": "Star Wars 34",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/27/1977",
-    "version": "1.0.34"
-  },
-  {
-    "name": "Star Wars 35",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/28/1977",
-    "version": "1.0.35"
-  },
-  {
-    "name": "Star Wars 36",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/29/1977",
-    "version": "1.0.36"
-  },
-  {
-    "name": "Star Wars 37",
-    "author": "George Lucas and Disney",
-    "creationDate": "6/30/1977",
-    "version": "1.0.37"
-  },
-  {
-    "name": "Star Wars 38",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/1/1977",
-    "version": "1.0.38"
-  },
-  {
-    "name": "Star Wars 39",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/2/1977",
-    "version": "1.0.39"
-  },
-  {
-    "name": "Star Wars 40",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/3/1977",
-    "version": "1.0.40"
-  },
-  {
-    "name": "Star Wars 41",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/4/1977",
-    "version": "1.0.41"
-  },
-  {
-    "name": "Star Wars 42",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/5/1977",
-    "version": "1.0.42"
-  },
-  {
-    "name": "Star Wars 43",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/6/1977",
-    "version": "1.0.43"
-  },
-  {
-    "name": "Star Wars 44",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/7/1977",
-    "version": "1.0.44"
-  },
-  {
-    "name": "Star Wars 45",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/8/1977",
-    "version": "1.0.45"
-  },
-  {
-    "name": "Star Wars 46",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/9/1977",
-    "version": "1.0.46"
-  },
-  {
-    "name": "Star Wars 47",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/10/1977",
-    "version": "1.0.47"
-  },
-  {
-    "name": "Star Wars 48",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/11/1977",
-    "version": "1.0.48"
-  },
-  {
-    "name": "Star Wars 49",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/12/1977",
-    "version": "1.0.49"
-  },
-  {
-    "name": "Star Wars 50",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/13/1977",
-    "version": "1.0.50"
-  },
-  {
-    "name": "Star Wars 51",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/14/1977",
-    "version": "1.0.51"
-  },
-  {
-    "name": "Star Wars 52",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/15/1977",
-    "version": "1.0.52"
-  },
-  {
-    "name": "Star Wars 53",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/16/1977",
-    "version": "1.0.53"
-  },
-  {
-    "name": "Star Wars 54",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/17/1977",
-    "version": "1.0.54"
-  },
-  {
-    "name": "Star Wars 55",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/18/1977",
-    "version": "1.0.55"
-  },
-  {
-    "name": "Star Wars 56",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/19/1977",
-    "version": "1.0.56"
-  },
-  {
-    "name": "Star Wars 57",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/20/1977",
-    "version": "1.0.57"
-  },
-  {
-    "name": "Star Wars 58",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/21/1977",
-    "version": "1.0.58"
-  },
-  {
-    "name": "Star Wars 59",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/22/1977",
-    "version": "1.0.59"
-  },
-  {
-    "name": "Star Wars 60",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/23/1977",
-    "version": "1.0.60"
-  },
-  {
-    "name": "Star Wars 61",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/24/1977",
-    "version": "1.0.61"
-  },
-  {
-    "name": "Star Wars 62",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/25/1977",
-    "version": "1.0.62"
-  },
-  {
-    "name": "Star Wars 63",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/26/1977",
-    "version": "1.0.63"
-  },
-  {
-    "name": "Star Wars 64",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/27/1977",
-    "version": "1.0.64"
-  },
-  {
-    "name": "Star Wars 65",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/28/1977",
-    "version": "1.0.65"
-  },
-  {
-    "name": "Star Wars 66",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/29/1977",
-    "version": "1.0.66"
-  },
-  {
-    "name": "Star Wars 67",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/30/1977",
-    "version": "1.0.67"
-  },
-  {
-    "name": "Star Wars 68",
-    "author": "George Lucas and Disney",
-    "creationDate": "7/31/1977",
-    "version": "1.0.68"
-  },
-  {
-    "name": "Star Wars 69",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/1/1977",
-    "version": "1.0.69"
-  },
-  {
-    "name": "Star Wars 70",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/2/1977",
-    "version": "1.0.70"
-  },
-  {
-    "name": "Star Wars 71",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/3/1977",
-    "version": "1.0.71"
-  },
-  {
-    "name": "Star Wars 72",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/4/1977",
-    "version": "1.0.72"
-  },
-  {
-    "name": "Star Wars 73",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/5/1977",
-    "version": "1.0.73"
-  },
-  {
-    "name": "Star Wars 74",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/6/1977",
-    "version": "1.0.74"
-  },
-  {
-    "name": "Star Wars 75",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/7/1977",
-    "version": "1.0.75"
-  },
-  {
-    "name": "Star Wars 76",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/8/1977",
-    "version": "1.0.76"
-  },
-  {
-    "name": "Star Wars 77",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/9/1977",
-    "version": "1.0.77"
-  },
-  {
-    "name": "Star Wars 78",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/10/1977",
-    "version": "1.0.78"
-  },
-  {
-    "name": "Star Wars 79",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/11/1977",
-    "version": "1.0.79"
-  },
-  {
-    "name": "Star Wars 80",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/12/1977",
-    "version": "1.0.80"
-  },
-  {
-    "name": "Star Wars 81",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/13/1977",
-    "version": "1.0.81"
-  },
-  {
-    "name": "Star Wars 82",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/14/1977",
-    "version": "1.0.82"
-  },
-  {
-    "name": "Star Wars 83",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/15/1977",
-    "version": "1.0.83"
-  },
-  {
-    "name": "Star Wars 84",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/16/1977",
-    "version": "1.0.84"
-  },
-  {
-    "name": "Star Wars 85",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/17/1977",
-    "version": "1.0.85"
-  },
-  {
-    "name": "Star Wars 86",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/18/1977",
-    "version": "1.0.86"
-  },
-  {
-    "name": "Star Wars 87",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/19/1977",
-    "version": "1.0.87"
-  },
-  {
-    "name": "Star Wars 88",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/20/1977",
-    "version": "1.0.88"
-  },
-  {
-    "name": "Star Wars 89",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/21/1977",
-    "version": "1.0.89"
-  },
-  {
-    "name": "Star Wars 90",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/22/1977",
-    "version": "1.0.90"
-  },
-  {
-    "name": "Star Wars 91",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/23/1977",
-    "version": "1.0.91"
-  },
-  {
-    "name": "Star Wars 92",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/24/1977",
-    "version": "1.0.92"
-  },
-  {
-    "name": "Star Wars 93",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/25/1977",
-    "version": "1.0.93"
-  },
-  {
-    "name": "Star Wars 94",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/26/1977",
-    "version": "1.0.94"
-  },
-  {
-    "name": "Star Wars 95",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/27/1977",
-    "version": "1.0.95"
-  },
-  {
-    "name": "Star Wars 96",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/28/1977",
-    "version": "1.0.96"
-  },
-  {
-    "name": "Star Wars 97",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/29/1977",
-    "version": "1.0.97"
-  },
-  {
-    "name": "Star Wars 98",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/30/1977",
-    "version": "1.0.98"
-  },
-  {
-    "name": "Star Wars 99",
-    "author": "George Lucas and Disney",
-    "creationDate": "8/31/1977",
-    "version": "1.0.99"
-  },
-  {
-    "name": "Star Wars 100",
-    "author": "George Lucas and Disney",
-    "creationDate": "9/1/1977",
-    "version": "1.0.100"
-  }
-]`
+const JSON_SEED_DATA = `[{"uuid":"1c2b0d0a-934f-4f6d-81f9-116112445ed6","name":"Konklab","description":"infrastructure","useruuid":"091d7c91-91b1-4111-9fa2-9fbdfde7618c","creationdate":"4/18/2022","version":"161.43.18.154"},
+{"uuid":"c0aef91c-855d-48f1-bce6-15bb6100913b","name":"Vagram","description":"Ameliorated","useruuid":"110aa9a1-e569-4e8e-9677-4254c9f603fd","creationdate":"8/24/2021","version":"214.108.118.35"},
+{"uuid":"ed5e73a0-6ebe-4bcd-9bb4-df9231930783","name":"Tresom","description":"solution","useruuid":"530982dc-e281-4f59-acb7-07a8481244c1","creationdate":"1/22/2022","version":"37.143.222.174"},
+{"uuid":"d17c3974-575c-4b37-aff7-c4f89eb23263","name":"Alpha","description":"contextually-based","useruuid":"577e1933-d959-4c28-a1b5-d9598b1be87b","creationdate":"10/26/2021","version":"76.42.155.33"},
+{"uuid":"b4936aca-174c-4f60-a728-76878581ca6f","name":"Veribet","description":"throughput","useruuid":"b531d424-994e-45f2-a37a-e805e8b28067","creationdate":"10/1/2021","version":"227.210.34.4"},
+{"uuid":"0203e880-ad38-4ec7-93e4-be2e153ca782","name":"Konklab","description":"Progressive","useruuid":"45d605de-1c9c-4ece-9cfa-6bee532f6192","creationdate":"5/29/2022","version":"73.207.160.117"},
+{"uuid":"0f958851-2d4b-400f-95f0-d695fd7fdadf","name":"Asoka","description":"Integrated","useruuid":"89669963-def3-4fa2-90f5-41706bfbd03b","creationdate":"12/10/2021","version":"88.41.79.27"},
+{"uuid":"c760c21a-a9e3-4d1e-b3e9-a3d2f48d4a2a","name":"Tresom","description":"user-facing","useruuid":"71a1be32-4375-464d-bf9f-30aef24e1d23","creationdate":"2/25/2022","version":"56.86.72.59"},
+{"uuid":"dc2e25d1-a789-479c-b5d5-4a6ecf4ba9ea","name":"Stim","description":"Configurable","useruuid":"1d620472-9247-42b8-aad2-273b7466f5f9","creationdate":"11/11/2021","version":"191.122.122.120"},
+{"uuid":"ede9b32b-00e6-4002-ab1b-a35767cbfa74","name":"Hatity","description":"national","useruuid":"e8d7aa4f-de05-45ca-9984-6d7262c8a5bd","creationdate":"10/26/2021","version":"253.141.42.148"},
+{"uuid":"d0e5ac1d-48b2-4c0c-adda-8e5490d43839","name":"Bytecard","description":"Optional","useruuid":"81247d93-e4eb-4539-abc0-63f42a1ead12","creationdate":"1/19/2022","version":"41.232.156.5"},
+{"uuid":"b44fc149-fce6-4f6d-9388-436869005f04","name":"Ventosanzap","description":"systematic","useruuid":"3c9a319b-0a9c-4f30-b5bc-6a80b7998973","creationdate":"1/10/2022","version":"230.9.22.113"},
+{"uuid":"ad7263a4-dc11-4870-b174-2741784393bb","name":"Cardguard","description":"non-volatile","useruuid":"2caa24b9-8801-451a-ba5c-8c137f182fc1","creationdate":"5/14/2022","version":"167.196.24.97"},
+{"uuid":"342ab4c7-6599-45cf-85d9-3790afd13c0d","name":"Voyatouch","description":"Switchable","useruuid":"4e61ae5e-10ee-40db-bd0e-08c69e701ef1","creationdate":"12/26/2021","version":"60.27.116.38"},
+{"uuid":"5e2107c2-9857-4169-9d94-a7c92997c0ea","name":"Biodex","description":"definition","useruuid":"bf984d3e-da7d-40a1-824d-342184f35ed2","creationdate":"8/23/2021","version":"120.25.171.220"},
+{"uuid":"a0d46952-17f4-4d7f-97d5-4738f954d103","name":"Stim","description":"Automated","useruuid":"d956e68d-527d-4bef-ab7c-4fc5d5aa2036","creationdate":"4/16/2022","version":"5.109.27.96"},
+{"uuid":"3f9a6f1e-3f2f-4c14-9ebd-fb85d4e7e8bb","name":"Alpha","description":"dynamic","useruuid":"804ad00e-bbeb-4629-8d8e-ebf215c6e1c3","creationdate":"11/18/2021","version":"182.17.147.239"},
+{"uuid":"dd0fb953-5279-439b-82d0-32b34affb161","name":"Fix San","description":"Customer-focused","useruuid":"e5eb3fd5-bbc3-4a0e-a564-67ac264a3f15","creationdate":"4/19/2022","version":"179.184.89.105"},
+{"uuid":"5feb2162-c4b5-4598-a6f0-a4691de99d90","name":"Hatity","description":"context-sensitive","useruuid":"0ed9f380-080d-49b1-a21a-e05431363047","creationdate":"5/15/2022","version":"23.127.121.70"},
+{"uuid":"7949491f-40a6-4c6a-a98c-e8e3668f5fd1","name":"Pannier","description":"logistical","useruuid":"839de36f-c2a7-411e-afa7-258002dc0e23","creationdate":"7/31/2021","version":"70.91.141.30"},
+{"uuid":"eb591ba4-fe89-46a3-b2bc-99ceff333135","name":"Ventosanzap","description":"exuding","useruuid":"b4fb3755-dbb7-4ba1-9160-37acc4acdb89","creationdate":"11/20/2021","version":"206.110.5.213"},
+{"uuid":"48e3ea22-30e8-4b4a-ba26-9773b36034a4","name":"Zontrax","description":"non-volatile","useruuid":"ae9c37ba-3875-4431-b9bc-ba3bc6398b1a","creationdate":"3/22/2022","version":"79.177.44.5"},
+{"uuid":"bad6f896-9757-4284-8a85-11b5f581b9a6","name":"Fintone","description":"reciprocal","useruuid":"59176a8e-be0b-4ea1-8116-c89525429fac","creationdate":"10/1/2021","version":"216.76.95.166"},
+{"uuid":"9089fb0b-9c01-41ef-b186-cbea114813a9","name":"Transcof","description":"systematic","useruuid":"13992eac-1744-4081-aafd-a8f85632f029","creationdate":"2/14/2022","version":"247.234.232.189"},
+{"uuid":"4b019ab7-5add-4752-aa95-c7f2bc188e3c","name":"Subin","description":"support","useruuid":"2faca326-0798-4318-8330-c5d22a5f1497","creationdate":"7/3/2022","version":"55.26.215.254"},
+{"uuid":"1ebe0510-7f99-447d-8884-eb6350012f77","name":"Job","description":"success","useruuid":"858a658f-ab2d-43d6-a65e-d4e55545d0ab","creationdate":"11/6/2021","version":"234.172.107.25"},
+{"uuid":"b09231ff-f7bd-49c6-8f22-2f3cca84f4f1","name":"Lotstring","description":"Digitized","useruuid":"de2e4cfb-09b8-4fb3-8e7d-dba65f77388f","creationdate":"7/21/2022","version":"1.21.58.210"},
+{"uuid":"f959cb00-a26a-4e24-a582-2a20fa5331c0","name":"Cookley","description":"Switchable","useruuid":"9a1d8242-e988-4e90-b0f5-5acdaee97f63","creationdate":"5/4/2022","version":"131.37.233.114"},
+{"uuid":"d786f606-ec85-4298-9b8d-73fc02ee2655","name":"Voyatouch","description":"Universal","useruuid":"c0c7a802-84f8-416c-b17d-3f4704db634a","creationdate":"11/17/2021","version":"196.143.159.40"},
+{"uuid":"06abbffc-87ba-4d86-9be5-fdb8731b7836","name":"Zathin","description":"national","useruuid":"7afa3637-b571-4629-8efd-c68ab972c076","creationdate":"1/31/2022","version":"56.226.249.141"},
+{"uuid":"0a6331f3-bf4c-49e2-a854-dc72443547e8","name":"Home Ing","description":"empowering","useruuid":"7ac699ab-bd5d-4f98-a806-1fdc080d6c80","creationdate":"1/26/2022","version":"36.176.61.201"},
+{"uuid":"95be9a95-739e-4857-aa3c-772079456278","name":"Mat Lam Tam","description":"motivating","useruuid":"4f67134f-27a6-407f-83b9-41cdc2803d70","creationdate":"11/29/2021","version":"89.235.88.0"},
+{"uuid":"007ca909-685f-43a9-961d-75847f953f41","name":"Duobam","description":"transitional","useruuid":"02f538ee-6486-4088-8226-883afdb32eeb","creationdate":"12/19/2021","version":"106.183.189.202"},
+{"uuid":"67ccadd0-606c-4dd6-86b3-5a9d549c4689","name":"Otcom","description":"synergy","useruuid":"70757e55-64b6-4945-a650-dbddca0a01ed","creationdate":"1/17/2022","version":"11.148.2.178"},
+{"uuid":"daa4c639-dcf8-44bd-bb2c-cd55a657cc11","name":"Hatity","description":"Polarised","useruuid":"76a0496a-1610-4a90-831d-4a3274e0c1e4","creationdate":"1/31/2022","version":"118.142.125.174"},
+{"uuid":"cc5bd056-54e9-49f0-aac3-a6d394afa4ad","name":"It","description":"reciprocal","useruuid":"6a9ffa34-2952-470c-84ad-6ac364db7fb3","creationdate":"1/18/2022","version":"218.203.222.82"},
+{"uuid":"00a25535-9e0d-4ea1-a72f-e7bbc3ce39ce","name":"Konklux","description":"Reduced","useruuid":"9d0b1bd4-a5cc-4c17-93b4-a6e53881d97e","creationdate":"8/6/2021","version":"1.127.115.192"},
+{"uuid":"85b7ee15-beab-426e-a68b-8860b4d05828","name":"Cookley","description":"budgetary management","useruuid":"877d4ce3-27aa-4605-8253-fa6a25e634dc","creationdate":"6/24/2022","version":"183.70.69.1"},
+{"uuid":"85ab12d9-467c-4ee4-8e93-bdd0dc046124","name":"Tampflex","description":"context-sensitive","useruuid":"14dd6f63-37b4-4076-b6b0-e22012de7f89","creationdate":"6/2/2022","version":"227.134.255.69"},
+{"uuid":"b3377fd9-b85c-4bbc-a2a1-d40a60f82e2e","name":"Flexidy","description":"didactic","useruuid":"50b0d23e-ae73-4eaf-a9a3-e228f7d7190b","creationdate":"6/23/2022","version":"170.255.245.28"},
+{"uuid":"7f54f88b-bd68-489f-a8a6-b8e7cc0b5349","name":"Ventosanzap","description":"intermediate","useruuid":"b5405b29-1acc-4349-a5fb-c14b9f0b1abd","creationdate":"8/12/2021","version":"17.249.174.243"},
+{"uuid":"6f39f07f-ce4a-4280-8f91-d81ff92d2d0e","name":"Transcof","description":"local","useruuid":"94d0fc48-7155-4380-a24b-0f90e934ef7f","creationdate":"9/2/2021","version":"177.59.1.202"},
+{"uuid":"cf3a77b2-17d8-4dc4-b5df-75f481f9cb5d","name":"Aerified","description":"Up-sized","useruuid":"1a73080e-8535-48b2-8281-6c41415130fe","creationdate":"5/28/2022","version":"69.162.220.48"},
+{"uuid":"7c95087f-7bfe-4d26-9f8f-fed7d87f4850","name":"Trippledex","description":"hardware","useruuid":"79bbb1f6-e5df-4d13-84bd-ee5502bebc5e","creationdate":"12/27/2021","version":"146.73.190.110"},
+{"uuid":"8dc44072-ccbe-4686-a517-38cc9b5b5763","name":"Keylex","description":"Programmable","useruuid":"f3826c4b-de87-4a07-b2aa-453b99853ee4","creationdate":"11/26/2021","version":"177.98.19.72"},
+{"uuid":"0475a3f1-3090-4511-aaeb-5cb61c946c65","name":"Flexidy","description":"interface","useruuid":"7491f7fe-764f-4f88-86b7-a3a093bb2c73","creationdate":"9/15/2021","version":"139.49.164.248"},
+{"uuid":"ebd08a8a-29b9-47b6-b30d-c1a5ada8cfa8","name":"Konklab","description":"budgetary management","useruuid":"cd40d560-19d5-4c14-9904-b63729414aa9","creationdate":"12/6/2021","version":"105.197.97.118"},
+{"uuid":"db504531-b127-428b-b831-5a1f7fa015f0","name":"Regrant","description":"website","useruuid":"d34c2d43-2e99-4931-aa71-8701d47f7330","creationdate":"7/27/2021","version":"97.236.123.249"},
+{"uuid":"3a0c9094-ab22-43bd-acab-580d5bd26ab0","name":"Voyatouch","description":"next generation","useruuid":"2247f8f4-7159-40aa-8e5a-fc61af0172e2","creationdate":"2/5/2022","version":"60.2.230.219"},
+{"uuid":"c15c1cdf-27fe-48ae-816a-6fb90b4728a4","name":"Home Ing","description":"Future-proofed","useruuid":"12741f1b-582c-4cf7-9f5a-41836e451760","creationdate":"6/24/2022","version":"246.72.82.204"},
+{"uuid":"1f2fabf5-113f-44c1-8193-6df2935092d7","name":"Flowdesk","description":"capacity","useruuid":"dfad9549-37c6-47be-9e14-89588970fbf7","creationdate":"12/24/2021","version":"80.232.66.172"},
+{"uuid":"c1eaa9db-f3a2-4b0b-b9cb-f52be560f7db","name":"Voyatouch","description":"Reverse-engineered","useruuid":"ea3cc7da-07ce-4fb7-a182-a1be6d019b30","creationdate":"6/4/2022","version":"97.39.30.222"},
+{"uuid":"e3016b30-1557-43b3-89c1-1fc753955854","name":"Domainer","description":"benchmark","useruuid":"2e10566f-f496-43de-924c-625984524623","creationdate":"5/10/2022","version":"220.13.152.49"},
+{"uuid":"08d56442-c67d-4fa5-82c5-cebc26445b60","name":"Fix San","description":"asymmetric","useruuid":"99f5e4c2-019e-4944-9e77-caa3f7053eb8","creationdate":"4/3/2022","version":"21.159.245.31"},
+{"uuid":"e3e1086c-fce4-4057-8cb6-1d8f3511551e","name":"Bitchip","description":"productivity","useruuid":"dd323491-02b9-4683-8a50-0049359a0c9c","creationdate":"2/2/2022","version":"148.120.67.21"},
+{"uuid":"70952044-e14d-4eb8-bf5c-29bb900734f8","name":"Solarbreeze","description":"Re-engineered","useruuid":"03fdd29f-e5ec-470b-bbec-dcdb65edc323","creationdate":"9/4/2021","version":"251.15.4.106"},
+{"uuid":"6e56c881-86ef-4349-9210-004d42388de8","name":"Sub-Ex","description":"encoding","useruuid":"59e4cf43-28f2-4e01-aa1b-6229ad3c87c9","creationdate":"2/23/2022","version":"190.244.24.224"},
+{"uuid":"16d879ca-3788-4904-b176-861855f2378a","name":"Bytecard","description":"multi-tasking","useruuid":"004c8079-a211-4d11-ac1a-9c4aa5ce3982","creationdate":"1/6/2022","version":"198.130.16.49"},
+{"uuid":"d2e12beb-b736-4494-81e5-60d4e16137fa","name":"Ronstring","description":"Multi-tiered","useruuid":"f5865333-c6cf-42b9-a551-ba4c14a73af0","creationdate":"3/8/2022","version":"127.98.213.175"},
+{"uuid":"d7542c55-8959-4e67-b869-a73c001699af","name":"Solarbreeze","description":"application","useruuid":"b4d22b4d-b1e7-40ca-abd5-f4f369a8f6b8","creationdate":"8/10/2021","version":"105.147.140.57"},
+{"uuid":"0db1cb00-6ad7-49f5-8aa5-304348563862","name":"Stronghold","description":"disintermediate","useruuid":"f1c4aad1-f7d3-479e-bebe-7e05d1184fa8","creationdate":"7/2/2022","version":"56.90.147.17"},
+{"uuid":"2522103f-d9e3-445b-9ff9-c0ceacbb510a","name":"Konklux","description":"tangible","useruuid":"4638713f-734f-4aac-985c-b4f2a0dd6267","creationdate":"3/3/2022","version":"106.165.18.237"},
+{"uuid":"cfed7aa7-15ee-46c0-ab3e-ecb9e4d88853","name":"Pannier","description":"systemic","useruuid":"3798a071-4ce9-4bb5-a96f-4edfcc3b2959","creationdate":"4/1/2022","version":"247.138.142.228"},
+{"uuid":"5a8d35c0-d05c-446a-99d9-10c52b24dd9a","name":"Mat Lam Tam","description":"needs-based","useruuid":"9ddf088e-e515-4130-b5c6-23db0c1892dc","creationdate":"9/10/2021","version":"101.181.55.61"},
+{"uuid":"8bbc9d2f-5cfc-495f-b469-2f6472ab60f7","name":"Ronstring","description":"Devolved","useruuid":"2e1566f4-708a-4443-82be-e4b62691cdc6","creationdate":"10/1/2021","version":"177.48.128.226"},
+{"uuid":"c56f1188-e39b-40a1-b887-a1797c940ecf","name":"Otcom","description":"Organic","useruuid":"43c7fec7-52eb-44f3-8838-29041f6b71db","creationdate":"11/12/2021","version":"226.33.248.188"},
+{"uuid":"fd13f8fb-c214-4f13-b630-275eb98cc54c","name":"Fixflex","description":"Future-proofed","useruuid":"987c6a56-69ef-40a6-88ad-6b2958c7ab49","creationdate":"3/13/2022","version":"48.237.49.74"},
+{"uuid":"356be21e-761d-49fd-bf27-b30ab62cd3bb","name":"Veribet","description":"Open-source","useruuid":"7a4e52f9-9805-49cf-addf-6b6dbf871107","creationdate":"9/26/2021","version":"166.250.8.80"},
+{"uuid":"98d691da-78e6-41e6-aa0b-eaa94e3f1237","name":"Vagram","description":"cohesive","useruuid":"1edf5e95-92f4-4ed6-8eac-c8a4bb0aa41f","creationdate":"6/3/2022","version":"125.42.210.49"},
+{"uuid":"d13e918b-2a73-4467-a6f6-133b126b6319","name":"Tin","description":"interactive","useruuid":"f4937190-98b2-47e5-8ed7-688c9e0259a4","creationdate":"6/3/2022","version":"213.55.218.240"},
+{"uuid":"6e3bfca8-ded3-490b-a489-6da620a79bf4","name":"Job","description":"user-facing","useruuid":"b8be9282-78ff-416a-b58d-eba74258782a","creationdate":"3/9/2022","version":"27.126.205.81"},
+{"uuid":"eb11dd26-ed6d-4da6-9446-9f0690b2ce3e","name":"Zathin","description":"policy","useruuid":"80abb89a-1ab1-4977-884a-fd3119a124d6","creationdate":"2/3/2022","version":"62.228.136.118"},
+{"uuid":"f1e44b94-3664-4622-aab6-b065011c5d0c","name":"Vagram","description":"hardware","useruuid":"1a2e010d-d80a-4845-9b03-6be865865b77","creationdate":"4/29/2022","version":"143.51.82.77"},
+{"uuid":"ea27246d-96aa-47d7-9d38-29a33750a7b7","name":"Quo Lux","description":"Face to face","useruuid":"ab9a7c01-8ddc-4f74-bc17-c3faeb586ac1","creationdate":"8/22/2021","version":"58.250.118.111"},
+{"uuid":"509fbf1c-176f-4a7a-a0d0-634de7eb1f79","name":"Job","description":"Integrated","useruuid":"37e4d9d2-4f7b-4226-af4b-79e0b8780a21","creationdate":"5/2/2022","version":"72.206.36.78"},
+{"uuid":"79c03627-23f4-4b13-9eb8-a7d6e9421ac3","name":"Toughjoyfax","description":"info-mediaries","useruuid":"65ae2eb1-c0c2-413b-bebc-5f7ecbf7d18d","creationdate":"11/7/2021","version":"118.35.226.65"},
+{"uuid":"badab111-8fca-4451-bf4b-48eba4cac6a2","name":"Gembucket","description":"Ergonomic","useruuid":"3a9468d5-afa6-43d9-9e01-21b414065760","creationdate":"7/28/2021","version":"223.4.175.27"},
+{"uuid":"0831f5eb-1c6e-4236-81dc-cc37d99ec365","name":"Alphazap","description":"modular","useruuid":"bad21a3b-1942-4dc8-911c-fbeec274b284","creationdate":"7/27/2021","version":"247.178.133.147"},
+{"uuid":"dc9dd3bb-a130-44cb-8d62-54384046db55","name":"Bigtax","description":"neural-net","useruuid":"6df05032-845f-4b3b-ac89-d749bad681ba","creationdate":"1/7/2022","version":"61.228.181.18"},
+{"uuid":"729a20b5-e17d-4f9d-ad1b-cf39c40cf6c2","name":"Cardify","description":"Optional","useruuid":"c066a512-8bec-4292-bd26-18088ce8b00c","creationdate":"12/25/2021","version":"102.216.251.81"},
+{"uuid":"8ada3043-ef13-4608-92e5-97b3418ce4e3","name":"Daltfresh","description":"Up-sized","useruuid":"2f1e346c-23d5-488d-94ed-93a6ebbf67c8","creationdate":"1/22/2022","version":"18.165.219.210"},
+{"uuid":"fe581423-5a23-4323-adb6-54672832fb70","name":"Cookley","description":"interface","useruuid":"785aff85-d8b2-4cbb-aaa9-5cddf2d2fb21","creationdate":"2/23/2022","version":"54.228.108.43"},
+{"uuid":"05cbd188-731f-4037-9942-955033a72b3f","name":"Subin","description":"artificial intelligence","useruuid":"04c4731a-7191-4349-8f56-c6585a8bf4ba","creationdate":"2/14/2022","version":"50.31.77.55"},
+{"uuid":"27a019d4-dd9b-4a58-8a89-0521c7545419","name":"Alpha","description":"empowering","useruuid":"a9b664f6-b5a5-4206-81a3-e40fef47ab10","creationdate":"8/3/2021","version":"26.235.251.93"},
+{"uuid":"4da918c1-3df8-47e6-85c5-adcdaa5bd958","name":"Cookley","description":"Enterprise-wide","useruuid":"44211506-648b-460f-a402-8c520b79b9b9","creationdate":"12/20/2021","version":"167.27.229.110"},
+{"uuid":"01cbe140-f810-42cb-ba7e-b99b5fca863d","name":"Flowdesk","description":"service-desk","useruuid":"70c1d3b8-b44a-4cbe-a37d-247482462825","creationdate":"9/7/2021","version":"158.126.8.250"},
+{"uuid":"9db2ad94-06eb-457d-bac0-d181047387e1","name":"Flexidy","description":"eco-centric","useruuid":"09799bf3-f22d-400f-afe3-1dbecc9fdc71","creationdate":"5/28/2022","version":"175.129.62.89"},
+{"uuid":"9c5f62bd-dd47-47fd-a7fd-8bea5ae0bab6","name":"Alphazap","description":"system engine","useruuid":"a082a2d9-e964-4933-aa0e-6b1875305a0f","creationdate":"9/3/2021","version":"164.108.89.235"},
+{"uuid":"4433670a-df30-45f5-9386-82dfb3d020f8","name":"Andalax","description":"Compatible","useruuid":"561c9d0b-6df5-4752-b562-245f1e7a5e4b","creationdate":"6/15/2022","version":"224.254.193.201"},
+{"uuid":"8b996a20-e200-4b5a-a4e2-56fd13ee5164","name":"Zaam-Dox","description":"info-mediaries","useruuid":"34184108-1fc2-4495-82b3-20ea1fe0ad26","creationdate":"3/21/2022","version":"88.37.194.233"},
+{"uuid":"691fd03f-4a80-461e-ba9d-e3a0ba58737e","name":"Namfix","description":"Enterprise-wide","useruuid":"6b8d2bb0-1026-4928-9ea2-ab2f408829a1","creationdate":"9/19/2021","version":"172.242.192.247"},
+{"uuid":"a861b023-386d-4be0-b3a4-9d25714cbfd0","name":"Stim","description":"Exclusive","useruuid":"53f4b013-5174-493a-8f49-f1f4daf25800","creationdate":"4/2/2022","version":"76.156.32.65"},
+{"uuid":"57e6bc5e-e18b-4f0a-be59-ce3939dccff3","name":"Span","description":"Cloned","useruuid":"dc74c00a-ea30-4f60-92fe-aa52219d5d32","creationdate":"3/26/2022","version":"80.216.98.127"},
+{"uuid":"9385811a-4229-494d-833b-d567ea708258","name":"Job","description":"neural-net","useruuid":"c0b83fae-3efc-46bf-b55b-0a9f3fbadc19","creationdate":"2/19/2022","version":"170.117.57.25"},
+{"uuid":"eb6b8dd7-9978-4178-8d96-6988dc182f84","name":"Stronghold","description":"bifurcated","useruuid":"891abad9-ccb8-4887-8ab6-6594c87d112f","creationdate":"7/28/2021","version":"47.58.79.100"},
+{"uuid":"367f6e32-cea0-4a5f-992e-e4a971c198b5","name":"Kanlam","description":"solution","useruuid":"b7ca0cbc-cd28-493b-8dff-7931e2c673cc","creationdate":"10/22/2021","version":"131.30.120.81"},
+{"uuid":"99b4f350-8b4d-45f8-9a86-35e5f0f6717e","name":"Bitchip","description":"benchmark","useruuid":"0f3ce783-1324-4232-9660-3976731dbffc","creationdate":"10/21/2021","version":"93.38.7.144"},
+{"uuid":"3b8aaa53-ef8e-4065-afad-a10cbc567cab","name":"Keylex","description":"grid-enabled","useruuid":"e44e575b-8cd4-4cbc-aeec-c0ca16961bdf","creationdate":"7/29/2021","version":"186.161.164.197"},
+{"uuid":"084641af-7aa1-48ce-82e9-74a66e6cdce6","name":"Cookley","description":"benchmark","useruuid":"0d20d111-6135-4cca-aa2b-9659b5b3e4a8","creationdate":"8/6/2021","version":"93.83.45.157"},
+{"uuid":"b15304c0-d17d-4ea0-8ca8-143b3588185a","name":"Regrant","description":"Enhanced","useruuid":"984c0834-6190-41a1-87ee-f5d452200396","creationdate":"7/18/2022","version":"60.122.41.78"}]`

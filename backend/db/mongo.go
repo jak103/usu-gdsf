@@ -21,6 +21,14 @@ type Mongo struct {
 	games    *mongo.Collection
 }
 
+func (db Mongo) GetGameByID(id string) (*models.Game, error) {
+	var res models.Game
+	if err := db.games.FindOne(context.Background(), bson.M{"uuid": id}).Decode(&res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
 func (db Mongo) GetAllGames() ([]models.Game, error) {
 	games := make([]models.Game, 0)
 
