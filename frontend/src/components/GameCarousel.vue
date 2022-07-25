@@ -1,7 +1,7 @@
 <template>
   <v-card width="100%">
     <v-card-body>
-      <v-carousel>
+      <v-carousel cycle :interval="cycleTime">
         <v-carousel-item v-for="color in colors" :key="color">
           <v-sheet :color="color" height="100%" tile>
             <v-row class="fill-height" align="center" justify="center">
@@ -25,6 +25,7 @@ export default {
 
   data: () => ({
     colors: ['red','orange','yellow','green','blue','indigo', '#7f00ff'],
+    cycleTime: 4000,
   }),
 }
 </script>
