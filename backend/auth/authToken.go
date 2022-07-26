@@ -23,13 +23,13 @@ const (
 type TokenClaims struct {
 	Type       TokenType
 	Expiration int64    
-	UserId     int64    
+	UserId     uint64    
 	UserEmail  string   
 }
 
 type TokenParams struct {
 	Type      TokenType
-	UserId    int64
+	UserId    uint64
 	UserEmail string
 }
 
