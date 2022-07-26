@@ -70,12 +70,16 @@ func GenerateToken(params TokenParams) (string, error) {
 	return encodedToken, nil
 }
 
-func DecodeAndVerifyTokenForUser(token string, userId int64, tokenType TokenType) (*TokenClaims, error) {
+func DecodeAndVerifyToken(token string, tokenType TokenType) (*TokenClaims, error) {
+	if len(token) == 0 {
+		return nil, errors.New("Token cannot be empty")
+	}
+	
 	currentTimestamp := time.Now().UnixMilli()
 	decodedToken, err := base64.RawURLEncoding.DecodeString(token)
 
 	if err != nil {
-		return nil, errors.New("Invalid token encoding")
+		return nil, errors.New("Invalid token")
 	}
 	
 	indexOfDelimeter := bytes.LastIndexByte(decodedToken, byte('|'))
@@ -101,10 +105,6 @@ func DecodeAndVerifyTokenForUser(token string, userId int64, tokenType TokenType
 		return nil, errors.New("Incorrect token type")
 	}
 
-	if claims.UserId != userId {
-		return nil, errors.New("Token does not belong to user")
-	}
-	
 	providedHash, err := hex.DecodeString(string(providedHexHash))
 
 	if err != nil {
