@@ -57,16 +57,18 @@ func (s *Server) setupMiddleware() {
 
 func (s *Server) setupRoutes() {
 	for _, route := range routes {
+		handler := route.handler
+
+		if route.requireAuth {
+			handler = auth.RequireAuthorization(route.handler)
+		}
+		
 		switch route.method {
 		case http.MethodGet:
-			if route.requireAuth {
-				s.echo.GET(route.path, auth.RequireAuthorization(route.handler))
-			} else {
-				s.echo.GET(route.path, route.handler)
-			}
+			s.echo.GET(route.path, handler)
 
 		case http.MethodPost:
-			s.echo.POST(route.path, route.handler)
+			s.echo.POST(route.path, handler)
 
 		default:
 			log.Error("Failed to register unknown method: %v", route.method)
