@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/jak103/usu-gdsf/log"
+	"github.com/jak103/usu-gdsf/auth"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -58,7 +59,11 @@ func (s *Server) setupRoutes() {
 	for _, route := range routes {
 		switch route.method {
 		case http.MethodGet:
-			s.echo.GET(route.path, route.handler)
+			if route.requireAuth {
+				s.echo.GET(route.path, auth.RequireAuthorization(route.handler))
+			} else {
+				s.echo.GET(route.path, route.handler)
+			}
 
 		case http.MethodPost:
 			s.echo.POST(route.path, route.handler)

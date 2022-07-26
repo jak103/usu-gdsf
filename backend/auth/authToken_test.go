@@ -19,8 +19,8 @@ func TestGenerateTokenDecodeAndValidate(t *testing.T) {
 	token, err := GenerateToken(params)
 	assert.Nil(t, err)
 
-	claims, _ := DecodeAndVerifyTokenForUser(token, params.UserId, params.Type)
-
+	claims, _ := DecodeAndVerifyToken(token, params.Type)
+ 
 	assert.Equal(t, claims.Type, params.Type)
 	assert.Equal(t, claims.UserId, params.UserId)
 	assert.Equal(t, claims.UserEmail, params.UserEmail)
@@ -37,7 +37,7 @@ func TestGenerateTokenDecodeAndValidate(t *testing.T) {
 	token, err = GenerateToken(params)
 	assert.Nil(t, err)
 
-	claims, _ = DecodeAndVerifyTokenForUser(token, params.UserId, params.Type)
+	claims, _ = DecodeAndVerifyToken(token, params.Type)
 
 	assert.Equal(t, claims.Type, params.Type)
 	assert.Equal(t, claims.UserId, params.UserId)
@@ -46,6 +46,13 @@ func TestGenerateTokenDecodeAndValidate(t *testing.T) {
 	expectedExperationTime = time.Now().UnixMilli() + config.RefreshTokenLifetimeDays * 24 * 60 * 60 * 1000
 	assert.True(t, claims.Expiration == expectedExperationTime || claims.Expiration == expectedExperationTime - 1)
 }
+
+func TestEmptyToken(t *testing.T) {
+	claims, err := DecodeAndVerifyToken("", ACCESS_TOKEN)
+	assert.Nil(t, claims)
+	assert.NotNil(t, err)
+}
+
 
 func TestBadTokenType(t *testing.T) {
 	params := TokenParams{
@@ -68,7 +75,7 @@ func TestInvalidTokenEncoding(t *testing.T) {
 	token, _ := GenerateToken(params)
 	decodedToken, _ := base64.RawURLEncoding.DecodeString(token)
 
-	claims, err := DecodeAndVerifyTokenForUser(string(decodedToken), params.UserId, params.Type)
+	claims, err := DecodeAndVerifyToken(string(decodedToken), params.Type)
 	assert.Nil(t, claims)
 	assert.NotNil(t, err)
 }
@@ -77,7 +84,7 @@ func TestInvalidTokenFormat(t *testing.T) {
 	fakeToken := "| this is a fake token string"
 	encodedFakeToken := base64.RawURLEncoding.EncodeToString([]byte(fakeToken))
 
-	claims, err := DecodeAndVerifyTokenForUser(encodedFakeToken, 0, ACCESS_TOKEN)
+	claims, err := DecodeAndVerifyToken(encodedFakeToken, ACCESS_TOKEN)
 	assert.Nil(t, claims)
 	assert.NotNil(t, err)
 }
@@ -87,7 +94,7 @@ func TestInvalidClaimsPayload(t *testing.T) {
 	invalidJsonToken := "{\"Type\":0\"Expiration\":1658548929402,\"UserId\":42,\"UserEmail\":\"testing@example.com\"}|c0c7b1bc9c8eaae5ab5732fa5bddf9704fc71fbe3afb6af1a797af20fa0040db"
 	encodedInvalidToken := base64.RawURLEncoding.EncodeToString([]byte(invalidJsonToken))
 
-	claims, err := DecodeAndVerifyTokenForUser(encodedInvalidToken, 42, ACCESS_TOKEN)
+	claims, err := DecodeAndVerifyToken(encodedInvalidToken, ACCESS_TOKEN)
 	assert.Nil(t, claims)
 	assert.NotNil(t, err)
 }
@@ -103,7 +110,7 @@ func TestExpiredToken(t *testing.T) {
 	
 	token := "eyJUeXBlIjowLCJFeHBpcmF0aW9uIjoxNjU4NTQ4NDIzNjg0LCJVc2VySWQiOjQyLCJVc2VyRW1haWwiOiJ0ZXN0aW5nQGV4YW1wbGUuY29tIn18MzllOWI0ZGUyNzY3OGZlZGQyMGYzNzU5MGZjYmIyMDk2NzVjNzAxN2U1YTNmMWQ0MWMxODA2N2IyNWIwYzI0MA"
 
-	claims, err := DecodeAndVerifyTokenForUser(token, 42, ACCESS_TOKEN)
+	claims, err := DecodeAndVerifyToken(token, ACCESS_TOKEN)
 	assert.Nil(t, claims)
 	assert.NotNil(t, err)
 }
@@ -117,33 +124,11 @@ func TestIncorrectTokenType(t *testing.T) {
 
 	token, _ := GenerateToken(params)
 
-	claims, err := DecodeAndVerifyTokenForUser(token, params.UserId, REFRESH_TOKEN)
+	claims, err := DecodeAndVerifyToken(token, REFRESH_TOKEN)
 	assert.Nil(t, claims)
 	assert.NotNil(t, err)
 
-	claims, err = DecodeAndVerifyTokenForUser(token, params.UserId, ACCESS_TOKEN)
-	assert.NotNil(t, claims)
-	assert.Nil(t, err)
-}
-
-func TestIncorrectUserId(t *testing.T) {
-	params := TokenParams{
-		Type: REFRESH_TOKEN,
-		UserId: 123456789,
-		UserEmail: "t|est|ing@example.com",
-	}
-
-	token, _ := GenerateToken(params)
-
-	claims, err := DecodeAndVerifyTokenForUser(token, params.UserId - 1, params.Type)
-	assert.Nil(t, claims)
-	assert.NotNil(t, err)
-
-	claims, err = DecodeAndVerifyTokenForUser(token, params.UserId + 1, params.Type)
-	assert.Nil(t, claims)
-	assert.NotNil(t, err)
-
-	claims, err = DecodeAndVerifyTokenForUser(token, params.UserId, params.Type)
+	claims, err = DecodeAndVerifyToken(token, ACCESS_TOKEN)
 	assert.NotNil(t, claims)
 	assert.Nil(t, err)
 }
@@ -153,7 +138,7 @@ func TestInvalidSignature(t *testing.T) {
 	invalidSignatureToken := "{\"Type\":0,\"Expiration\":1658548929402,\"UserId\":42,\"UserEmail\":\"testing@example.com\"}|c0c7b1bc9c8eaae5ab5732fa5bddf9704fc71fbe3afb6af1a797af20fa0040dg"
 	encodedInvalidToken := base64.RawURLEncoding.EncodeToString([]byte(invalidSignatureToken))
 
-	claims, err := DecodeAndVerifyTokenForUser(encodedInvalidToken, 42, ACCESS_TOKEN)
+	claims, err := DecodeAndVerifyToken(encodedInvalidToken, ACCESS_TOKEN)
 	assert.Nil(t, claims)
 	assert.NotNil(t, err)
 }
@@ -179,11 +164,11 @@ func TestIncorrectSignature(t *testing.T) {
 
 	encodedAlteredToken := base64.RawURLEncoding.EncodeToString([]byte(alteredToken))
 
-	claims, err := DecodeAndVerifyTokenForUser(reencodedToken, params.UserId, params.Type)
+	claims, err := DecodeAndVerifyToken(reencodedToken, params.Type)
 	assert.NotNil(t, claims)
 	assert.Nil(t, err)
 
-	claims, err = DecodeAndVerifyTokenForUser(encodedAlteredToken, params.UserId, params.Type)
+	claims, err = DecodeAndVerifyToken(encodedAlteredToken, params.Type)
 	assert.Nil(t, claims)
 	assert.NotNil(t, err)
 }
