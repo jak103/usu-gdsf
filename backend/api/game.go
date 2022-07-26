@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func game(c echo.Context) error {
+func getGameByID(c echo.Context) error {
 	db, err := db.NewDatabaseFromEnv()
 
 	if err != nil {
@@ -50,7 +50,7 @@ func newGameHandler(c echo.Context) error {
 
 func init() {
 	log.Info("Running game init")
-	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: game})
+	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGameByID})
 	registerRoute(route{method: http.MethodGet, path: "/game", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game/add", handler: newGameHandler})
 }
