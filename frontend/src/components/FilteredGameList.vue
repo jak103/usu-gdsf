@@ -2,14 +2,12 @@
   <v-container fluid>
     <!--This is a drop down if we want it idk-->
       <v-select
-          @change="testFunction"
+          v-on:input="testFunction"
           v-model="filter"
           label="Select a Filter"
           :items="options"
           solo
         ></v-select>
-        this is something
-    {{this.filter}}
     <!-- <v-virtual-scroll> -->
     <v-list v-for="game in this.filteredList">
      <!-- gameOverview="game.gameOverview" rating="game.rating" image="game.image" showGameOverview -->
@@ -29,8 +27,6 @@ export const ratings = {
 export default {
     name: "FilteredGameList",
     data: () => ({
-        something: "This is where we will implement a filtered game list... We will need to pass in props.",
-        // filteredList: getFilteredList()
         filteredList: [],
         options: [
           ratings.MOST_POPULAR,
@@ -39,11 +35,7 @@ export default {
         filter: ratings.MOST_POPULAR
     }),
     methods: {
-        testFunction :function () {
-          console.log("CLICKING CLICKING CLICKING")
-        },
         getFilteredList: function (filter) {
-          console.log("GET FILTEReD LIST")
             if (filter == ratings.MOST_POPULAR) {
               this.filteredList = this.getMostPopular()
             }
@@ -87,6 +79,11 @@ export default {
             }
           ];
         },
+    },
+    watch: {
+      filter : function(filter){
+        this.getFilteredList(filter)
+      }
     },
     components: { GameCard }
 }
