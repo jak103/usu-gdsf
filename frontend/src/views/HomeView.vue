@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <p> Team 2's Frontend</p>
     <v-row class="ma-3">
       <!-- Carousel -->
       <GameCarousel></GameCarousel>
