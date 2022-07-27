@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"go.mongodb.org/mongo-driver/bson"
@@ -19,6 +20,19 @@ type Mongo struct {
 	client   *mongo.Client
 	database *mongo.Database
 	games    *mongo.Collection
+}
+
+func (db Mongo) GetGameByID(id string) (*models.Game, error) {
+	fmt.Printf(id)
+	uuidID, err := uuid.Parse(id)
+	if err != nil {
+		return nil, err
+	}
+	var res models.Game
+	if err := db.games.FindOne(context.Background(), bson.M{"id": uuidID}).Decode(&res); err != nil {
+		return nil, err
+	}
+	return &res, nil
 }
 
 func (db Mongo) GetAllGames() ([]models.Game, error) {
@@ -84,7 +98,6 @@ func (db *Mongo) Connect() error {
 		log.Debug("No game records currently exist. Seeding the games record collection...")
 
 		docs := []interface{}{}
-
 		for _, v := range CreateGamesFromJson() {
 			doc, err := bson.Marshal(v)
 			if err != nil {

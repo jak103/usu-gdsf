@@ -1,6 +1,9 @@
 package db
 
 import (
+	"encoding/json"
+	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/jak103/usu-gdsf/log"
@@ -11,6 +14,17 @@ var _ Database = (*Mock)(nil)
 
 type Mock struct {
 	games map[string]models.Game
+}
+
+func (db Mock) GetGameByID(id string) (*models.Game, error) {
+	if id != "" {
+		bs, _ := json.Marshal(db.games)
+		fmt.Println(string(bs))
+		if game, ok := db.games[id]; ok {
+			return &game, nil
+		}
+	}
+	return nil, errors.New("mockdb: game not found")
 }
 
 func (db Mock) GetAllGames() ([]models.Game, error) {
@@ -40,3 +54,7 @@ func (db Mock) Connect() error {
 func (db Mock) Disconnect() error {
 	return nil
 }
+
+// func init(){
+
+// }

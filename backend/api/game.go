@@ -8,8 +8,22 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func game(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Successful game get!")
+func getGameByID(c echo.Context) error {
+	db, err := db.NewDatabaseFromEnv()
+
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return err
+	}
+	gameID := c.Param("id")
+
+	if result, err := db.GetGameByID(gameID); err != nil {
+		log.Error("An error occurred while getting game records: %v", err)
+		return err
+	} else {
+		return c.JSON(http.StatusOK, []interface{}{result})
+	}
+
 }
 
 func getAllGames(c echo.Context) error {
@@ -36,7 +50,7 @@ func newGameHandler(c echo.Context) error {
 
 func init() {
 	log.Info("Running game init")
-	registerRoute(route{method: http.MethodGet, path: "/game", handler: game})
-	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
-	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
+	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGameByID})
+	registerRoute(route{method: http.MethodGet, path: "/game", handler: getAllGames})
+	registerRoute(route{method: http.MethodPost, path: "/game/add", handler: newGameHandler})
 }
