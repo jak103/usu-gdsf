@@ -3,7 +3,7 @@
     <p> Team 1's Frontend</p>
     <v-row class="ma-3">
       <!-- Carousel -->
-      <GameCarousel></GameCarousel>
+      <GameCarousel :screenshotUrls="['https://i.ytimg.com/vi/-Gq2S0AXjNw/mqdefault.jpg']"></GameCarousel>
     </v-row>
 
     <v-divider></v-divider>

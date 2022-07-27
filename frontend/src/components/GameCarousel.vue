@@ -1,9 +1,9 @@
 <template>
-  <v-card width="100%">
-    <v-card-text>
-      This is where the vuetify carousel will be implemented.
-    </v-card-text>
-  </v-card>
+  <v-carousel cycle>
+    <v-carousel-item v-for="url in screenshotUrls">
+      <img :src="url">
+    </v-carousel-item>
+  </v-carousel>
 
 </template>
 
@@ -12,7 +12,10 @@ export default {
   name: 'GameCarousel',
 
   data: () => ({
-
+      
   }),
+
+  props: ["screenshotUrls"]
+  
 }
 </script>
