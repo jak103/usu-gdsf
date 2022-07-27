@@ -21,6 +21,11 @@ type Mongo struct {
 	games    *mongo.Collection
 }
 
+func (db Mongo) AddGame(game models.Game) error {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (db Mongo) GetAllGames() ([]models.Game, error) {
 	games := make([]models.Game, 0)
 

@@ -18,7 +18,7 @@ var connection Database
 
 type Database interface {
 	GetAllGames() ([]models.Game, error)
-
+	AddGame(models.Game) error
 	Disconnect() error
 	Connect() error
 }

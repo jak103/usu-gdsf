@@ -13,6 +13,11 @@ type Mock struct {
 	games map[string]models.Game
 }
 
+func (db Mock) AddGame(game models.Game) error {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (db Mock) GetAllGames() ([]models.Game, error) {
 	games := make([]models.Game, 0)
 

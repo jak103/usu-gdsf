@@ -16,6 +16,12 @@ type Firestore struct {
 	client *firestore.Client
 }
 
+// AddGame Add a new game to the remote database
+func (db Firestore) AddGame(game models.Game) error {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (db Firestore) GetAllGames() ([]models.Game, error) {
 	games := make([]models.Game, 0)
 	gc := db.client.Collection("games")
