@@ -32,7 +32,7 @@ export default {
           ratings.MOST_POPULAR,
           ratings.TOP_RATED
         ], 
-        filter: ratings.MOST_POPULAR
+        filter: ""
     }),
     methods: {
         getFilteredList: function (filter) {
