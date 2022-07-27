@@ -1,9 +1,27 @@
 <template>
   <v-container>
-    <p> Team 1's Frontend</p>
+    <v-row>
+      <v-card height="200" width="2000" color="#10243c">
+        <p class="text-center font-weight-thin" style="color:#FFFFFF;font-size: 100px">
+          USU Game Dev Store Front
+        </p>
+      </v-card>
+    </v-row>
     <v-row class="ma-3">
+      <v-col>
+        <v-card height="300">
+          Something else here
+        </v-card>
+      </v-col>
       <!-- Carousel -->
-      <GameCarousel :screenshotUrls="['https://i.ytimg.com/vi/-Gq2S0AXjNw/mqdefault.jpg']"></GameCarousel>
+      <v-col>
+        <GameCarousel :screenshotUrls="['https://i.ytimg.com/vi/-Gq2S0AXjNw/mqdefault.jpg', 'https://www.techspot.com/images2/news/bigimage/2016/02/2016-02-11-image.jpg']"></GameCarousel>
+      </v-col>
+      <v-col>
+        <v-card height="300">
+          Something else here
+        </v-card>
+      </v-col>    
     </v-row>
 
     <v-divider></v-divider>

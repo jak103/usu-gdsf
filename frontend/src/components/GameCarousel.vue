@@ -1,10 +1,9 @@
 <template>
-  <v-carousel cycle>
-    <v-carousel-item v-for="url in screenshotUrls">
-      <img :src="url">
-    </v-carousel-item>
-  </v-carousel>
-
+    <v-carousel cycle height="auto" hide-delimiters>
+      <v-carousel-item v-for="url in screenshotUrls">
+        <v-img :src="url" contain max-height="300"></v-img>
+      </v-carousel-item>
+    </v-carousel>
 </template>
 
 <script>
@@ -16,6 +15,6 @@ export default {
   }),
 
   props: ["screenshotUrls"]
-  
+
 }
 </script>
