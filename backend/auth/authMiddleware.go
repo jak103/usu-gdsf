@@ -10,14 +10,24 @@ import (
 
 func RequireAuthorization(handler echo.HandlerFunc) echo.HandlerFunc {
 	return func(ctx echo.Context) error {
-		authorizationHeader := ctx.Request().Header.Get("Authorization")
-		splitHeader := strings.Split(authorizationHeader, " ")
-		
-		if len(splitHeader) != 2 || strings.ToLower(splitHeader[0]) != "bearer" {
-			return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized: Invalid Authorization header")
+		var token string
+
+		if authCookie, err := ctx.Cookie("accessToken"); err == nil {
+			token = authCookie.Value
+		} else if authHeader := ctx.Request().Header.Get("Authorization"); authHeader != "" {
+			splitHeader := strings.Split(authHeader, " ")
+			
+			if len(splitHeader) != 2 || strings.ToLower(splitHeader[0]) != "bearer" {
+				return echo.NewHTTPError(http.StatusUnauthorized,
+					"Unauthorized: Invalid Authorization header")
+			}
+
+			token = splitHeader[1]
+		} else {
+			return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized: No access token provided")
 		}
 		
-		tokenClaims, err := DecodeAndVerifyToken(splitHeader[1], ACCESS_TOKEN)
+		tokenClaims, err := DecodeAndVerifyToken(token, ACCESS_TOKEN)
 		
 		if err != nil {
 			return echo.NewHTTPError(http.StatusUnauthorized, fmt.Sprintf("Unauthorized: %s", err))
