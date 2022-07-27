@@ -23,6 +23,23 @@ type Database interface {
 	Connect() error
 }
 
+// IdExists Helper function to check if given ID already exists in the database
+func IdExists(id uint64) (bool, error) {
+	_, exists, err := FindById(id)
+	return exists, err
+}
+
+// FindById Find a game with the given ID in the database
+func FindById(id uint64) (models.Game, bool, error) {
+	games, err := connection.GetAllGames()
+	for _, game := range games {
+		if game.Id == id {
+			return game, true, err
+		}
+	}
+	return models.Game{}, false, err
+}
+
 func NewDatabaseFromEnv() (Database, error) {
 	if connection == nil {
 		runningEnv, wasSet := os.LookupEnv("RUN_ENV")

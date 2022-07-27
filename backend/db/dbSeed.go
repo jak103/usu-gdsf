@@ -3,8 +3,8 @@ package db
 import (
 	"encoding/json"
 
-	"github.com/jak103/usu-gdsf/models"
 	"github.com/jak103/usu-gdsf/log"
+	"github.com/jak103/usu-gdsf/models"
 )
 
 func CreateGamesFromJson() []models.Game {
@@ -19,6 +19,7 @@ func CreateGamesFromJson() []models.Game {
 	return result
 }
 
+// TODO add ID to seed data
 const JSON_SEED_DATA = `[
   {
     "name": "Star Wars 1",
