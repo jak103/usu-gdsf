@@ -22,7 +22,7 @@ func main() {
 
 	if err := setupDatabaseConnection(); err != nil {
 		log.WithError(err).Error("Error setting up database connection...")
-		panic("Database was not loaded correctly...")
+		panic("Database not connected")
 	}
 
 	go server.Start()
@@ -33,7 +33,7 @@ func main() {
 }
 
 func setupDatabaseConnection() error {
-	db, err := db.NewDatabaseFromEnv();
+	db, err := db.NewDatabaseFromEnv()
 
 	if err != nil {
 		log.WithError(err).Error("Error starting database...")
