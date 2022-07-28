@@ -1,12 +1,9 @@
 package models
 
-import "time"
-
 type Game struct {
-	Id           uint64
 	Name         string
 	Author       string
-	CreationDate time.Time
+	CreationDate string
 	Version      string
 	Tags         []string
 	downloads    uint64
