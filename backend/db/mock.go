@@ -1,9 +1,7 @@
 package db
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
 
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
@@ -17,8 +15,6 @@ type Mock struct {
 
 func (db *Mock) GetGameByID(id string) (*models.Game, error) {
 	if id != "" {
-		bs, _ := json.Marshal(db.games)
-		fmt.Println(string(bs))
 		if game, ok := db.games[id]; ok {
 			return &game, nil
 		}
