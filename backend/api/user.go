@@ -26,5 +26,10 @@ func init() {
 
 	registerRoute(route{method: http.MethodGet, path: "/user", handler: user})
 	registerRoute(route{method: http.MethodGet, path: "/user/register", handler: register})
-	registerRoute(route{method: http.MethodGet, path: "user/downloads", handler: downloads})
+	registerRoute(route{
+		method: http.MethodGet, 
+		path: "user/downloads", 
+		handler: downloads,
+		requireAuth: true,
+	})
 }
