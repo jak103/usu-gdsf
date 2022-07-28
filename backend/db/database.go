@@ -41,7 +41,12 @@ func NewDatabaseFromEnv() (Database, error) {
 			log.Error("Unknown RUN_ENV set %v", runningEnv)
 			return nil, errors.New("unknown RUN_ENV")
 		}
-	}
 
+		err := connection.Connect()
+		if err != nil {
+			log.WithError(err).Error("Could not connect to database")
+			return nil, err
+		}
+	}
 	return connection, nil
 }

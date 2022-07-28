@@ -77,7 +77,7 @@ func newGameHandler(c echo.Context) error {
 	// register new route with ID
 	registerRoute(route{method: http.MethodGet, path: fmt.Sprintf("/game/%s", id), handler: game})
 
-	// TODO return successful game add view
+	// TODO return successful game add data
 	return c.JSON(http.StatusOK, "New game handler")
 }
 
@@ -101,6 +101,6 @@ func init() {
 		if getIdErr != nil {
 			continue
 		}
-		registerRoute(route{method: http.MethodGet, path: fmt.Sprintf("/game/%s", gameID), handler: game})
+		registerRoute(route{method: http.MethodGet, path: fmt.Sprintf("/info/%s", gameID), handler: game})
 	}
 }
