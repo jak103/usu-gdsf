@@ -9,13 +9,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var s Server = *NewServer(&sync.WaitGroup{})
-
-func init() {
-	s.Start()
-}
-
 func AssertResponseCode(t *testing.T, method string, path string, expectedCode int) bool {
+	var s Server = *NewServer(&sync.WaitGroup{})
+	s.Start()
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(method, path, nil)
 	s.echo.ServeHTTP(recorder, request)

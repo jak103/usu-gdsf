@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"os"
 	"time"
-
+	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"go.mongodb.org/mongo-driver/bson"
@@ -121,7 +121,7 @@ func (db *Mongo) Disconnect() error {
 
 // connect allows the user to connect to the database
 func (db *Mongo) Connect() error {
-	client, err := mongo.NewClient(options.Client().ApplyURI(os.Getenv("MONGO_URI")))
+	client, err := mongo.NewClient(options.Client().ApplyURI(config.MongoUri))
 	if err != nil {
 		log.WithError(err).Error("Failed to create mongo client")
 		return err

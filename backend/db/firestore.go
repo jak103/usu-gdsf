@@ -1,8 +1,9 @@
 package db
 
 import (
-	"cloud.google.com/go/firestore"
 	"context"
+	"cloud.google.com/go/firestore"
+	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"google.golang.org/api/iterator"
@@ -98,7 +99,7 @@ func (db *Firestore) Disconnect() error {
 // Connect allows the user to connect to the database
 func (db *Firestore) Connect() error {
 	// Sets your Google Cloud Platform project ID.
-	projectID := os.Getenv("FIRESTORE_PROJECT_ID")
+	projectID := config.FirestoreProjectId
 
 	client, err := firestore.NewClient(context.Background(), projectID)
 	if err != nil {
