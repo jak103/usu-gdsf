@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar color="tangerine">
+    <v-toolbar color=teal>
       Game Dev Store
       <v-btn icon :to="`/`">
         <v-icon>

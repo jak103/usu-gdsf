@@ -5,7 +5,7 @@
 		<v-card>
 			{{ rating }}
 			<v-img width="200" :src="image"></v-img>
-			<router-link :to="{ name: 'info', params: { id: '2' }}">To another game</router-link>
+			<router-link :to="{ name: 'info', params: { id: '2' }}">To a different game</router-link>
 	<!-- Title -->
 	<!-- Ratings -->
 	<!-- Overview: Image -->
