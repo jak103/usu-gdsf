@@ -9,5 +9,5 @@ type Game struct {
 	CreationDate time.Time
 	Version      string
 	Tags         []string
-	downloads	 uint64
+	downloads    uint64
 }
