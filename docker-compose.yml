@@ -42,5 +42,13 @@ services:
     ports:
       - '27017-27019:27017-27019'
 
+  gcs:
+    image: fsouza/fake-gcs-server
+    container_name: cloud-storage
+    volumes:
+      - gcs-volume:/data
+    ports:
+      - 4443:4443
+
 volumes:
   mongo-volume:
