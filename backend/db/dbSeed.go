@@ -19,7 +19,6 @@ func CreateGamesFromJson() []models.Game {
 	return result
 }
 
-// TODO add ID to seed data
 const JSON_SEED_DATA = `[
   {
     "name": "Star Wars 1",

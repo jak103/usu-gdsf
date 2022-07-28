@@ -2,7 +2,9 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"os"
 	"time"
 
@@ -21,9 +23,63 @@ type Mongo struct {
 	games    *mongo.Collection
 }
 
-func (db Mongo) AddGame(game models.Game) error {
-	//TODO implement me
-	panic("implement me")
+func (db Mongo) GetGameID(game models.Game) (string, error) {
+	result := db.database.Collection("games").FindOne(context.Background(), bson.M{
+		// TODO might need to convert game datatypes to mongo datatypes
+		"name":         game.Name,
+		"author":       game.Author,
+		"creationDate": game.CreationDate,
+		"version":      game.Version,
+	}, options.FindOne().SetShowRecordID(true))
+
+	// find error
+	if result.Err() == mongo.ErrNoDocuments {
+		log.Error("No document found in Mongo GetGameID")
+		return "", result.Err()
+	}
+
+	// decode found document
+	raw, err := result.DecodeBytes()
+	if err != nil {
+		log.WithError(err).Error("Cannot decode result in Mongo GetGameID")
+		return "", err
+	}
+
+	// lookup the id in the raw bson data
+	id := raw.Lookup("recordId").String()
+	if id == "" {
+		log.Error("Could not find ID from db data in Mongo GetGameID")
+		return id, errors.New("could not find 'recordId' key in raw Mongo data")
+	}
+	// TODO might need to convert id to hex id
+	return id, nil
+}
+
+func (db Mongo) GetGameByID(id string) (models.Game, error) {
+	// convert hex id to object ID
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.WithError(err).Error("Invalid id in Mongo ID search")
+	}
+
+	// find game with object ID
+	result := db.database.Collection("games").FindOne(context.Background(), bson.M{"_id": objID})
+	game := models.Game{}
+	decodeErr := result.Decode(game)
+	if decodeErr != nil {
+		log.WithError(decodeErr).Error("Mongo decoding Game struct error")
+		return game, decodeErr
+	}
+
+	return game, nil
+}
+
+func (db Mongo) AddGame(game models.Game) (string, error) {
+	insertResult, err := db.database.Collection("games").InsertOne(context.Background(), game)
+	if err != nil {
+		log.WithError(err).Error("Failed to add game to Mongo db")
+	}
+	return insertResult.InsertedID.(primitive.ObjectID).Hex(), nil
 }
 
 func (db Mongo) GetAllGames() ([]models.Game, error) {

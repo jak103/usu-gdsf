@@ -1,8 +1,8 @@
 package api
 
 import (
+	"fmt"
 	"github.com/jak103/usu-gdsf/models"
-	"math/rand"
 	"net/http"
 	"time"
 
@@ -12,15 +12,29 @@ import (
 )
 
 const (
-	// TODO these are placeholder form names for adding a new game ('/game' POST)
-	// TODO match these strings with the view's form names for '/game' POST
+	// TODO these are placeholder form var names for adding a new game
+	// TODO match these strings with the view's form var names for '/game' POST
 	NAME    = "Name"
 	AUTHOR  = "Author"
 	VERSION = "Version"
 )
 
 func game(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Successful game get!")
+	// get id from path
+	id := c.Path()[6:]
+
+	// get game from db with id
+	_db, getDbErr := db.NewDatabaseFromEnv()
+	if getDbErr != nil {
+		return c.JSON(http.StatusInternalServerError, "Database connection error")
+	}
+	game, err := _db.GetGameByID(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Database find game ID error")
+	}
+
+	// TODO return view filled by game details
+	return c.JSON(http.StatusOK, fmt.Sprintf("%s\n%s\n%s\n%s", game.Name, game.Author, game.CreationDate, game.Version))
 }
 
 func getAllGames(c echo.Context) error {
@@ -40,21 +54,9 @@ func getAllGames(c echo.Context) error {
 }
 
 func newGameHandler(c echo.Context) error {
-	// create random uint64 for new game ID
-	var id = rand.Uint64()
-	for {
-		// check for already existing ID
-		exists, _ := db.IdExists(id)
-		if !exists {
-			break
-		} else {
-			id = rand.Uint64()
-		}
-	}
-
-	// create new game db model
+	// create new game model
+	// TODO need a security layer in between the form and our new game struct
 	newGame := models.Game{
-		Id:           id,
 		Name:         c.FormValue(NAME),
 		Author:       c.FormValue(AUTHOR),
 		CreationDate: time.Now().Format("MM/DD/YYYY"),
@@ -62,18 +64,44 @@ func newGameHandler(c echo.Context) error {
 	}
 
 	// Add new game to database
-	_db, dbGetErr := db.NewDatabaseFromEnv()
-	err := _db.AddGame(newGame)
-	// TODO error handling
+	_db, getDbErr := db.NewDatabaseFromEnv()
+	id, err := _db.AddGame(newGame)
 
-	// TODO register new route with ID
+	// error handling
+	if getDbErr != nil {
+		return c.JSON(http.StatusInternalServerError, "Database connection error")
+	}
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Database add game error")
+	}
 
+	// register new route with ID
+	registerRoute(route{method: http.MethodGet, path: fmt.Sprintf("/game/%s", id), handler: game})
+
+	// TODO return successful game add view
 	return c.JSON(http.StatusOK, "New game handler")
 }
 
 func init() {
 	log.Info("Running game init")
-	registerRoute(route{method: http.MethodGet, path: "/game", handler: game})
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
+
+	// register routes for all games from the db
+	log.Info("Creating routes for all games in database")
+	_db, getDbErr := db.NewDatabaseFromEnv()
+	if getDbErr != nil {
+		return
+	}
+	games, getGamesErr := _db.GetAllGames()
+	if getGamesErr != nil {
+		return
+	}
+	for _, v := range games {
+		gameID, getIdErr := _db.GetGameID(v)
+		if getIdErr != nil {
+			continue
+		}
+		registerRoute(route{method: http.MethodGet, path: fmt.Sprintf("/game/%s", gameID), handler: game})
+	}
 }

@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"strconv"
 
 	"github.com/jak103/usu-gdsf/log"
@@ -13,9 +14,23 @@ type Mock struct {
 	games map[string]models.Game
 }
 
-func (db Mock) AddGame(game models.Game) error {
-	//TODO implement me
-	panic("implement me")
+func (db Mock) GetGameID(game models.Game) (string, error) {
+	for i, v := range db.games {
+		if v == game {
+			return i, nil
+		}
+	}
+	return "", errors.New("mockDB: ID couldn't be found with given game")
+}
+
+func (db Mock) GetGameByID(id string) (models.Game, error) {
+	return db.games[id], nil
+}
+
+func (db Mock) AddGame(game models.Game) (string, error) {
+	var id = strconv.Itoa(len(db.games) + 1)
+	db.games[id] = game
+	return id, nil
 }
 
 func (db Mock) GetAllGames() ([]models.Game, error) {

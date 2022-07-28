@@ -1,13 +1,14 @@
 package db
 
 import (
-	"context"
-	"os"
-
 	"cloud.google.com/go/firestore"
+	"context"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"google.golang.org/api/iterator"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"os"
 )
 
 var _ Database = (*Firestore)(nil)
@@ -16,10 +17,45 @@ type Firestore struct {
 	client *firestore.Client
 }
 
-// AddGame Add a new game to the remote database
-func (db Firestore) AddGame(game models.Game) error {
-	//TODO implement me
-	panic("implement me")
+func (db Firestore) GetGameID(game models.Game) (string, error) {
+	// query
+	gc := db.client.Collection("games")
+	q := gc.Where("name", "==", game.Name).Where("author", "==", game.Author)
+	result := q.Where("creationdate", "==", game.CreationDate).Where("version", "==", game.Version)
+	result = result.Limit(1)
+
+	// get id from query result
+	docs, err := result.Documents(context.Background()).GetAll()
+	if err != nil {
+		log.WithError(err).Error("Firestore query error in GetGameID")
+		return "", err
+	}
+	doc := docs[0]
+	return doc.Ref.ID, nil
+}
+
+func (db Firestore) GetGameByID(id string) (models.Game, error) {
+	snapShot, err := db.client.Collection("games").Doc(id).Get(context.Background())
+	if status.Code(err) == codes.NotFound {
+		return models.Game{}, err
+	}
+	game := models.Game{}
+	convErr := snapShot.DataTo(game)
+	if convErr != nil {
+		log.WithError(convErr).Error("Cannot convert firestore snapshot to game struct")
+	}
+	return game, nil
+}
+
+// AddGame Add a new game to the remote database. Returns unique game ID, error.
+func (db Firestore) AddGame(game models.Game) (string, error) {
+	docRef, _, err := db.client.Collection("games").Add(context.Background(), game)
+
+	if err != nil {
+		log.WithError(err).Error("Failed to add game to firestore db")
+		return docRef.ID, err
+	}
+	return docRef.ID, nil
 }
 
 func (db Firestore) GetAllGames() ([]models.Game, error) {
