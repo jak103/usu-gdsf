@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"strconv"
 	"time"
 )
 
@@ -23,15 +24,15 @@ type Mongo struct {
 }
 
 func (db Mongo) GetGameID(game models.Game) (string, error) {
-	result := db.database.Collection("games").FindOne(context.Background(), bson.M{
-		// TODO might need to convert game datatypes to mongo datatypes
+	gc := db.database.Collection("games")
+	result := gc.FindOne(context.Background(), bson.M{
 		"name":         game.Name,
 		"author":       game.Author,
-		"creationDate": game.CreationDate,
+		"creationdate": game.CreationDate,
 		"version":      game.Version,
 	}, options.FindOne().SetShowRecordID(true))
 
-	// find error
+	// handle no doc found error
 	if result.Err() == mongo.ErrNoDocuments {
 		log.Error("No document found in Mongo GetGameID")
 		return "", result.Err()
@@ -45,12 +46,11 @@ func (db Mongo) GetGameID(game models.Game) (string, error) {
 	}
 
 	// lookup the id in the raw bson data
-	id := raw.Lookup("recordId").String()
+	id := strconv.Itoa(int(raw.Lookup("$recordId").AsInt64()))
 	if id == "" {
 		log.Error("Could not find ID from db data in Mongo GetGameID")
 		return id, errors.New("could not find 'recordId' key in raw Mongo data")
 	}
-	// TODO might need to convert id to hex id
 	return id, nil
 }
 
