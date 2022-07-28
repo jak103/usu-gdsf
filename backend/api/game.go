@@ -2,13 +2,12 @@ package api
 
 import (
 	"fmt"
-	"github.com/jak103/usu-gdsf/models"
-	"net/http"
-	"time"
-
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
+	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
+	"net/http"
+	"time"
 )
 
 const (

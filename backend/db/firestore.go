@@ -1,15 +1,15 @@
 package db
 
 import (
-	"context"
 	"cloud.google.com/go/firestore"
+	"context"
 	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"google.golang.org/api/iterator"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"os"
+	_ "os"
 )
 
 var _ Database = (*Firestore)(nil)

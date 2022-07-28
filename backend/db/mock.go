@@ -2,10 +2,10 @@ package db
 
 import (
 	"errors"
-	"strconv"
-
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
+	"reflect"
+	"strconv"
 )
 
 var _ Database = (*Mock)(nil)
@@ -16,7 +16,7 @@ type Mock struct {
 
 func (db Mock) GetGameID(game models.Game) (string, error) {
 	for i, v := range db.games {
-		if v == game {
+		if reflect.DeepEqual(v, game) {
 			return i, nil
 		}
 	}
