@@ -12,6 +12,11 @@ func game(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Successful game get!")
 }
 
+// for downloaded games, this route allows you to play them
+func gameDownload(c echo.Context) error {
+	return c.JSON(http.StatusOK, "Download a game")
+}
+
 func getAllGames(c echo.Context) error {
 	db, err := db.NewDatabaseFromEnv()
 
@@ -37,6 +42,7 @@ func newGameHandler(c echo.Context) error {
 func init() {
 	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/game", handler: game})
+	registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 }
