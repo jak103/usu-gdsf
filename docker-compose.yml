@@ -45,6 +45,7 @@ services:
   gcs:
     image: fsouza/fake-gcs-server
     container_name: cloud-storage
+    build: ./gcs
     volumes:
       - gcs-volume:/data
     ports:
@@ -52,3 +53,4 @@ services:
 
 volumes:
   mongo-volume:
+  gcs-volume:
