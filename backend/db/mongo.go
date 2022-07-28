@@ -60,7 +60,7 @@ func (db *Mongo) Disconnect() error {
 
 // connect allows the user to connect to the database
 func (db *Mongo) Connect() error {
-	client, err := mongo.NewClient(options.Client().ApplyURI(config.RunEnv))
+	client, err := mongo.NewClient(options.Client().ApplyURI(config.MongoUri))
 	if err != nil {
 		log.WithError(err).Error("Failed to create mongo client")
 		return err
