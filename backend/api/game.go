@@ -1,7 +1,9 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
@@ -17,7 +19,21 @@ func gameDownload(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Download a game")
 }
 
-func getAllGames(c echo.Context) error {
+func getGames(c echo.Context) error {
+	query := c.Request().URL.Query()
+
+	if query.Has("userid") {
+		userids, _ := query["userid"]
+		// db.GetGamesByUserId(userids[0])
+		return c.JSON(http.StatusOK, "List of games by " + userids[0]);
+	}
+
+	if query.Has("tag") {
+		tags, _ := query["tag"]
+		// db.GetGamesByTags(tags)
+		return c.JSON(http.StatusOK, fmt.Sprintf("List of games with tags %s", strings.Join(tags, ", ")))
+	}
+
 	db, err := db.NewDatabaseFromEnv()
 
 	if err != nil {
@@ -43,6 +59,6 @@ func init() {
 	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/game", handler: game})
 	registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
-	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
+	registerRoute(route{method: http.MethodGet, path: "/games", handler: getGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 }
