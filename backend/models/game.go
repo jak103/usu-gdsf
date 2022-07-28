@@ -4,9 +4,6 @@ import (
 	"github.com/google/uuid"
 )
 
-type ID uuid.UUID
-type UserID uuid.UUID
-
 type Game struct {
 	ID           uuid.UUID
 	Name         string
