@@ -23,7 +23,6 @@ type Mongo struct {
 }
 
 func (db Mongo) GetGameByID(id string) (*models.Game, error) {
-	fmt.Printf(id)
 	uuidID, err := uuid.Parse(id)
 	if err != nil {
 		return nil, err
