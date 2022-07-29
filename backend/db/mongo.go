@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
@@ -11,7 +10,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"strconv"
 	"time"
 )
 
@@ -39,18 +37,16 @@ func (db Mongo) GetGameID(game models.Game) (string, error) {
 	}
 
 	// decode found document
-	raw, err := result.DecodeBytes()
+	data := bson.M{}
+	err := result.Decode(&data)
 	if err != nil {
 		log.WithError(err).Error("Cannot decode result in Mongo GetGameID")
 		return "", err
 	}
 
-	// lookup the id in the raw bson data
-	id := strconv.Itoa(int(raw.Lookup("$recordId").AsInt64()))
-	if id == "" {
-		log.Error("Could not find ID from db data in Mongo GetGameID")
-		return id, errors.New("could not find 'recordId' key in raw Mongo data")
-	}
+	// convert objectID to hex
+	id := data["_id"].(primitive.ObjectID).Hex()
+
 	return id, nil
 }
 
@@ -64,7 +60,7 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 	// find game with object ID
 	result := db.database.Collection("games").FindOne(context.Background(), bson.M{"_id": objID})
 	game := models.Game{}
-	decodeErr := result.Decode(game)
+	decodeErr := result.Decode(&game)
 	if decodeErr != nil {
 		log.WithError(decodeErr).Error("Mongo decoding Game struct error")
 		return game, decodeErr
