@@ -12,7 +12,7 @@ var (
 		Author:       "tester",
 		CreationDate: "01/01/1900",
 		Version:      "0.0.0",
-		Tags:         nil,
+		Tags:         []string{"tag0", "tag1"},
 	}
 
 	game1 = models.Game{
@@ -20,7 +20,7 @@ var (
 		Author:       "tester",
 		CreationDate: "01/02/1900",
 		Version:      "0.0.1",
-		Tags:         nil,
+		Tags:         []string{"tag1", "tag2"},
 	}
 )
 
@@ -46,4 +46,35 @@ func TestMongo_GameID(t *testing.T) {
 	game1F, _ := _db.GetGameByID(id1F)
 	assert.Equal(t, game0, game0F)
 	assert.Equal(t, game1, game1F)
+
+	// cleanup
+	_db.RemoveGame(game0)
+	_db.RemoveGame(game1)
+}
+
+func TestMongo_Tags(t *testing.T) {
+	_db, _ := NewDatabaseFromEnv()
+	_db.AddGame(game0)
+	_db.AddGame(game1)
+
+	res0, _ := _db.GetGamesByTag("tag0")
+	res1, _ := _db.GetGamesByTag("tag1")
+	res2, _ := _db.GetGamesByTag("tag2")
+	res3, _ := _db.GetGamesByTag("bad tag")
+
+	// result size
+	assert.Equal(t, 1, len(res0))
+	assert.Equal(t, 2, len(res1))
+	assert.Equal(t, 1, len(res2))
+	assert.Equal(t, 0, len(res3))
+
+	// result elements
+	assert.Contains(t, res0, game0)
+	assert.Contains(t, res1, game0)
+	assert.Contains(t, res1, game1)
+	assert.Contains(t, res2, game1)
+
+	// cleanup
+	_db.RemoveGame(game0)
+	_db.RemoveGame(game1)
 }
