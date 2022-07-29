@@ -56,7 +56,7 @@ func newGameHandler(c echo.Context) error {
 	newGame := models.Game{
 		Name:         c.FormValue(NAME),
 		Author:       c.FormValue(AUTHOR),
-		CreationDate: time.Now().Format("MM/DD/YYYY"),
+		CreationDate: time.Now(),
 		Version:      c.FormValue(VERSION),
 	}
 
