@@ -21,6 +21,32 @@ type Mongo struct {
 	games    *mongo.Collection
 }
 
+func (db Mongo) GetGamesByTag(s string) ([]models.Game, error) {
+	// Search for games containing tag
+	gc := db.database.Collection("games")
+	cur, err := gc.Find(context.Background(), bson.D{
+		{"tags", s},
+	})
+	if err != nil {
+		log.WithError(err).Error("Mongo GetGamesByTag search error")
+		return nil, err
+	}
+
+	// decode games containing tag
+	games := make([]models.Game, 0)
+	for cur.Next(context.Background()) {
+		g := models.Game{}
+		err := cur.Decode(&g)
+		if err != nil {
+			log.WithError(err).Error("Failed to decode cursor")
+			return nil, err
+		}
+		games = append(games, g)
+	}
+
+	return games, nil
+}
+
 // GetGameID search for the given game and return its hex ID
 func (db Mongo) GetGameID(game models.Game) (string, error) {
 	gc := db.database.Collection("games")
