@@ -8,16 +8,15 @@
         </v-icon>
       </v-btn>
     </v-toolbar>
+    
     <v-list nav>
       <v-list-item to="/">Home</v-list-item>
       <v-list-item to="/about">About</v-list-item>
-      <v-list-item @click="gameSelected = !gameSelected"> Games </v-list-item>
-      <v-divider v-if="gameSelected"></v-divider> 
-      <v-list-item v-if="gameSelected" :to="`/info/${defaultGame}`">Game</v-list-item>
-      <v-divider v-if="gameSelected"></v-divider> 
-      <v-list-item v-if="gameSelected" :to="`/info/2`">Game 2</v-list-item>
+      <!-- Game List: add route that goes to all games page-->
+      <v-list-item> Game List </v-list-item>
     </v-list>
     <v-btn to="/admin" color="secondary">Login</v-btn>
+    <!-- To Do: add buttons for roles (anything that a default user wouldn't see, like admin/author navigation buttons)-->
   </div>
 </template>
 
@@ -28,9 +27,11 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'NavMenu',
 
+//just keeping these values here until we know we don't need them :)
   data: () => ({
     defaultGame: 1,
     gameSelected: false,
+    
   }),
   
 });
