@@ -21,6 +21,7 @@ type Mongo struct {
 	games    *mongo.Collection
 }
 
+// GetGameID search for the given game and return its hex ID
 func (db Mongo) GetGameID(game models.Game) (string, error) {
 	gc := db.database.Collection("games")
 	result := gc.FindOne(context.Background(), bson.M{
@@ -50,6 +51,7 @@ func (db Mongo) GetGameID(game models.Game) (string, error) {
 	return id, nil
 }
 
+// GetGameByID find and return the game with the given db hex id
 func (db Mongo) GetGameByID(id string) (models.Game, error) {
 	// convert hex id to object ID
 	objID, err := primitive.ObjectIDFromHex(id)
@@ -69,6 +71,7 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 	return game, nil
 }
 
+// AddGame add game to database. Returns assigned ID
 func (db Mongo) AddGame(game models.Game) (string, error) {
 	insertResult, err := db.database.Collection("games").InsertOne(context.Background(), game)
 	if err != nil {

@@ -18,6 +18,8 @@ type Firestore struct {
 	client *firestore.Client
 }
 
+// GetGameID search for the given game and return its db ID
+// TODO not tested
 func (db Firestore) GetGameID(game models.Game) (string, error) {
 	// query
 	gc := db.client.Collection("games")
@@ -35,6 +37,8 @@ func (db Firestore) GetGameID(game models.Game) (string, error) {
 	return doc.Ref.ID, nil
 }
 
+// GetGameByID find and return the game with the given db ID
+// TODO not tested
 func (db Firestore) GetGameByID(id string) (models.Game, error) {
 	snapShot, err := db.client.Collection("games").Doc(id).Get(context.Background())
 	if status.Code(err) == codes.NotFound {
@@ -48,7 +52,8 @@ func (db Firestore) GetGameByID(id string) (models.Game, error) {
 	return game, nil
 }
 
-// AddGame Add a new game to the remote database. Returns unique game ID, error.
+// AddGame Add a new game to the remote database. Returns unique game ID
+// TODO not tested
 func (db Firestore) AddGame(game models.Game) (string, error) {
 	docRef, _, err := db.client.Collection("games").Add(context.Background(), game)
 

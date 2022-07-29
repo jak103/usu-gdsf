@@ -18,7 +18,7 @@ const (
 	VERSION = "Version"
 )
 
-func game(c echo.Context) error {
+func gameInfoHandler(c echo.Context) error {
 	// get id from path
 	id := c.Path()[6:]
 
@@ -32,8 +32,8 @@ func game(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Database find game ID error")
 	}
 
-	// TODO return view filled by game details
-	return c.JSON(http.StatusOK, fmt.Sprintf("%s\n%s\n%s\n%s", game.Name, game.Author, game.CreationDate, game.Version))
+	// TODO not sure if this is the correct return
+	return c.JSON(http.StatusOK, game)
 }
 
 func getAllGames(c echo.Context) error {
@@ -75,9 +75,9 @@ func newGameHandler(c echo.Context) error {
 	}
 
 	// register new route with ID
-	registerRoute(route{method: http.MethodGet, path: fmt.Sprintf("/game/%s", id), handler: game})
+	registerRoute(route{method: http.MethodGet, path: fmt.Sprintf("/info/%s", id), handler: gameInfoHandler})
 
-	// TODO return successful game add data
+	// TODO return successful game add
 	return c.JSON(http.StatusOK, "New game handler")
 }
 
@@ -101,6 +101,6 @@ func init() {
 		if getIdErr != nil {
 			continue
 		}
-		registerRoute(route{method: http.MethodGet, path: fmt.Sprintf("/info/%s", gameID), handler: game})
+		registerRoute(route{method: http.MethodGet, path: fmt.Sprintf("/info/%s", gameID), handler: gameInfoHandler})
 	}
 }
