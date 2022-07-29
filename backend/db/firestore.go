@@ -102,7 +102,7 @@ func (db Firestore) GetGameByID(id string) (models.Game, error) {
 		return models.Game{}, err
 	}
 	game := models.Game{}
-	convErr := snapShot.DataTo(game)
+	convErr := snapShot.DataTo(&game)
 	if convErr != nil {
 		log.WithError(convErr).Error("Cannot convert firestore snapshot to game struct")
 	}
