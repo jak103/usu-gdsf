@@ -18,13 +18,70 @@ type Firestore struct {
 	client *firestore.Client
 }
 
+// RemoveGame removes the given game from the db
+// TODO not tested
+func (db Firestore) RemoveGame(game models.Game) error {
+	// query
+	gc := db.client.Collection("games")
+	q := gc.Where("name", "==", game.Name).Where("author", "==", game.Author)
+	q1 := q.Where("creationdate", "==", game.CreationDate).Where("version", "==", game.Version)
+	result := q1.Where("tags", "==", game.Tags)
+	result = result.Limit(1)
+
+	// get doc
+	docs, err := result.Documents(context.Background()).GetAll()
+	if err != nil {
+		log.WithError(err).Error("Firestore query error in RemoveGame")
+		return err
+	}
+
+	// delete doc
+	_, err = docs[0].Ref.Delete(context.Background())
+	if err != nil {
+		log.WithError(err).Error("Firestore deletion error in RemoveGame")
+		return err
+	}
+
+	return nil
+}
+
+// GetGamesByTag search and return all games with given tag
+// TODO not tested
+func (db Firestore) GetGamesByTag(tag string) ([]models.Game, error) {
+	// query
+	gc := db.client.Collection("games")
+	result := gc.Where("tags", "array-contains", tag)
+
+	// get docs
+	docs, err := result.Documents(context.Background()).GetAll()
+	if err != nil {
+		log.WithError(err).Error("Firestore query error in GetGamesByTag")
+		return []models.Game{}, err
+	}
+
+	// decode
+	games := make([]models.Game, len(docs))
+	for i, doc := range docs {
+		game := models.Game{}
+		err = doc.DataTo(&game)
+		if err != nil {
+			log.WithError(err).Error("Firestore decode error in GetGamesByTag")
+			return []models.Game{}, err
+		}
+		games[i] = game
+	}
+
+	return games, nil
+}
+
 // GetGameID search for the given game and return its db ID
 // TODO not tested
 func (db Firestore) GetGameID(game models.Game) (string, error) {
 	// query
 	gc := db.client.Collection("games")
 	q := gc.Where("name", "==", game.Name).Where("author", "==", game.Author)
-	result := q.Where("creationdate", "==", game.CreationDate).Where("version", "==", game.Version)
+	q1 := q.Where("creationdate", "==", game.CreationDate).Where("version", "==", game.Version)
+	result := q1.Where("tags", "==", game.Tags)
 	result = result.Limit(1)
 
 	// get id from query result
