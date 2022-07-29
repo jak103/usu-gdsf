@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
@@ -21,6 +22,29 @@ type Mongo struct {
 	games    *mongo.Collection
 }
 
+// RemoveGame removes the given game from the db
+func (db Mongo) RemoveGame(game models.Game) error {
+	gc := db.database.Collection("games")
+	res, err := gc.DeleteOne(context.Background(), bson.M{
+		"name":         game.Name,
+		"author":       game.Author,
+		"creationdate": game.CreationDate,
+		"version":      game.Version,
+	})
+	if err != nil {
+		log.WithError(err).Error("Mongo RemoveGame deletion error")
+		return err
+	}
+
+	if res.DeletedCount > 1 {
+		log.Error("Mongo RemoveGame deleted more than one record")
+		return errors.New("mongo deleted more than one record")
+	}
+
+	return nil
+}
+
+// GetGamesByTag search and return all games with given tag
 func (db Mongo) GetGamesByTag(s string) ([]models.Game, error) {
 	// Search for games containing tag
 	gc := db.database.Collection("games")
