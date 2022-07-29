@@ -79,6 +79,7 @@ func (db Mongo) GetGameID(game models.Game) (string, error) {
 		"author":       game.Author,
 		"creationdate": game.CreationDate,
 		"version":      game.Version,
+		"tags":         game.Tags,
 	}, options.FindOne().SetShowRecordID(true))
 
 	// handle no doc found error
@@ -121,10 +122,13 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 	}
 
 	// decode tags array
-	primTags := data["tags"].(primitive.A)
-	tags := make([]string, len(primTags))
-	for i, v := range primTags {
-		tags[i] = v.(string)
+	var tags []string
+	if data["tags"] != nil {
+		primTags := data["tags"].(primitive.A)
+		tags = make([]string, len(primTags))
+		for i, v := range primTags {
+			tags[i] = v.(string)
+		}
 	}
 
 	// load game model
