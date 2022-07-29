@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
@@ -20,7 +19,7 @@ const (
 
 func gameInfoHandler(c echo.Context) error {
 	// get id from path
-	id := c.Path()[6:]
+	id := c.Param("id")
 
 	// get game from db with id
 	_db, getDbErr := db.NewDatabaseFromEnv()
@@ -32,7 +31,6 @@ func gameInfoHandler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Database find game ID error")
 	}
 
-	// TODO not sure if this is the correct return
 	return c.JSON(http.StatusOK, game)
 }
 
@@ -64,7 +62,7 @@ func newGameHandler(c echo.Context) error {
 
 	// Add new game to database
 	_db, getDbErr := db.NewDatabaseFromEnv()
-	id, err := _db.AddGame(newGame)
+	_, err := _db.AddGame(newGame)
 
 	// error handling
 	if getDbErr != nil {
@@ -75,7 +73,7 @@ func newGameHandler(c echo.Context) error {
 	}
 
 	// register new route with ID
-	registerRoute(route{method: http.MethodGet, path: fmt.Sprintf("/info/%s", id), handler: gameInfoHandler})
+	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
 
 	// TODO return successful game add
 	return c.JSON(http.StatusOK, "New game handler")
@@ -96,11 +94,7 @@ func init() {
 	if getGamesErr != nil {
 		return
 	}
-	for _, v := range games {
-		gameID, getIdErr := _db.GetGameID(v)
-		if getIdErr != nil {
-			continue
-		}
-		registerRoute(route{method: http.MethodGet, path: fmt.Sprintf("/info/%s", gameID), handler: gameInfoHandler})
+	for range games {
+		registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
 	}
 }
