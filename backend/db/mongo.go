@@ -136,7 +136,7 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 	game := models.Game{
 		Name:         data["name"].(string),
 		Author:       data["author"].(string),
-		CreationDate: data["creationdate"].(string),
+		CreationDate: data["creationdate"].(primitive.DateTime).Time().UTC(),
 		Version:      data["version"].(string),
 		Tags:         tags,
 	}

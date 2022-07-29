@@ -4,13 +4,14 @@ import (
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 var (
 	game0 = models.Game{
 		Name:         "game0",
 		Author:       "tester",
-		CreationDate: "01/01/1900",
+		CreationDate: time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC),
 		Version:      "0.0.0",
 		Tags:         []string{"tag0", "tag1"},
 	}
@@ -18,7 +19,7 @@ var (
 	game1 = models.Game{
 		Name:         "game1",
 		Author:       "tester",
-		CreationDate: "01/02/1900",
+		CreationDate: time.Date(1900, 1, 2, 0, 0, 0, 0, time.UTC),
 		Version:      "0.0.1",
 		Tags:         []string{"tag1", "tag2"},
 	}
