@@ -111,11 +111,29 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 
 	// find game with object ID
 	result := db.database.Collection("games").FindOne(context.Background(), bson.M{"_id": objID})
-	game := models.Game{}
-	decodeErr := result.Decode(&game)
-	if decodeErr != nil {
-		log.WithError(decodeErr).Error("Mongo decoding Game struct error")
-		return game, decodeErr
+
+	// decode
+	data := bson.M{}
+	err = result.Decode(&data)
+	if err != nil {
+		log.WithError(err).Error("Cannot decode record in Mongo GetGameByID")
+		return models.Game{}, err
+	}
+
+	// decode tags array
+	primTags := data["tags"].(primitive.A)
+	tags := make([]string, len(primTags))
+	for i, v := range primTags {
+		tags[i] = v.(string)
+	}
+
+	// load game model
+	game := models.Game{
+		Name:         data["name"].(string),
+		Author:       data["author"].(string),
+		CreationDate: data["creationdate"].(string),
+		Version:      data["version"].(string),
+		Tags:         tags,
 	}
 
 	return game, nil
