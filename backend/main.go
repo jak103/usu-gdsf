@@ -20,10 +20,10 @@ func main() {
 	server := api.NewServer(wg)
 	setupCloseHandler(server)
 
-	if err := setupDatabaseConnection(); err != nil {
-		log.WithError(err).Error("Error setting up database connection...")
-		panic("Database not connected")
-	}
+	//if err := setupDatabaseConnection(); err != nil {
+	//	log.WithError(err).Error("Error setting up database connection...")
+	//	panic("Database not connected")
+	//}
 
 	go server.Start()
 

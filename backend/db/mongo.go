@@ -44,6 +44,18 @@ func (db Mongo) GetAllGames() ([]models.Game, error) {
 	return games, nil
 }
 
+func (db Mongo) CreateUser(newUser models.User) (models.User, error) {
+	users := db.database.Collection("users")
+
+	newUserDoc, err := users.InsertOne(context.Background(), newUser, nil)
+	if err != nil {
+		log.WithError(err).Error("Failed to insert new user")
+		return nil, err
+	}
+
+	return newUser, nil
+}
+
 // disconnect disconnects from the remote database
 func (db *Mongo) Disconnect() error {
 	fmt.Println("Disconnecting from the database.")
