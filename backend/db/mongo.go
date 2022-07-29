@@ -30,6 +30,7 @@ func (db Mongo) RemoveGame(game models.Game) error {
 		"author":       game.Author,
 		"creationdate": game.CreationDate,
 		"version":      game.Version,
+		"tags":         game.Tags,
 	})
 	if err != nil {
 		log.WithError(err).Error("Mongo RemoveGame deletion error")
