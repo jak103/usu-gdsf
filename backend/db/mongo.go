@@ -60,10 +60,8 @@ func (db Mongo) GetGamesByTag(s string) ([]models.Game, error) {
 	// decode games containing tag
 	games := make([]models.Game, 0)
 	for cur.Next(context.Background()) {
-		g := models.Game{}
-		err := cur.Decode(&g)
+		g, err := DecodeCursorToGame(cur)
 		if err != nil {
-			log.WithError(err).Error("Failed to decode cursor")
 			return nil, err
 		}
 		games = append(games, g)
@@ -136,6 +134,17 @@ func (db Mongo) AddGame(game models.Game) (string, error) {
 	return insertResult.InsertedID.(primitive.ObjectID).Hex(), nil
 }
 
+func DecodeCursorToGame(cur *mongo.Cursor) (models.Game, error) {
+	data := bson.M{}
+	err := cur.Decode(&data)
+	if err != nil {
+		log.WithError(err).Error("Unable to decode Mongo cursor")
+		return models.Game{}, err
+	}
+
+	return DecodeBsonData(data)
+}
+
 func DecodeBsonData(data bson.M) (models.Game, error) {
 	// decode tags array
 	var tags []string
@@ -184,15 +193,9 @@ func (db Mongo) GetAllGames() ([]models.Game, error) {
 	}
 
 	for cursor.Next(context.Background()) {
-		data := bson.M{}
-		err := cursor.Decode(&data)
+		g, err := DecodeCursorToGame(cursor)
 		if err != nil {
-			log.WithError(err).Error("Failed to decode cursor")
 			return nil, err
-		}
-		g, err := DecodeBsonData(data)
-		if err != nil {
-			log.WithError(err).Error("Failed to decode cursor to game in Mongo GetAllGames")
 		}
 		games = append(games, g)
 	}
