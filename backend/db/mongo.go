@@ -11,7 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"reflect"
 	"time"
 )
 
@@ -115,7 +114,7 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 	// find game with object ID
 	result := db.database.Collection("games").FindOne(context.Background(), bson.M{"_id": objID})
 
-	// decode
+	// decode into bson
 	data := bson.M{}
 	err = result.Decode(&data)
 	if err != nil {
@@ -123,6 +122,21 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 		return models.Game{}, err
 	}
 
+	// decode bson into game
+	game, _ := DecodeBsonData(data)
+	return game, nil
+}
+
+// AddGame add game to database. Returns assigned ID
+func (db Mongo) AddGame(game models.Game) (string, error) {
+	insertResult, err := db.database.Collection("games").InsertOne(context.Background(), game)
+	if err != nil {
+		log.WithError(err).Error("Failed to add game to Mongo db")
+	}
+	return insertResult.InsertedID.(primitive.ObjectID).Hex(), nil
+}
+
+func DecodeBsonData(data bson.M) (models.Game, error) {
 	// decode tags array
 	var tags []string
 	if data["tags"] != nil {
@@ -135,11 +149,12 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 
 	//decode creationDate
 	var date time.Time
-	if reflect.TypeOf(data["creationdate"]) == bson.TypeDateTime {
+	var err error
+	// Check the type of creationDate date (time.Time or string)
+	if _, ok := data["creationdate"].(primitive.DateTime); ok { // creationDate is saved as time.Time
 		date = data["creationdate"].(primitive.DateTime).Time().UTC()
-	} else if reflect.TypeOf(data["creationdate"]) == bson.TypeString {
-		// seed data format MM/DD/YYYY
-		date, err = time.Parse("MM/DD/YYYY", data["creationdate"].(string))
+	} else if _, ok := data["creationdate"].(string); ok { // creationDate is saved as string
+		date, err = time.Parse("1/2/2006", data["creationdate"].(string))
 		if err != nil {
 			log.WithError(err).Error("Cannot parse string into date in Mongo GetGameByID")
 			return models.Game{}, err
@@ -158,15 +173,6 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 	return game, nil
 }
 
-// AddGame add game to database. Returns assigned ID
-func (db Mongo) AddGame(game models.Game) (string, error) {
-	insertResult, err := db.database.Collection("games").InsertOne(context.Background(), game)
-	if err != nil {
-		log.WithError(err).Error("Failed to add game to Mongo db")
-	}
-	return insertResult.InsertedID.(primitive.ObjectID).Hex(), nil
-}
-
 func (db Mongo) GetAllGames() ([]models.Game, error) {
 	games := make([]models.Game, 0)
 
@@ -178,11 +184,15 @@ func (db Mongo) GetAllGames() ([]models.Game, error) {
 	}
 
 	for cursor.Next(context.Background()) {
-		g := models.Game{}
-		err := cursor.Decode(&g)
+		data := bson.M{}
+		err := cursor.Decode(&data)
 		if err != nil {
 			log.WithError(err).Error("Failed to decode cursor")
 			return nil, err
+		}
+		g, err := DecodeBsonData(data)
+		if err != nil {
+			log.WithError(err).Error("Failed to decode cursor to game in Mongo GetAllGames")
 		}
 		games = append(games, g)
 	}
