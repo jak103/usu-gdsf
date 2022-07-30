@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"reflect"
 	"time"
 )
 
@@ -132,11 +133,24 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 		}
 	}
 
+	//decode creationDate
+	var date time.Time
+	if reflect.TypeOf(data["creationdate"]) == bson.TypeDateTime {
+		date = data["creationdate"].(primitive.DateTime).Time().UTC()
+	} else if reflect.TypeOf(data["creationdate"]) == bson.TypeString {
+		// seed data format MM/DD/YYYY
+		date, err = time.Parse("MM/DD/YYYY", data["creationdate"].(string))
+		if err != nil {
+			log.WithError(err).Error("Cannot parse string into date in Mongo GetGameByID")
+			return models.Game{}, err
+		}
+	}
+
 	// load game model
 	game := models.Game{
 		Name:         data["name"].(string),
 		Author:       data["author"].(string),
-		CreationDate: data["creationdate"].(primitive.DateTime).Time().UTC(),
+		CreationDate: date,
 		Version:      data["version"].(string),
 		Tags:         tags,
 	}
