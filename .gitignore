@@ -146,6 +146,9 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+# Ignore GoLand configs
+.idea
+
 # yarn v2
 .yarn/cache
 .yarn/unplugged
