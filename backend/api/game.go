@@ -1,7 +1,9 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
@@ -26,7 +28,26 @@ func getGameByID(c echo.Context) error {
 
 }
 
-func getAllGames(c echo.Context) error {
+// for downloaded games, this route allows you to play them
+func gameDownload(c echo.Context) error {
+	return c.JSON(http.StatusOK, "Download a game")
+}
+
+func getGames(c echo.Context) error {
+	query := c.Request().URL.Query()
+
+	if query.Has("userid") {
+		userids, _ := query["userid"]
+		// db.GetGamesByUserId(userids[0])
+		return c.JSON(http.StatusOK, "List of games by " + userids[0]);
+	}
+
+	if query.Has("tag") {
+		tags, _ := query["tag"]
+		// db.GetGamesByTags(tags)
+		return c.JSON(http.StatusOK, fmt.Sprintf("List of games with tags %s", strings.Join(tags, ", ")))
+	}
+
 	db, err := db.NewDatabaseFromEnv()
 
 	if err != nil {
@@ -50,7 +71,12 @@ func newGameHandler(c echo.Context) error {
 
 func init() {
 	log.Info("Running game init")
+	//registerRoute(route{method: http.MethodGet, path: "/game", handler: game})
+	//registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
+	//registerRoute(route{method: http.MethodGet, path: "/games", handler: getGames})
+	//registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
+  registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
 	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGameByID})
-	registerRoute(route{method: http.MethodGet, path: "/game", handler: getAllGames})
+	registerRoute(route{method: http.MethodGet, path: "/game", handler: getGames})
 	registerRoute(route{method: http.MethodPost, path: "/game/add", handler: newGameHandler})
 }
