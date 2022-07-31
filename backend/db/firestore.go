@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"cloud.google.com/go/firestore"
@@ -14,6 +15,27 @@ var _ Database = (*Firestore)(nil)
 
 type Firestore struct {
 	client *firestore.Client
+	games  *firestore.CollectionRef
+}
+
+func (db Firestore) GetGameByID(id string) (*models.Game, error) {
+	gameDoc := db.games.Doc(id)
+	docSnapshot, err := gameDoc.Get(context.Background())
+
+	if err != nil {
+		return nil, err
+	}
+
+	if docSnapshot == nil {
+		return nil, fmt.Errorf("%s: game not found", id)
+	}
+
+	var game models.Game
+	if err = docSnapshot.DataTo(&game); err != nil {
+		return nil, err
+	}
+
+	return &game, nil
 }
 
 func (db Firestore) GetAllGames() ([]models.Game, error) {
