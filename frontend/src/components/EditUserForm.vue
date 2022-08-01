@@ -13,6 +13,7 @@
           <v-container>
             <v-row>
               <v-col
+                style="padding-top: 0; padding-bottom: 0; margin-bottom: 0;"
                 cols="12"
                 sm="4"
                 md="6"
@@ -24,6 +25,7 @@
                 ></v-text-field>
               </v-col>
               <v-col
+                style="padding-top: 0; padding-bottom: 0; margin-bottom: 0;"
                 cols="12"
                 sm="4"
                 md="6"
@@ -35,14 +37,20 @@
                   required
                 ></v-text-field>
               </v-col>
-              <v-col cols="12">
+              <v-col 
+                style="padding-top: 0; padding-bottom: 0; margin-bottom: 0;"
+                cols="12"
+              >
                 <v-text-field
                   label="Email*"
                   v-model="selectedUser.email"
                   required
                 ></v-text-field>
               </v-col>
-              <v-col cols="12">
+              <v-col 
+                style="padding-top: 0; padding-bottom: 0; margin-bottom: 0;"
+                cols="12"
+              >
                 <v-text-field
                   label="Password*"
                   type="password"
@@ -51,18 +59,23 @@
               </v-col>
             </v-row>
           </v-container>
-          <small>*indicates required field</small>
         </v-card-text>
         <v-card-actions>
+          <v-btn
+            color="error"
+            text
+            @click="$emit('delete', selectedUser)">
+            Delete User
+          </v-btn>
           <v-spacer></v-spacer>
           <v-btn
-            color="blue-darken-1"
+            color="secondary"
             text
             @click="$emit('close')">
             Close
           </v-btn>
           <v-btn
-            color="blue-darken-1"
+            color="secondary"
             text
             @click="$emit('save', selectedUser)">
             Save
@@ -71,6 +84,7 @@
       </v-card>
     </v-dialog>
   </v-row>
+  
 </template>
 
 <script setup>

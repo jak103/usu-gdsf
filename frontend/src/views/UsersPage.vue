@@ -1,6 +1,19 @@
 <template>
 <div>
-	<h1 class="mt-10 ml-13">Site Users</h1>
+	<v-row>
+		<v-col>
+			<h1 class="mt-10 ml-13">Site Users</h1>
+		</v-col>
+
+		<v-spacer></v-spacer>
+
+		<v-col class="d-flex align-end flex-column">
+			<v-btn 
+			class="mt-10 mr-13"
+			color="secondary">
+			Create Admin</v-btn>
+		</v-col>
+	</v-row>
 
 	<v-progress-circular
 		v-if="loading"
@@ -21,7 +34,6 @@
       </tr>
     </thead>
     <tbody>
-			<!-- TODO: Add onclick event -->
       <tr
         v-for="user in users"
         :key="user.email"
