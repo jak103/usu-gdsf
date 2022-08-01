@@ -13,7 +13,7 @@
       <v-list-item to="/">Home</v-list-item>
       <v-list-item to="/about">About</v-list-item>
       <!-- Game List: add route that goes to all games page-->
-      <v-list-item> Game List </v-list-item>
+      <v-list-item to="/games"> Game List </v-list-item>
     </v-list>
     <v-btn to="/admin" color="secondary">Login</v-btn>
     <!-- To Do: add buttons for roles (anything that a default user wouldn't see, like admin/author navigation buttons)-->
