@@ -34,13 +34,16 @@
     </tbody>
   </v-table>
 
-	<UserForm v-if="showForm"></UserForm>
+	<UserForm :showSelf="showForm" @close="showForm = false"/>
+	
 	</div>
 </template>
 
 <script>
 import UserForm from '../components/UserForm.vue'
+import {ref} from "vue";
 export default {
+
     name: "UsersPage",
     data() {
         return {
@@ -67,7 +70,7 @@ export default {
             ],
             // Set to false when users have loading, default should be true
             loading: false,
-						showForm: false,
+						showForm: ref(false),
 						selectedUser: {
 							name: "",
 							email: ""
@@ -78,7 +81,6 @@ export default {
 
 		methods: {
 			handleClick() {
-				console.log("clicked")
 				this.showForm = true
 			}
 		}

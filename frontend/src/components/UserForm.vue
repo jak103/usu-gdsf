@@ -1,7 +1,9 @@
+<!-- This component operates as a model to edit users -->
 <template>
   <v-row justify="center">
     <v-dialog
       persistent
+      v-model="showSelf"
     >
       <v-card>
         <v-card-title>
@@ -53,13 +55,13 @@
           <v-btn
             color="blue-darken-1"
             text
-            @update="$emit('update:showSelf', false)">
+            @click="$emit('close')">
             Close
           </v-btn>
           <v-btn
             color="blue-darken-1"
             text
-            @update="$emit('update:showSelf', false)">
+            @click="$emit('save')">
             Save
           </v-btn>
         </v-card-actions>
@@ -68,17 +70,8 @@
   </v-row>
 </template>
 
-<script>
-export default {
-  name: 'UserForm',
-  
-  data: () => ({
-  
-  }),
-
-  
-  methods: {
-
-  }
-}
+<script setup>
+  defineProps({
+    showSelf: Boolean
+  });
 </script>
