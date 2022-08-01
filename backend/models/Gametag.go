@@ -5,7 +5,7 @@ import (
 )
 
 type GameTag struct {
-	TagId              uuid.UUID
+	ID              uuid.UUID
 	Type               string
 	GameId             uuid.UUID
 	GameRatingId       uuid.UUID

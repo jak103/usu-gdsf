@@ -5,7 +5,7 @@ import (
 )
 
 type Game struct {
-	GameId       uuid.UUID
+	ID      uuid.UUID
 	Title        string
 	Description  string
 	UserID       uuid.UUID

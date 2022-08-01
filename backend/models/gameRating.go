@@ -5,7 +5,7 @@ import (
 )
 
 type GameRating struct {
-	GameRatingId       uuid.UUID
+	ID                 uuid.UUID
 	RatingValue        string
 	RatingDescription  string
 	RatingTimestamp    string

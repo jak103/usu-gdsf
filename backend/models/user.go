@@ -15,7 +15,7 @@ const (
 
 type User struct {
 
-	UserID       uuid.UUID
+	ID       uuid.UUID
 	Username     string
 	Password     string
 	Displayname  string
