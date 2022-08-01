@@ -37,12 +37,25 @@
                   required
                 ></v-text-field>
               </v-col>
+
+              <v-col 
+                style="padding-top: 0; padding-bottom: 0; margin-bottom: 0;"
+                cols="12"
+              >
+                <v-text-field
+                  label="Birth Date*"
+                  type="date"
+                  v-model="selectedUser.dob"
+                  required
+                ></v-text-field>
+              </v-col>
               <v-col 
                 style="padding-top: 0; padding-bottom: 0; margin-bottom: 0;"
                 cols="12"
               >
                 <v-text-field
                   label="Email*"
+                  type="email"
                   v-model="selectedUser.email"
                   required
                 ></v-text-field>

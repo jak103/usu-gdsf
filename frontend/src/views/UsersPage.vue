@@ -61,7 +61,7 @@ export default {
         return {
             // Get list of users from database
             users: [
-                { firstName: "Test", lastName: "User", email: "testUser@example.com" },
+                { firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
 								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
 								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
 								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
@@ -91,7 +91,8 @@ export default {
 						selectedUser: {
 							firstName: "",
 							lastName: "",
-							email: ""
+							email: "",
+							dob: ""
 						}
         };
     },
@@ -109,6 +110,7 @@ export default {
 					firstName: "",
 					lastName: "",
 					email: "",
+					dob: ""
 				}
 			},
 
