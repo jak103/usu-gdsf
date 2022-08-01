@@ -11,7 +11,7 @@
     <!-- Break out Games by: Semester, Type -->
     <v-row class="ma-2">
       <v-col cols="6">
-        <FilteredGameList></FilteredGameList>
+        <GameList></GameList>
       </v-col>
 
       <v-divider vertical></v-divider>
@@ -24,7 +24,7 @@
     <v-divider></v-divider>
 
     <v-row class="ma-2">
-      <GameList></GameList>
+      <FilteredGameList></FilteredGameList>
     </v-row>
   </v-container>
 </template>
