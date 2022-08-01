@@ -25,7 +25,7 @@ jobs:
       run: cd backend && go test -v .
       
     - name: WriteGoList
-      run: cd backend && go list -json -m all > go.list
+      run: cd backend && go list -json -m all > ../go.list
       
     - name: Nancy
       uses: sonatype-nexus-community/nancy-github-action@main
