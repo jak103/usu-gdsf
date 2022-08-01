@@ -6,8 +6,8 @@
       v-model="showSelf"
     >
       <v-card>
-        <v-card-title>
-          <span class="text-h5">User Profile</span>
+        <v-card-title class="text-center">
+          <span class="text-h5">Edit User Profile</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -19,6 +19,7 @@
               >
                 <v-text-field
                   label="First Name*"
+                  v-model="selectedUser.firstName"
                   required
                 ></v-text-field>
               </v-col>
@@ -29,6 +30,7 @@
               >
                 <v-text-field
                   label="Last Name*"
+                  v-model="selectedUser.lastName"
                   persistent-hint
                   required
                 ></v-text-field>
@@ -36,6 +38,7 @@
               <v-col cols="12">
                 <v-text-field
                   label="Email*"
+                  v-model="selectedUser.email"
                   required
                 ></v-text-field>
               </v-col>
@@ -61,7 +64,7 @@
           <v-btn
             color="blue-darken-1"
             text
-            @click="$emit('save')">
+            @click="$emit('save', selectedUser)">
             Save
           </v-btn>
         </v-card-actions>
@@ -72,6 +75,12 @@
 
 <script setup>
   defineProps({
-    showSelf: Boolean
+    showSelf: Boolean,
+    selectedUser: {
+      firstName: String,
+      lastName: String,
+      email: String,
+    }
   });
+
 </script>

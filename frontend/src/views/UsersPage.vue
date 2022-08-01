@@ -26,21 +26,21 @@
         v-for="user in users"
         :key="user.email"
 				style="cursor: pointer"
-				@click="handleClick"
+				@click="handleClick(user)"
       >
-        <td>{{ user.name }}</td>
+        <td>{{ user.firstName }} {{user.lastName}}</td>
         <td>{{ user.email }}</td>
       </tr>
     </tbody>
   </v-table>
 
-	<UserForm :showSelf="showForm" @close="showForm = false"/>
+	<EditUserForm :showSelf="showForm" @close="handleClose()" :selectedUser="selectedUser" @save="handleSave(selectedUser)"/>
 	
 	</div>
 </template>
 
 <script>
-import UserForm from '../components/UserForm.vue'
+import EditUserForm from '../components/EditUserForm.vue'
 import {ref} from "vue";
 export default {
 
@@ -49,39 +49,59 @@ export default {
         return {
             // Get list of users from database
             users: [
-                { name: "Hailey Dennis", email: "haileydennis@example.com" },
-                { name: "Test Account", email: "test@example.com" },
-                { name: "Hailey Dennis", email: "haileydennis@example.com" },
-                { name: "Test Account", email: "test@example.com" },
-                { name: "Hailey Dennis", email: "haileydennis@example.com" },
-                { name: "Test Account", email: "test@example.com" },
-                { name: "Hailey Dennis", email: "haileydennis@example.com" },
-                { name: "Test Account", email: "test@example.com" },
-                { name: "Hailey Dennis", email: "haileydennis@example.com" },
-                { name: "Test Account", email: "test@example.com" },
-                { name: "Hailey Dennis", email: "haileydennis@example.com" },
-                { name: "Test Account", email: "test@example.com" },
-                { name: "Hailey Dennis", email: "haileydennis@example.com" },
-                { name: "Test Account", email: "test@example.com" },
-                { name: "Hailey Dennis", email: "haileydennis@example.com" },
-                { name: "Test Account", email: "test@example.com" },
-                { name: "Hailey Dennis", email: "haileydennis@example.com" },
-                { name: "Test Account", email: "test@example.com" },
+                { firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								
             ],
             // Set to false when users have loading, default should be true
             loading: false,
 						showForm: ref(false),
 						selectedUser: {
-							name: "",
+							firstName: "",
+							lastName: "",
 							email: ""
 						}
         };
     },
-    components: { UserForm },
+    components: { EditUserForm },
 
 		methods: {
-			handleClick() {
+			handleClick(user) {
 				this.showForm = true
+				this.selectedUser = user
+			},
+
+			handleClose() {
+				this.showForm = false
+				this.selectedUser = {
+					firstName: "",
+					lastName: "",
+					email: "",
+				}
+			},
+
+			handleSave(user) {
+
 			}
 		}
 }
