@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/jak103/usu-gdsf/log"
+	"github.com/jak103/usu-gdsf/auth"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -56,12 +57,18 @@ func (s *Server) setupMiddleware() {
 
 func (s *Server) setupRoutes() {
 	for _, route := range routes {
+		handler := route.handler
+
+		if route.requireAuth {
+			handler = auth.RequireAuthorization(route.handler)
+		}
+		
 		switch route.method {
 		case http.MethodGet:
-			s.echo.GET(route.path, route.handler)
+			s.echo.GET(route.path, handler)
 
 		case http.MethodPost:
-			s.echo.POST(route.path, route.handler)
+			s.echo.POST(route.path, handler)
 
 		default:
 			log.Error("Failed to register unknown method: %v", route.method)
