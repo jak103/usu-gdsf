@@ -1,10 +1,31 @@
 <template>
   <v-container>
-    {{ something }}
+    <v-row class="ma-2">
+      <v-col>
+        <GameCardView></GameCardView>
+      </v-col>
+      <v-col>
+        <GameCardView></GameCardView>
+      </v-col>
+      <v-col>
+        <GameCardView></GameCardView>
+      </v-col>
+      <v-col>
+        <GameCardView></GameCardView>
+      </v-col>
+      <v-col>
+        <GameCardView></GameCardView>
+      </v-col>
+      <v-col>
+        <GameCardView></GameCardView>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
+import GameCardView from '../components/GameCardView.vue'
+
 export default {
   name: 'GameList',
   
@@ -14,6 +35,10 @@ export default {
   
   methods: {
     
+  },
+
+  components: {
+    GameCardView,
   }
 }
 </script>
