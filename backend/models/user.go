@@ -4,11 +4,23 @@ import (
 	"github.com/google/uuid"
 )
 
+
+type Role int64
+
+const (
+	Admin Role  = 0
+	Publisher   = 1
+
+)
+
 type User struct {
+
 	UserID       uuid.UUID
 	Username     string
 	Password     string
-	UserID       uuid.UUID
 	Displayname  string
-	RolesId      string
+	Role         Role
 }
+
+
+
