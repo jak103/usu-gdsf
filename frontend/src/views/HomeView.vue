@@ -28,7 +28,7 @@
     </v-row>
 
     <v-row class="ma-2">
-        <GameCardView></GameCardView>
+        <GameCardView :game="exampleGame"></GameCardView>
     </v-row>
   </v-container>
 </template>
@@ -38,7 +38,7 @@ import { defineComponent } from 'vue';
 import GameCarousel from '../components/GameCarousel.vue';
 import GameList from '../components/GameList.vue'
 import GameCardView from '../components/GameCardView.vue'
-
+import Game from '../models/game.js'
 
 export default defineComponent({
   name: 'HomeView',
@@ -47,6 +47,12 @@ export default defineComponent({
     GameCarousel,
     GameList,
     GameCardView
+  },
+
+  data() {
+    return {
+      exampleGame: new Game()
+    }
   },
 
   computed: {
