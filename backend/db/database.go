@@ -2,8 +2,8 @@ package db
 
 import (
 	"errors"
-	"os"
 
+	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 )
@@ -18,19 +18,18 @@ var connection Database
 
 type Database interface {
 	GetAllGames() ([]models.Game, error)
-
+	AddGame(models.Game) (string, error)
+	RemoveGame(models.Game) error
+	GetGameByID(string) (models.Game, error)
+	GetGamesByTag(string) ([]models.Game, error)
+	GetGameID(models.Game) (string, error)
 	Disconnect() error
 	Connect() error
 }
 
 func NewDatabaseFromEnv() (Database, error) {
 	if connection == nil {
-		runningEnv, wasSet := os.LookupEnv("RUN_ENV")
-
-		if !wasSet || len(runningEnv) == 0 {
-			log.Error("Environment variable RUN_ENV was not set correctly")
-			return nil, errors.New("RUN_ENV not set")
-		}
+		runningEnv := config.RunEnv
 
 		switch runningEnv {
 		case MOCK:
@@ -44,7 +43,12 @@ func NewDatabaseFromEnv() (Database, error) {
 			log.Error("Unknown RUN_ENV set %v", runningEnv)
 			return nil, errors.New("unknown RUN_ENV")
 		}
-	}
 
+		err := connection.Connect()
+		if err != nil {
+			log.WithError(err).Error("Could not connect to database")
+			return nil, err
+		}
+	}
 	return connection, nil
 }

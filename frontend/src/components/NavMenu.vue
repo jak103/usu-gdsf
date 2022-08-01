@@ -1,5 +1,6 @@
 <template>
   <v-navigation-drawer
+    data-test="drawer"
     permanent
     color="primary"
     :rail="rail"
@@ -7,6 +8,7 @@
   >
     <!-- TODO: This icon is only a place holder until we can get the appropriate URL for the official Utah State Icon, or we decide on some other icon. -->
     <v-list-item
+      data-test="listItem1"
       title="Game Dev Store"
       prepend-avatar="https://gmedia.playstation.com/is/image/SIEPDC/game-library-white-icon-01-en-09nov21?$native--t$"
     >
