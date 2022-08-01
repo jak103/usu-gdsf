@@ -1,6 +1,7 @@
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 // Vuetify
 import { createVuetify } from 'vuetify'
@@ -50,15 +51,10 @@ export default createVuetify({
     },
   },
   icons: {
-    iconfont: 'mdi',
-    values: {
-      add: 'mdi-plus',
-      edit: 'mdi-pencil',
-      delete: 'mdi-delete',
-      download: 'mdi-download', //has issues, maybe a reserved word??
-      menu: 'mdi-menu',
-      star: 'mdi-star-outline', //has issues, maybe a reserved word??
-      search: 'mdi-magnify', //has issues, maybe a reserved word??
+    defaultSet: 'mdi',
+    aliases,
+    sets: {
+      mdi,
     }
   },
   components,
