@@ -2,11 +2,9 @@
   <v-card
     class="mx-4 my-4"
     max-width="600px"
-    color="white"
   >
     <v-img
       :src="image"
-      
     ></v-img>
 
     <v-card-title>
