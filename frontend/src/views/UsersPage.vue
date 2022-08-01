@@ -9,9 +9,12 @@
 
 		<v-col class="d-flex align-end flex-column">
 			<v-btn 
-			class="mt-10 mr-13"
-			color="secondary">
-			Create Admin</v-btn>
+				class="mt-10 mr-13"
+				color="secondary"
+				@click="handleClickAdmin()"
+			>
+				Create Admin
+			</v-btn>
 		</v-col>
 	</v-row>
 
@@ -38,7 +41,7 @@
         v-for="user in users"
         :key="user.email"
 				style="cursor: pointer"
-				@click="handleClick(user)"
+				@click="handleClickUser(user)"
       >
         <td>{{ user.firstName }} {{user.lastName}}</td>
         <td>{{ user.email }}</td>
@@ -46,13 +49,13 @@
     </tbody>
   </v-table>
 
-	<EditUserForm :showSelf="showForm" @close="handleClose()" :selectedUser="selectedUser" @save="handleSave(selectedUser)"/>
+	<UserForm :isAdmin=isAdmin :showSelf="showForm" @close="handleClose()" :selectedUser="selectedUser" @save="handleSave(selectedUser)"/>
 	
 	</div>
 </template>
 
 <script>
-import EditUserForm from '../components/EditUserForm.vue'
+import UserForm from '../components/UserForm.vue'
 import {ref} from "vue";
 export default {
 
@@ -88,24 +91,31 @@ export default {
             // Set to false when users have loading, default should be true
             loading: false,
 						showForm: ref(false),
-						selectedUser: {
+						isAdmin: ref(false),
+						selectedUser: ref({
 							firstName: "",
 							lastName: "",
 							email: "",
 							dob: ""
-						}
+						})
         };
     },
-    components: { EditUserForm },
+    components: { UserForm },
 
 		methods: {
-			handleClick(user) {
+			handleClickUser(user) {
 				this.showForm = true
 				this.selectedUser = user
 			},
 
-			handleClose() {
+			handleClickAdmin() {
+				this.showForm = true
+				this.isAdmin = true
+			},
+
+			resetDefaults() {
 				this.showForm = false
+				this.isAdmin = false
 				this.selectedUser = {
 					firstName: "",
 					lastName: "",
@@ -114,9 +124,16 @@ export default {
 				}
 			},
 
-			handleSave(user) {
+			handleClose() {
+				// small bug here where edit user is shown after closing admin creation
+				this.resetDefaults()
+			},
 
+			handleSave(user) {
+				this.resetDefaults()
 			}
+
+			// handle admin creation here or in form?
 		}
 }
 </script>

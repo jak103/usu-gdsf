@@ -7,7 +7,9 @@
     >
       <v-card>
         <v-card-title class="text-center">
-          <span class="text-h5">Edit User Profile</span>
+          <span v-if="isAdmin" class="text-h5">Create Admin Account</span>
+          <span v-else class="text-h5">Edit User Profile</span>
+          <span></span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -75,8 +77,9 @@
         </v-card-text>
         <v-card-actions>
           <v-btn
+            v-if="!isAdmin"
             color="error"
-            text
+            flat
             @click="$emit('delete', selectedUser)">
             Delete User
           </v-btn>
@@ -88,10 +91,19 @@
             Close
           </v-btn>
           <v-btn
+            v-if="!isAdmin"
             color="secondary"
-            text
+            flat
             @click="$emit('save', selectedUser)">
             Save
+          </v-btn>
+
+            <v-btn
+            v-if="isAdmin"
+            color="secondary"
+            text
+            @click="$emit('createAdmin', selectedUser)">
+            Create
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -103,6 +115,7 @@
 <script setup>
   defineProps({
     showSelf: Boolean,
+    isAdmin: Boolean,
     selectedUser: {
       firstName: String,
       lastName: String,
