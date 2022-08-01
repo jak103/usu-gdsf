@@ -5,7 +5,7 @@
     color="white"
   >
     <v-img
-      src="https://cdn.cloudflare.steamstatic.com/steam/apps/489830/capsule_616x353.jpg?t=1650909796"
+      :src="image"
       
     ></v-img>
 
@@ -55,6 +55,7 @@
         title: String,
         author: String,
         description: String,
+        image: String,
     },
 
     data: () => ({
