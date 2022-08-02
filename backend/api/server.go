@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"sync"
+	"os"
 
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/labstack/echo/v4"
@@ -47,6 +48,11 @@ func (s *Server) setupMiddleware() {
 	s.echo.Use(middleware.Gzip())
 	s.echo.Use(middleware.Recover())
 	s.echo.Use(middleware.CORS())
+
+	config := middleware.DefaultJWTConfig;
+	config.SigningKey = os.Getenv("USUGDSF_AUTH_TOKEN");
+
+	s.echo.Use(middleware.JWTWithConfig(config));
 
 	s.echo.Use(middleware.StaticWithConfig(middleware.StaticConfig{
 		Root:  "/frontend/dist",
