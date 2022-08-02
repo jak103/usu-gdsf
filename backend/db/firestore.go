@@ -38,6 +38,28 @@ func (db Firestore) GetGameByID(id string) (*models.Game, error) {
 	return &game, nil
 }
 
+func (db Firestore) GetGamesByTags(tags []string) ([]models.Game, error) {
+	games := make([]models.Game, 0)
+	gc := db.client.Collection("games")
+
+	documents := gc.Where("tags", "in", tags).Documents(context.Background())
+
+	for {
+		docRef, docRefErr := documents.Next()
+
+		if docRefErr == iterator.Done {
+			break
+		}
+
+		var game models.Game
+		docRef.DataTo(&game)
+
+		games = append(games, game)
+	}
+
+	return games, nil
+}
+
 func (db Firestore) GetAllGames() ([]models.Game, error) {
 	games := make([]models.Game, 0)
 	gc := db.client.Collection("games")

@@ -34,6 +34,25 @@ func (db Mongo) GetGameByID(id string) (*models.Game, error) {
 	return &res, nil
 }
 
+func (db Mongo) GetGamesByTags(tags []string) ([]models.Game, error) {
+	games := make([]models.Game, 0)
+	cursor, err := db.games.Find(context.Background(), bson.M{"tags": bson.M{"$in": tags}})
+	if err != nil {
+		log.WithError(err).Error("mongo find failed")
+		return nil, err
+	}
+	for cursor.Next(context.Background()) {
+		g := models.Game{}
+		err := cursor.Decode(&g)
+		if err != nil {
+			log.WithError(err).Error("Failed to decode cursor")
+			return nil, err
+		}
+		games = append(games, g)
+	}
+	return games, nil
+}
+
 func (db Mongo) GetAllGames() ([]models.Game, error) {
 	games := make([]models.Game, 0)
 
