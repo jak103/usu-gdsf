@@ -9,7 +9,12 @@ type route struct {
 }
 
 var routes []route = make([]route, 0)
+var restrictedRoutes []route = make([]route, 0)
 
 func registerRoute(r route) {
 	routes = append(routes, r)
+}
+
+func registerRestrictedRoute(r route) {
+	restrictedRoutes = append(restrictedRoutes, r)
 }

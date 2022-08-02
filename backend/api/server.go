@@ -13,6 +13,7 @@ import (
 
 type Server struct {
 	echo *echo.Echo
+	restricted *echo.Group
 	wg   *sync.WaitGroup
 }
 
@@ -49,15 +50,17 @@ func (s *Server) setupMiddleware() {
 	s.echo.Use(middleware.Recover())
 	s.echo.Use(middleware.CORS())
 
-	config := middleware.DefaultJWTConfig;
-	config.SigningKey = os.Getenv("USUGDSF_AUTH_TOKEN");
-
-	s.echo.Use(middleware.JWTWithConfig(config));
-
 	s.echo.Use(middleware.StaticWithConfig(middleware.StaticConfig{
 		Root:  "/frontend/dist",
 		HTML5: true,
 	}))
+
+	s.restricted = s.echo.Group("/restricted")
+
+	config := middleware.DefaultJWTConfig;
+	config.SigningKey = os.Getenv("USUGDSF_AUTH_TOKEN");
+
+	s.restricted.Use(middleware.JWTWithConfig(config));
 }
 
 func (s *Server) setupRoutes() {
@@ -68,6 +71,19 @@ func (s *Server) setupRoutes() {
 
 		case http.MethodPost:
 			s.echo.POST(route.path, route.handler)
+
+		default:
+			log.Error("Failed to register unknown method: %v", route.method)
+		}
+	}
+
+	for _, route := range restrictedRoutes {
+		switch route.method {
+		case http.MethodGet:
+			s.restricted.GET(route.path, route.handler)
+
+		case http.MethodPost:
+			s.restricted.POST(route.path, route.handler)
 
 		default:
 			log.Error("Failed to register unknown method: %v", route.method)
