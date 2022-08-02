@@ -79,5 +79,5 @@ func init() {
 	registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
 	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGameByID})
 	registerRoute(route{method: http.MethodGet, path: "/game", handler: getGames})
-	registerRoute(route{method: http.MethodPost, path: "/game/add", handler: newGameHandler})
+	registerRestrictedRoute(route{method: http.MethodPost, path: "/game/add", handler: newGameHandler})
 }
