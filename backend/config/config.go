@@ -10,7 +10,6 @@ import (
 
 // Environment
 var DbType string
-var RunEnv string
 var MongoUri string
 var FirestoreProjectId string
 
@@ -23,7 +22,6 @@ func init() {
 	log.Info("Running configuration init")
 	
 	DbType = strings.ToLower(getEnvVarString("DB_TYPE"))
-	RunEnv = getEnvVarString("RUN_ENV")
 
 	if DbType == "mongo" {
 		MongoUri = getEnvVarString("MONGO_URI")

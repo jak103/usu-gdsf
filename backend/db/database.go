@@ -29,9 +29,9 @@ type Database interface {
 
 func NewDatabaseFromEnv() (Database, error) {
 	if connection == nil {
-		runningEnv := config.RunEnv
+		dbType := config.DbType
 
-		switch runningEnv {
+		switch dbType {
 		case MOCK:
 			connection = &Mock{}
 		case FIRESTORE:
@@ -40,7 +40,7 @@ func NewDatabaseFromEnv() (Database, error) {
 			connection = &Mongo{}
 
 		default:
-			log.Error("Unknown RUN_ENV set %v", runningEnv)
+			log.Error("Unknown DB_TYPE %v", dbType)
 			return nil, errors.New("unknown RUN_ENV")
 		}
 
