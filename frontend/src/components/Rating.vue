@@ -1,7 +1,7 @@
 <template>
 		<v-card-actions> 
-			<span class="pr-2">
-				{{ rating }}
+			<span class="pr-1">
+				({{ rating }})
 			</span>
 			<v-rating
 				v-model="rating"
