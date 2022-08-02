@@ -70,10 +70,7 @@ func newGameHandler(c echo.Context) error {
 	}
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Database add game error")
-	}
-
-	// register new route with ID
-	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
+	}	
 
 	// TODO return successful game add
 	return c.JSON(http.StatusOK, "New game handler")
@@ -83,18 +80,5 @@ func init() {
 	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
-
-	// register routes for all games from the db
-	log.Info("Creating routes for all games in database")
-	_db, getDbErr := db.NewDatabaseFromEnv()
-	if getDbErr != nil {
-		return
-	}
-	games, getGamesErr := _db.GetAllGames()
-	if getGamesErr != nil {
-		return
-	}
-	for range games {
-		registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
-	}
+	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
 }
