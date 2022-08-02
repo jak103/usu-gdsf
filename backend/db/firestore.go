@@ -1,15 +1,16 @@
 package db
 
 import (
-	"cloud.google.com/go/firestore"
 	"context"
+	_ "os"
+
+	"cloud.google.com/go/firestore"
 	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"google.golang.org/api/iterator"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	_ "os"
 )
 
 var _ Database = (*Firestore)(nil)
@@ -47,15 +48,23 @@ func (db Firestore) RemoveGame(game models.Game) error {
 
 // GetGamesByTag search and return all games with given tag
 // TODO not tested
-func (db Firestore) GetGamesByTag(tag string) ([]models.Game, error) {
+func (db Firestore) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, error) {
 	// query
 	gc := db.client.Collection("games")
-	result := gc.Where("tags", "array-contains", tag)
+	operator := ""
+
+	if matchAll {
+		operator = "array-contains"
+	} else {
+		operator = "array-contains-any"
+	}
+
+	result := gc.Where("tags", operator, tags)
 
 	// get docs
 	docs, err := result.Documents(context.Background()).GetAll()
 	if err != nil {
-		log.WithError(err).Error("Firestore query error in GetGamesByTag")
+		log.WithError(err).Error("Firestore query error in GetGamesByTags")
 		return []models.Game{}, err
 	}
 
