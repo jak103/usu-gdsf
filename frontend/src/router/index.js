@@ -18,14 +18,34 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
-      path: '/info/:id',
+      path: '/account',
+      name: 'account',
+      component: () => import('../views/AccountPage.vue')
+    },
+    {
+      path: '/games/all',
+      name: 'allGames',
+      component: () => import('../views/AllGamesPage.vue')
+    },
+    {
+      path: '/games/info/:id',
       name: 'info',
       component: () => import('../views/GameInfo.vue')
     },
     {
-      path: '/admin',
-      name: 'admin',
-      component: () => import('../views/AdminPage.vue')
+      path: '/admin/login',
+      name: 'login',
+      component: () => import('../views/LoginPage.vue')
+    },
+    {
+      path: '/admin/games/manage',
+      name: 'manageGames',
+      component: () => import('../views/GameManagementPage.vue')
+    },
+    {
+      path: '/admin/users',
+      name: 'users',
+      component: () => import('../views/UsersPage.vue')
     },
   ]
 })

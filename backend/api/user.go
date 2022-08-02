@@ -59,7 +59,6 @@ func register(c echo.Context) error {
 	}
 
 	newUser := models.User{
-		12, //TODO Handle id creation
 		c.FormValue("email"),
 		passwordHash,
 		c.FormValue("firstName"),
@@ -128,9 +127,9 @@ func init() {
 	registerRoute(route{method: http.MethodGet, path: "/user", handler: user})
 	registerRoute(route{method: http.MethodGet, path: "/user/register", handler: register})
 	registerRoute(route{
-		method: http.MethodGet, 
-		path: "user/downloads", 
-		handler: downloads,
+		method:      http.MethodGet,
+		path:        "user/downloads",
+		handler:     downloads,
 		requireAuth: true,
 	})
 }

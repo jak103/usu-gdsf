@@ -33,13 +33,13 @@ func main() {
 }
 
 func setupDatabaseConnection() error {
-	db, err := db.NewDatabaseFromEnv()
+	_db, err := db.NewDatabaseFromEnv()
 
 	if err != nil {
 		log.WithError(err).Error("Error starting database...")
 		return err
 	} else {
-		if cerr := db.Connect(); cerr != nil {
+		if cerr := _db.Connect(); cerr != nil {
 			log.WithError(cerr).Error("Error connecting to database...")
 			return cerr
 		}
