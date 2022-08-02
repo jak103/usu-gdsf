@@ -42,7 +42,7 @@ func NewDatabaseFromEnv() (Database, error) {
 			connection = &Mongo{}
 
 		default:
-			log.Error("Unknown DB_TYPE set %v", runningEnv)
+			log.Error("Unknown DB_TYPE set %v", dbType)
 			return nil, errors.New("unknown DB_TYPE")
 		}
 	}
