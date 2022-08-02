@@ -26,10 +26,6 @@ Server settings are configured using environment variables. The following enviro
 * `DB_TYPE`
 
   Specifies which database to use. Valid values are `firestore` and `mongo`
-  
-* `RUN_ENV`
-
-  Specifies which database to use. Valid values are `firestore`, `mongo`, and `mock`
 
 * `MONGO_URI` (only if `DB_TYPE` is `mongo`)
 
