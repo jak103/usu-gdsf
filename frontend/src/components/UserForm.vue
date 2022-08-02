@@ -1,9 +1,14 @@
-<!-- This component operates as a model to edit users -->
+<!-- 
+  This component operates as an admin tool to edit users and create admin accounts.
+  It could easily be used to update accounts from the /accounts page, just make sure isAdmin
+  is set to false.
+ -->
 <template>
   <v-row justify="center">
     <v-dialog
       persistent
       v-model="showSelf"
+      @afterLeave="$emit('leftDialog')"
     >
       <v-card>
         <v-card-title class="text-center">
@@ -17,7 +22,7 @@
               <v-col
                 style="padding-top: 0; padding-bottom: 0; margin-bottom: 0;"
                 cols="12"
-                sm="4"
+                sm="6"
                 md="6"
               >
                 <v-text-field
@@ -29,11 +34,12 @@
               <v-col
                 style="padding-top: 0; padding-bottom: 0; margin-bottom: 0;"
                 cols="12"
-                sm="4"
+                sm="6"
                 md="6"
               >
                 <v-text-field
                   label="Last Name*"
+                  :rules="[rules.required, rules.counter]"
                   v-model="selectedUser.lastName"
                   persistent-hint
                   required
@@ -54,10 +60,12 @@
               <v-col 
                 style="padding-top: 0; padding-bottom: 0; margin-bottom: 0;"
                 cols="12"
+                class="overflow-hidden"
               >
                 <v-text-field
                   label="Email*"
                   type="email"
+                  :rules="[rules.email]"
                   v-model="selectedUser.email"
                   required
                 ></v-text-field>
@@ -79,21 +87,18 @@
           <v-btn
             v-if="!isAdmin"
             color="error"
-            flat
             @click="$emit('delete', selectedUser)">
             Delete User
           </v-btn>
           <v-spacer></v-spacer>
           <v-btn
             color="secondary"
-            text
             @click="$emit('close')">
             Close
           </v-btn>
           <v-btn
             v-if="!isAdmin"
             color="secondary"
-            flat
             @click="$emit('save', selectedUser)">
             Save
           </v-btn>
@@ -101,7 +106,6 @@
             <v-btn
             v-if="isAdmin"
             color="secondary"
-            text
             @click="$emit('createAdmin', selectedUser)">
             Create
           </v-btn>
@@ -123,4 +127,12 @@
     }
   });
 
+  let rules = {
+    required: value => !!value || '',
+    counter: value => value.length <= 20 || 'Max 20 characters',
+    email: value => {
+      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      return pattern.test(value) || 'Invalid e-mail.'
+    }
+  }
 </script>

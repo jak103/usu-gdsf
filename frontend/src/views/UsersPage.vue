@@ -41,7 +41,7 @@
         v-for="user in users"
         :key="user.email"
 				style="cursor: pointer"
-				@click="handleClickUser(user)"
+				@click="handleClickUser(() => { return {...user}})"
       >
         <td>{{ user.firstName }} {{user.lastName}}</td>
         <td>{{ user.email }}</td>
@@ -49,7 +49,14 @@
     </tbody>
   </v-table>
 
-	<UserForm :isAdmin=isAdmin :showSelf="showForm" @close="handleClose()" :selectedUser="selectedUser" @save="handleSave(selectedUser)"/>
+	<UserForm :isAdmin=isAdmin 
+		:showSelf="showForm" 
+		@close="handleClose()" 
+		@leftDialog="resetDefaults()" 
+		:selectedUser="selectedUser" 
+		@save="handleSave(selectedUser)"
+		@createAdmin="handleCreateAdmin(selectedUser)"	
+	/>
 	
 	</div>
 </template>
@@ -125,15 +132,22 @@ export default {
 			},
 
 			handleClose() {
-				// small bug here where edit user is shown after closing admin creation
+				this.showForm = false
+			},
+
+			handleSaveEdit(user) {
+				// Find user
 				this.resetDefaults()
 			},
 
-			handleSave(user) {
-				this.resetDefaults()
-			}
+			handleDeleteUser(user) {
+				// Find user
 
-			// handle admin creation here or in form?
+			},
+
+			handleCreateAdmin(user) {
+				console.log(user)
+			}
 		}
 }
 </script>
