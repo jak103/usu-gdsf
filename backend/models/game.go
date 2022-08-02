@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Game struct {
-	Id           int
+	Id           string
 	Name         string
 	Author       string
 	CreationDate time.Time
