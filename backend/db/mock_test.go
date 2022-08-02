@@ -23,3 +23,11 @@ func TestGetGameByID(t *testing.T) {
 
 	assert.Equal(t, game.ID.String(), id)
 }
+
+func TestGetAllGames(t *testing.T) {
+	mock := Mock{}
+	mock.Connect()
+	allGames, _ := mock.GetAllGames()
+	assert.Equal(t, len(mock.games), len(allGames))
+	assert.Greater(t, len(allGames), 0)
+}
