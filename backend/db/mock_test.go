@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,8 +19,8 @@ func TestGetGameByID(t *testing.T) {
 	mock.Connect()
 
 	keys := reflect.ValueOf(mock.games).MapKeys()
-	id := keys[rand.Intn(len(keys))].Interface().(string)
+	id := keys[rand.Intn(len(keys))].Interface().(uuid.UUID)
 	game, _ := mock.GetGameByID(id)
 
-	assert.Equal(t, game.ID.String(), id)
+	assert.Equal(t, game.ID, id)
 }
