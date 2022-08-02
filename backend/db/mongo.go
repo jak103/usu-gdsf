@@ -115,37 +115,6 @@ func containsGame(games []models.Game, game models.Game) bool {
 	return false
 }
 
-// GetGameID search for the given game and return its hex ID
-func (db Mongo) GetGameID(game models.Game) (string, error) {
-	gc := db.database.Collection("games")
-	result := gc.FindOne(context.Background(), bson.M{
-		"name":         game.Name,
-		"author":       game.Author,
-		"creationdate": game.CreationDate,
-		"version":      game.Version,
-		"tags":         game.Tags,
-	}, options.FindOne().SetShowRecordID(true))
-
-	// handle no doc found error
-	if result.Err() == mongo.ErrNoDocuments {
-		log.Error("No document found in Mongo GetGameID")
-		return "", result.Err()
-	}
-
-	// decode found document
-	data := bson.M{}
-	err := result.Decode(&data)
-	if err != nil {
-		log.WithError(err).Error("Cannot decode result in Mongo GetGameID")
-		return "", err
-	}
-
-	// convert objectID to hex
-	id := data["_id"].(primitive.ObjectID).Hex()
-
-	return id, nil
-}
-
 // GetGameByID find and return the game with the given db hex id
 func (db Mongo) GetGameByID(id string) (models.Game, error) {
 	// convert hex id to object ID
@@ -217,6 +186,7 @@ func DecodeBsonData(data bson.M) (models.Game, error) {
 
 	// load game model
 	game := models.Game{
+		Id:           data["_id"].(primitive.ObjectID).Hex(),
 		Name:         data["name"].(string),
 		Author:       data["author"].(string),
 		CreationDate: date,

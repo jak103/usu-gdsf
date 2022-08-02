@@ -70,15 +70,6 @@ func containsTag(a []string, el string) bool {
 	return false
 }
 
-func (db Mock) GetGameID(game models.Game) (string, error) {
-	for i, v := range db.games {
-		if reflect.DeepEqual(v, game) {
-			return i, nil
-		}
-	}
-	return "", errors.New("mockDB: ID couldn't be found with given game")
-}
-
 func (db Mock) GetGameByID(id string) (models.Game, error) {
 	return db.games[id], nil
 }

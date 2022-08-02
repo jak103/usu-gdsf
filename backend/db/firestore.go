@@ -83,26 +83,6 @@ func (db Firestore) GetGamesByTags(tags []string, matchAll bool) ([]models.Game,
 	return games, nil
 }
 
-// GetGameID search for the given game and return its db ID
-// TODO not tested
-func (db Firestore) GetGameID(game models.Game) (string, error) {
-	// query
-	gc := db.client.Collection("games")
-	q := gc.Where("name", "==", game.Name).Where("author", "==", game.Author)
-	q1 := q.Where("creationdate", "==", game.CreationDate).Where("version", "==", game.Version)
-	result := q1.Where("tags", "==", game.Tags)
-	result = result.Limit(1)
-
-	// get id from query result
-	docs, err := result.Documents(context.Background()).GetAll()
-	if err != nil {
-		log.WithError(err).Error("Firestore query error in GetGameID")
-		return "", err
-	}
-	doc := docs[0]
-	return doc.Ref.ID, nil
-}
-
 // GetGameByID find and return the game with the given db ID
 // TODO not tested
 func (db Firestore) GetGameByID(id string) (models.Game, error) {
