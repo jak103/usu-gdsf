@@ -27,5 +27,7 @@ func TestGetGameByID(t *testing.T) {
 func TestGetAllGames(t *testing.T) {
 	mock := Mock{}
 	mock.Connect()
-	assert.Greater(t, len(mock.games), 0)
+	allGames, _ := mock.GetAllGames()
+	assert.Equal(t, len(mock.games), len(allGames))
+	assert.Greater(t, len(allGames), 0)
 }
