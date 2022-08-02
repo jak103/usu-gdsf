@@ -28,7 +28,7 @@ func NewDatabaseFromEnv() (Database, error) {
 	if connection == nil {
 		dbType, wasSet := os.LookupEnv("DB_TYPE")
 
-		if !wasSet || len(runningEnv) == 0 {
+		if !wasSet || len(dbType) == 0 {
 			log.Error("Environment variable DB_TYPE was not set correctly")
 			return nil, errors.New("DB_TYPE not set")
 		}
