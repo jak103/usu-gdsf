@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
@@ -11,7 +13,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"time"
 )
 
 var _ Database = (*Mongo)(nil)
@@ -68,6 +69,50 @@ func (db Mongo) GetGamesByTag(s string) ([]models.Game, error) {
 	}
 
 	return games, nil
+}
+
+// GetGamesByTag search and return all games with given tag
+func (db Mongo) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, error) {
+	result, err := db.GetGamesByTag(tags[0])
+	if err != nil {
+		log.WithError(err).Error("Error getting games with tags")
+		return nil, err
+	}
+
+	for _, tag := range tags[1:] {
+		games, err := db.GetGamesByTag(tag)
+
+		if err != nil {
+			log.WithError(err).Error("Error getting games with tags")
+			return nil, err
+		}
+
+		if matchAll {
+			for i, game := range result {
+				if !containsGame(games, game) {
+					result[i] = result[len(result)-1]
+					result = result[:len(result)-1]
+				}
+			}
+		} else {
+			for _, game := range games {
+				if !containsGame(result, game) {
+					result = append(result, game)
+				}
+			}
+		}
+	}
+	return result, nil
+}
+
+// Helper function to check if one array contains an element
+func containsGame(games []models.Game, game models.Game) bool {
+	for _, v := range games {
+		if v.Id == game.Id {
+			return true
+		}
+	}
+	return false
 }
 
 // GetGameByID find and return the game with the given db hex id
@@ -141,7 +186,6 @@ func DecodeBsonData(data bson.M) (models.Game, error) {
 
 	// load game model
 	game := models.Game{
-		Id:           data["_id"].(primitive.ObjectID).Hex(),
 		Name:         data["name"].(string),
 		Author:       data["author"].(string),
 		CreationDate: date,

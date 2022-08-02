@@ -1,10 +1,11 @@
 package db
 
 import (
-	"github.com/jak103/usu-gdsf/models"
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/jak103/usu-gdsf/models"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -54,10 +55,10 @@ func TestMongo_Tags(t *testing.T) {
 	game0.Id = id0
 	game1.Id = id1
 
-	res0, _ := _db.GetGamesByTag("tag0")
-	res1, _ := _db.GetGamesByTag("tag1")
-	res2, _ := _db.GetGamesByTag("tag2")
-	res3, _ := _db.GetGamesByTag("bad tag")
+	res0, _ := _db.GetGamesByTags([]string{"tag0"}, false)
+	res1, _ := _db.GetGamesByTags([]string{"tag1"}, false)
+	res2, _ := _db.GetGamesByTags([]string{"tag3"}, false)
+	res3, _ := _db.GetGamesByTags([]string{"bad tag"}, false)
 
 	// result size
 	assert.Equal(t, 1, len(res0))

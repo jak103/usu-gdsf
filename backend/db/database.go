@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
@@ -21,21 +22,22 @@ type Database interface {
 	AddGame(models.Game) (string, error)
 	RemoveGame(models.Game) error
 	GetGameByID(string) (models.Game, error)
-	GetGamesByTag(string) ([]models.Game, error)
+	GetGamesByTags([]string, bool) ([]models.Game, error)
+	GetGameID(models.Game) (string, error)
 	Disconnect() error
 	Connect() error
 }
 
 func NewDatabaseFromEnv() (Database, error) {
 	if connection == nil {
-		dbType := config.DbType
+		dbType := strings.ToLower(config.DbType)
 
 		switch dbType {
-		case MOCK:
+		case "mock":
 			connection = &Mock{}
-		case FIRESTORE:
+		case "firestore":
 			connection = &Firestore{}
-		case MONGO:
+		case "mongo":
 			connection = &Mongo{}
 
 		default:
