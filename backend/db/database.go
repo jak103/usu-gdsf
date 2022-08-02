@@ -33,7 +33,7 @@ func NewDatabaseFromEnv() (Database, error) {
 			return nil, errors.New("DB_TYPE not set")
 		}
 
-		switch runningEnv {
+		switch dbType {
 		case MOCK:
 			connection = &Mock{}
 		case FIRESTORE:
