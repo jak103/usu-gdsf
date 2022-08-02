@@ -1,7 +1,7 @@
 <template>
 		<v-card-actions> 
-			<span class="pr-2">
-				{{ rating }}
+			<span class="pr-1">
+				({{ rating }})
 			</span>
 			<v-rating
 				v-model="rating"
@@ -40,11 +40,10 @@ export default {
         starSize:Number,
         isHalfIncrements:Boolean,
         isHover:Boolean,
-        value:Number
+        value:Number,
+        ["rating"]
     },
 
-    data: () => ({
-        rating: 3,
-    }),
+    data: () => ({}),
 }
 </script>
