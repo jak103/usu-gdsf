@@ -1,8 +1,15 @@
 package models
 
+import (
+	"github.com/google/uuid"
+)
+
 type Game struct {
-	Name         string
-	Author       string
-	CreationDate string
-	Version      string
+	ID      uuid.UUID
+	Title        string
+	Description  string
+	UserID       uuid.UUID
+	VersionNumber string
 }
+
+// todo, create and store unqiue uuids
