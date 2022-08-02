@@ -1,4 +1,5 @@
 <template>
+  <h3>Filtered Games</h3>
   <v-sheet
     class="mx-auto"
     max-width="100%"
