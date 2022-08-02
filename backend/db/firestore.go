@@ -20,24 +20,15 @@ type Firestore struct {
 }
 
 // RemoveGame removes the given game from the db
-// TODO not tested
 func (db Firestore) RemoveGame(game models.Game) error {
 	// query
-	gc := db.client.Collection("games")
-	q := gc.Where("name", "==", game.Name).Where("author", "==", game.Author)
-	q1 := q.Where("creationdate", "==", game.CreationDate).Where("version", "==", game.Version)
-	result := q1.Where("tags", "==", game.Tags)
-	result = result.Limit(1)
-
-	// get doc
-	docs, err := result.Documents(context.Background()).GetAll()
+	snapShot, err := db.client.Collection("games").Doc(game.Id).Get(context.Background())
 	if err != nil {
 		log.WithError(err).Error("Firestore query error in RemoveGame")
-		return err
 	}
 
 	// delete doc
-	_, err = docs[0].Ref.Delete(context.Background())
+	_, err = snapShot.Ref.Delete(context.Background())
 	if err != nil {
 		log.WithError(err).Error("Firestore deletion error in RemoveGame")
 		return err
@@ -47,19 +38,17 @@ func (db Firestore) RemoveGame(game models.Game) error {
 }
 
 // GetGamesByTag search and return all games with given tag
-// TODO not tested
 func (db Firestore) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, error) {
 	// query
 	gc := db.client.Collection("games")
 	operator := ""
-
 	if matchAll {
 		operator = "array-contains"
 	} else {
 		operator = "array-contains-any"
 	}
 
-	result := gc.Where("tags", operator, tags)
+	result := gc.Where("Tags", operator, tags)
 
 	// get docs
 	docs, err := result.Documents(context.Background()).GetAll()
@@ -73,6 +62,7 @@ func (db Firestore) GetGamesByTags(tags []string, matchAll bool) ([]models.Game,
 	for i, doc := range docs {
 		game := models.Game{}
 		err = doc.DataTo(&game)
+		game.Id = doc.Ref.ID
 		if err != nil {
 			log.WithError(err).Error("Firestore decode error in GetGamesByTag")
 			return []models.Game{}, err
@@ -84,7 +74,6 @@ func (db Firestore) GetGamesByTags(tags []string, matchAll bool) ([]models.Game,
 }
 
 // GetGameByID find and return the game with the given db ID
-// TODO not tested
 func (db Firestore) GetGameByID(id string) (models.Game, error) {
 	snapShot, err := db.client.Collection("games").Doc(id).Get(context.Background())
 	if status.Code(err) == codes.NotFound {
@@ -92,6 +81,7 @@ func (db Firestore) GetGameByID(id string) (models.Game, error) {
 	}
 	game := models.Game{}
 	convErr := snapShot.DataTo(&game)
+	game.Id = snapShot.Ref.ID
 	if convErr != nil {
 		log.WithError(convErr).Error("Cannot convert firestore snapshot to game struct")
 	}
@@ -99,7 +89,6 @@ func (db Firestore) GetGameByID(id string) (models.Game, error) {
 }
 
 // AddGame Add a new game to the remote database. Returns unique game ID
-// TODO not tested
 func (db Firestore) AddGame(game models.Game) (string, error) {
 	docRef, _, err := db.client.Collection("games").Add(context.Background(), game)
 
@@ -126,6 +115,7 @@ func (db Firestore) GetAllGames() ([]models.Game, error) {
 
 		if docSnapshot, _ := docRef.Get(context.Background()); docSnapshot != nil {
 			_ = docSnapshot.DataTo(&game)
+			game.Id = docRef.ID
 		}
 
 		games = append(games, game)
