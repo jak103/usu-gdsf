@@ -6,6 +6,8 @@ export default {
     "Clark Smith",
     "Jayden Bates",
     "Matthew Larsen",
-    "Benjamin Winslett"
+    "Benjamin Winslett",
+    "Sriya Gorrepati",
+    "Elijah Peterson"
   ]
 }
