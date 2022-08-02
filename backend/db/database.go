@@ -18,7 +18,11 @@ var connection Database
 
 type Database interface {
 	GetAllGames() ([]models.Game, error)
-
+	AddGame(models.Game) (string, error)
+	RemoveGame(models.Game) error
+	GetGameByID(string) (models.Game, error)
+	GetGamesByTag(string) ([]models.Game, error)
+	GetGameID(models.Game) (string, error)
 	Disconnect() error
 	Connect() error
 }
@@ -39,7 +43,12 @@ func NewDatabaseFromEnv() (Database, error) {
 			log.Error("Unknown RUN_ENV set %v", runningEnv)
 			return nil, errors.New("unknown RUN_ENV")
 		}
-	}
 
+		err := connection.Connect()
+		if err != nil {
+			log.WithError(err).Error("Could not connect to database")
+			return nil, err
+		}
+	}
 	return connection, nil
 }
