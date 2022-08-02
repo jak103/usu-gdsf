@@ -33,9 +33,7 @@ export default {
     something: 'This is where we will implement a dynamic view of different games. We will need to pass in props.'
   }),
   
-  methods: {
-    
-  },
+  props: ["tag"],
 
   components: {
     GameCardView,

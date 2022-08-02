@@ -38,13 +38,22 @@
     <v-row>
       <h1>Spring 2022</h1>
     </v-row>
-      <GameList></GameList>
+    <v-row class="ma-2">
+      <GameList :tag="spring2022"></GameList>
+    </v-row>
+
     <v-row>
-      
       <h1>Puzzles</h1>
     </v-row>
     <v-row class="ma-2">
-      <GameList></GameList>
+      <GameList :tag="puzzle"></GameList>
+    </v-row>
+
+    <v-row>
+      <h1>Most Popular</h1>
+    </v-row>
+    <v-row class="ma-2">
+      <GameList :tag="mostPopular"></GameList>
     </v-row>
   <v-row>
     <Footer></Footer>
