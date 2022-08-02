@@ -50,6 +50,7 @@ services:
       - gcs-volume:/data
     ports:
       - 4443:4443
+    command: "-scheme http"
 
 volumes:
   mongo-volume:
