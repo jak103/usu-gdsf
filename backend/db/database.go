@@ -26,11 +26,11 @@ type Database interface {
 
 func NewDatabaseFromEnv() (Database, error) {
 	if connection == nil {
-		runningEnv, wasSet := os.LookupEnv("RUN_ENV")
+		runningEnv, wasSet := os.LookupEnv("DB_TYPE")
 
 		if !wasSet || len(runningEnv) == 0 {
-			log.Error("Environment variable RUN_ENV was not set correctly")
-			return nil, errors.New("RUN_ENV not set")
+			log.Error("Environment variable DB_TYPE was not set correctly")
+			return nil, errors.New("DB_TYPE not set")
 		}
 
 		switch runningEnv {
@@ -42,8 +42,8 @@ func NewDatabaseFromEnv() (Database, error) {
 			connection = &Mongo{}
 
 		default:
-			log.Error("Unknown RUN_ENV set %v", runningEnv)
-			return nil, errors.New("unknown RUN_ENV")
+			log.Error("Unknown DB_TYPE set %v", runningEnv)
+			return nil, errors.New("unknown DB_TYPE")
 		}
 	}
 
