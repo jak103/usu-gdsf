@@ -12,9 +12,9 @@ import (
 )
 
 type Server struct {
-	echo *echo.Echo
-	restricted *echo.Group
-	wg   *sync.WaitGroup
+	echo      *echo.Echo
+	jwtConfig middleware.JWTConfig
+	wg        *sync.WaitGroup
 }
 
 func NewServer(wg *sync.WaitGroup) *Server {
@@ -27,6 +27,9 @@ func NewServer(wg *sync.WaitGroup) *Server {
 func (s *Server) Start() {
 	log.Info("Starting API server")
 	s.echo = echo.New()
+
+	s.jwtConfig = middleware.DefaultJWTConfig;
+	s.jwtConfig.SigningKey = os.Getenv("USUGDSF_AUTH_TOKEN");
 
 	s.setupMiddleware()
 	s.setupRoutes()
@@ -55,12 +58,6 @@ func (s *Server) setupMiddleware() {
 		HTML5: true,
 	}))
 
-	s.restricted = s.echo.Group("/restricted")
-
-	config := middleware.DefaultJWTConfig;
-	config.SigningKey = os.Getenv("USUGDSF_AUTH_TOKEN");
-
-	s.restricted.Use(middleware.JWTWithConfig(config));
 }
 
 func (s *Server) setupRoutes() {
@@ -80,10 +77,10 @@ func (s *Server) setupRoutes() {
 	for _, route := range restrictedRoutes {
 		switch route.method {
 		case http.MethodGet:
-			s.restricted.GET(route.path, route.handler)
+			s.echo.GET(route.path, route.handler, middleware.JWTWithConfig(s.jwtConfig))
 
 		case http.MethodPost:
-			s.restricted.POST(route.path, route.handler)
+			s.echo.POST(route.path, route.handler, middleware.JWTWithConfig(s.jwtConfig))
 
 		default:
 			log.Error("Failed to register unknown method: %v", route.method)
