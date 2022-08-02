@@ -26,7 +26,7 @@ type Database interface {
 
 func NewDatabaseFromEnv() (Database, error) {
 	if connection == nil {
-		runningEnv, wasSet := os.LookupEnv("DB_TYPE")
+		dbType, wasSet := os.LookupEnv("DB_TYPE")
 
 		if !wasSet || len(runningEnv) == 0 {
 			log.Error("Environment variable DB_TYPE was not set correctly")
