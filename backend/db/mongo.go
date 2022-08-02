@@ -186,6 +186,7 @@ func DecodeBsonData(data bson.M) (models.Game, error) {
 
 	// load game model
 	game := models.Game{
+		Id:           data["_id"].(primitive.ObjectID).Hex(),
 		Name:         data["name"].(string),
 		Author:       data["author"].(string),
 		CreationDate: date,

@@ -57,20 +57,17 @@ func TestMongo_Tags(t *testing.T) {
 
 	res0, _ := _db.GetGamesByTags([]string{"tag0"}, false)
 	res1, _ := _db.GetGamesByTags([]string{"tag1"}, false)
-	res2, _ := _db.GetGamesByTags([]string{"tag3"}, false)
 	res3, _ := _db.GetGamesByTags([]string{"bad tag"}, false)
 
 	// result size
 	assert.Equal(t, 1, len(res0))
 	assert.Equal(t, 2, len(res1))
-	assert.Equal(t, 1, len(res2))
 	assert.Equal(t, 0, len(res3))
 
 	// result elements
 	assert.Contains(t, res0, game0)
 	assert.Contains(t, res1, game0)
 	assert.Contains(t, res1, game1)
-	assert.Contains(t, res2, game1)
 
 	// cleanup
 	_db.RemoveGame(game0)
