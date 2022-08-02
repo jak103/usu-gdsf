@@ -28,6 +28,7 @@ services:
       - DB_TYPE=mongo
       - RUN_ENV=mongo
       - MONGO_URI=mongodb://gdsf:gdsf@db:27017
+      - USUGDSF_AUTH_TOKEN=triangle
     command: gin --appPort 8080 -i run .
 
   db:
