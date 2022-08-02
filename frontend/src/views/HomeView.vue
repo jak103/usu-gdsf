@@ -11,7 +11,6 @@
     <!-- Break out Games by: Semester, Type -->
     <v-row class="mt-4">
       <FilteredGameList></FilteredGameList>
-      <!-- <GameList></GameList> -->
     </v-row>
   </v-container>
 </template>
