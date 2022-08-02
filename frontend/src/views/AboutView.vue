@@ -25,7 +25,7 @@ export default {
   name: 'AboutView',
 
   data: () => ({
-    moreWords: 'This will be a page of general text and information about our project'
+    moreWords: 'This project was made in part by Team 2. And gamers like you. Thank you'
   })
 }
 </script>

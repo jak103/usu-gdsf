@@ -16,8 +16,30 @@
     </v-container>
   </v-main>
 
-  <v-footer color="teal" app>
-    Bottom navigation info and copyright stuff. &copy; 2022
+  <v-footer color="primary" app
+  paddless
+  >
+  <v-row
+  justify="center"
+  no-gutters
+  >
+  <v-btn
+        v-for="link in links"
+        :key="link"
+        color="secondary"
+        text
+        rounded
+        class="my-2"
+      >
+        {{ link }}
+      </v-btn>
+      <v-col
+        class="primary lighten-2 py-4 text-center black--text"
+        cols="12"
+      >
+        {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
+      </v-col>
+  </v-row>
   </v-footer>
   </v-app>
 </template>
@@ -35,6 +57,11 @@ export default {
 },
 
   data: () => ({
+    links: [
+      'USU CS Department',
+      'About Us',
+      'Contact Us',
+    ],
 
   }),
 
