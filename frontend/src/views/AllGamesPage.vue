@@ -3,27 +3,27 @@
 		<v-table>
 			<thead>
 				<tr>
-					<th></th> <!--Image-->
-					<th class="text-left">
+					<th width="100px"></th> <!--Image-->
+					<th class="text-left" width="15%">
 					Name
 					</th>
-					<th class="text-left">
+					<th class="text-left" width="15%">
 					Developer
 					</th>
-					<th class="text-left">
+					<th class="text-left" width="15%">
 					Tags
 					</th>
-					<th class="text-left">
+					<th class="text-left" width="10%">
 					Times Played/Downloaded
 					</th>
-					<th class="text-left">
+					<th class="text-left" width="15%">
 					Rating
 					</th>
 					<th></th><!--Tooltip info with description-->
 				</tr>
 			</thead>
 			<tbody>
-				<tr	v-for="item in games" :key="item.id">
+				<tr	link v-for="item in games" :key="item.id" @click.stop="handleClickGame(item.id)">
 					<td>
 						<v-img
 							height="75"
@@ -81,7 +81,9 @@ export default {
 	},
 
 	methods: {
-
+		handleClickGame(id) {
+			this.$router.push("/games/info/" + id)
+		}
 	}
 
 }
