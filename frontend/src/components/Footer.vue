@@ -1,14 +1,15 @@
 <template>
-  <v-footer color="teal" app>
     <v-container>
+      <v-divider class="ma-3"></v-divider>
         <v-row justify="center">
-        <v-btn v-for="link of links" :href="link.link" color="teal"> {{ link.name }}</v-btn>
-        <v-col cols="12" class="text-center">
-          Created by Summer 2022 CS 5890 Intro to DevOps Course &copy; 2022
+        <v-col class="text-center">
+          Summer 2022 CS 5890 Intro to DevOps &copy; 2022
         </v-col>
+          <v-col class="text-center" v-for="link of links">
+            <a :href="link.link" class="text-primary"> {{ link.name }}</a>
+          </v-col>
         </v-row>
     </v-container>
-  </v-footer>
 </template>
 
 <script>
