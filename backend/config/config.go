@@ -1,6 +1,7 @@
 package config
 
 import (
+	"bufio"
 	"os"
 	"strconv"
 	"strings"
@@ -21,32 +22,74 @@ var RefreshTokenLifetimeDays int64
 func init() {
 	log.Info("Running configuration init")
 	
-	DbType = strings.ToLower(getEnvVarString("DB_TYPE"))
+	envFileMap := mapVariablesFromEnvFile()
+	
+	DbType = strings.ToLower(getEnvVarString("DB_TYPE", envFileMap))
 	
 	if DbType == "mongo" {
-		MongoUri = getEnvVarString("MONGO_URI")
+		MongoUri = getEnvVarString("MONGO_URI", envFileMap)
 	} else if DbType == "firestore" {
-		FirestoreProjectId = getEnvVarString("FIRESTORE_PROJECT_ID")
+		FirestoreProjectId = getEnvVarString("FIRESTORE_PROJECT_ID", envFileMap)
 	}
 	
-	TokenHashingKey = getEnvVarString("TOKEN_HASHING_KEY")
-	AccessTokenLifetimeMins = getEnvVarInt64("ACCESS_TOKEN_LIFETIME_MINS")
-	RefreshTokenLifetimeDays = getEnvVarInt64("REFRESH_TOKEN_LIFETIME_DAYS")
+	TokenHashingKey = getEnvVarString("TOKEN_HASHING_KEY", envFileMap)
+	AccessTokenLifetimeMins = getEnvVarInt64("ACCESS_TOKEN_LIFETIME_MINS", envFileMap)
+	RefreshTokenLifetimeDays = getEnvVarInt64("REFRESH_TOKEN_LIFETIME_DAYS", envFileMap)
 }
 
-func getEnvVarString(key string) string {
+func mapVariablesFromEnvFile() map[string]string {
+	envMap := make(map[string]string)
+
+	envFile, err := os.Open("./.env")
+
+	if err != nil {
+		return envMap
+	}
+
+	defer envFile.Close()
+
+	envFileScanner := bufio.NewScanner(envFile)
+	for envFileScanner.Scan() {
+		line := strings.TrimSpace(envFileScanner.Text())
+
+		if len(line) == 0 || line[0:1] == "#" {
+			continue
+		}
+		
+		commentSplit := strings.SplitN(line, "#", 2)
+		keyValString := commentSplit[0]
+
+		if !strings.Contains(keyValString, "=") {
+			continue
+		}
+
+		splitKeyVal := strings.SplitN(keyValString, "=", 2)
+		key := splitKeyVal[0]
+		val := splitKeyVal[1]
+
+		envMap[key] = val
+	}
+
+	return envMap
+}
+
+func getEnvVarString(key string, envFileMap map[string]string) string {
 	envVar := os.Getenv(key)
 
 	if envVar == "" {
-		log.Error("Environment variable ", key, " not set!")
-		os.Exit(1)
+		if value, isInMap := envFileMap[key]; isInMap {
+			envVar = value
+		} else {
+			log.Error("Environment variable ", key, " not set!")
+			os.Exit(1)
+		}
 	}
 
 	return envVar
 }
 
-func getEnvVarInt64(key string) int64 {
-	envVarStr := getEnvVarString(key)
+func getEnvVarInt64(key string, envFileMap map[string]string) int64 {
+	envVarStr := getEnvVarString(key, envFileMap)
 	envVarInt, err := strconv.Atoi(envVarStr)
 
 	if err != nil {
