@@ -32,10 +32,6 @@ func TestMongo_GameID(t *testing.T) {
 	id0A, _ := _db.AddGame(game0)
 	id1A, _ := _db.AddGame(game1)
 
-	// find IDs with game details
-	id0F, _ := _db.GetGameID(game0)
-	id1F, _ := _db.GetGameID(game1)
-
 	game0.Id = id0A
 	game1.Id = id1A
 
@@ -44,12 +40,6 @@ func TestMongo_GameID(t *testing.T) {
 	game1A, _ := _db.GetGameByID(id1A)
 	assert.Equal(t, game0, game0A)
 	assert.Equal(t, game1, game1A)
-
-	// found IDs
-	game0F, _ := _db.GetGameByID(id0F)
-	game1F, _ := _db.GetGameByID(id1F)
-	assert.Equal(t, game0, game0F)
-	assert.Equal(t, game1, game1F)
 
 	// cleanup
 	_db.RemoveGame(game0)
