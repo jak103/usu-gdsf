@@ -26,7 +26,7 @@ var (
 	}
 )
 
-func TestMongo_GameID(t *testing.T) {
+func TestDatabase_GameID(t *testing.T) {
 	_db, _ := NewDatabaseFromEnv()
 
 	// assign IDs on add
@@ -47,7 +47,7 @@ func TestMongo_GameID(t *testing.T) {
 	_db.RemoveGame(game1)
 }
 
-func TestMongo_Tags(t *testing.T) {
+func TestDatabase_Tags(t *testing.T) {
 	_db, _ := NewDatabaseFromEnv()
 	id0, _ := _db.AddGame(game0)
 	id1, _ := _db.AddGame(game1)
