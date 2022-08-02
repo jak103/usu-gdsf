@@ -1,8 +1,11 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Game struct {
+	Id           string
 	Name         string
 	Author       string
 	CreationDate time.Time

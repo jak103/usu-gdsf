@@ -36,6 +36,9 @@ func TestMongo_GameID(t *testing.T) {
 	id0F, _ := _db.GetGameID(game0)
 	id1F, _ := _db.GetGameID(game1)
 
+	game0.Id = id0A
+	game1.Id = id1A
+
 	// assigned IDs
 	game0A, _ := _db.GetGameByID(id0A)
 	game1A, _ := _db.GetGameByID(id1A)
@@ -55,8 +58,11 @@ func TestMongo_GameID(t *testing.T) {
 
 func TestMongo_Tags(t *testing.T) {
 	_db, _ := NewDatabaseFromEnv()
-	_db.AddGame(game0)
-	_db.AddGame(game1)
+	id0, _ := _db.AddGame(game0)
+	id1, _ := _db.AddGame(game1)
+
+	game0.Id = id0
+	game1.Id = id1
 
 	res0, _ := _db.GetGamesByTag("tag0")
 	res1, _ := _db.GetGamesByTag("tag1")
