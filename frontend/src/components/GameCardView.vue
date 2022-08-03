@@ -11,6 +11,8 @@
 		starColor="#0F2439"
 		starBackgroundColor="#8a8d8f"
 		:rating="game.rating"
+		isHover="true"
+		isHalfIncrements="true"
 		>
 	</Rating>
     <v-card-text>{{ game.description }}</v-card-text>

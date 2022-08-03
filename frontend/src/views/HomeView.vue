@@ -82,15 +82,20 @@
         <GameCardView :game="exampleGame"></GameCardView>
       </v-col>
     </v-row>
+  <v-row>
+    <Footer></Footer>
+  </v-row>
   <!-- </v-container> -->
 </template>
 
 <script>
 import { defineComponent } from 'vue';
 import GameCarousel from '../components/GameCarousel.vue';
-import GameList from '../components/GameList.vue'
-import GameCardView from '../components/GameCardView.vue'
 import Game from '../models/game.js'
+import GameList from '../components/GameList.vue';
+import GameCardView from '../components/GameCardView.vue';
+import Footer from "../components/Footer.vue";
+
 
 export default defineComponent({
   name: 'HomeView',
@@ -98,7 +103,8 @@ export default defineComponent({
   components: {
     GameCarousel,
     GameList,
-    GameCardView
+    GameCardView,
+    Footer
   },
 
   data() {

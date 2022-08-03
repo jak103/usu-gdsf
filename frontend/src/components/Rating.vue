@@ -6,7 +6,7 @@
 			<v-rating
 				v-model="rating"
                 :background-color="starBackgroundColor" 
-                :clearable="clearable"
+                :clearable="isClearable"
                 :close-delay="closeDelay"
 				:color="starColor" 
                 :dark="isDark"
@@ -16,8 +16,12 @@
                 :readonly="isReadOnly"
                 :ripple="isRipple"
                 :size="starSize"
-				:half-increments="isHalfIncrement"
+				:half-increments="isHalfIncrements"
                 :hover="isHover"
+                :small="isSmall"
+                :value="starValue"
+                :x-large="isXLarge"
+                :x-small="isXSmall"
 			></v-rating> 
 		</v-card-actions>
 </template>
@@ -37,11 +41,15 @@ export default {
         openDelay:Number,
         isReadOnly:Boolean,
         isRipple:Boolean,
-        starSize:Number,
         isHalfIncrements:Boolean,
         isHover:Boolean,
         value:Number,
-        rating:Number
+        rating:Number,
+        isSmall:Boolean,
+        starSize:Number,
+        starValue:Number,
+        isXLarge:Boolean,
+        isXSmall:Boolean
     },
 
     data: () => ({}),

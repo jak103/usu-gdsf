@@ -68,26 +68,40 @@
 </template>
 
 <script>
-import Game from "../models/game.js"
-import Rating from '../components/Rating.vue';
-export default {
-	name: 'AllGamesPage',
-	components: {
-		Rating
-	},
-	data: () => ({
-		games: [new Game(), new Game(), new Game()]
-	}),
+	import Game from "../models/game.js"
+	import Rating from '../components/Rating.vue';
+	import axios from "axios";
+	export default {
+		name: 'AllGamesPage',
+		components: {
+			Rating
+		},
+		data() {
+			return {
+			games: {}
+			};
+		},
 
-	computed: {
+		computed: {
 
-	},
+		},
 
-	methods: {
-		handleClickGame(id) {
-			this.$router.push("/games/info/" + id)
+		methods: {
+			handleClickGame(id) {
+				this.$router.push("/games/info/" + id)
+			},
+			getGames() {
+				// we may want to configure a base-url for this, because it won't work on production
+				axios.get('http://127.0.0.1:8080/games')
+					.then(response => {
+						this.games = response.data[0];
+					}).catch(error => {
+					console.log(error.response.data);
+				});
+			}
+		},
+		created() {
+			this.getGames();
 		}
 	}
-
-}
 </script>
