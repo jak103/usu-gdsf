@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	cloud.google.com/go/firestore v1.6.1
+	github.com/google/uuid v1.3.0
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/stretchr/testify v1.8.0
 	go.mongodb.org/mongo-driver v1.9.1

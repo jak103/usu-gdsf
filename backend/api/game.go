@@ -1,10 +1,9 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
-	"strings"
 
+	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/labstack/echo/v4"
@@ -17,7 +16,7 @@ func getGameByID(c echo.Context) error {
 		log.WithError(err).Error("Unable to use database")
 		return err
 	}
-	gameID := c.Param("id")
+	gameID, _ := uuid.Parse(c.Param("ID"))
 
 	if result, err := db.GetGameByID(gameID); err != nil {
 		log.Error("An error occurred while getting game records: %v", err)
@@ -34,21 +33,25 @@ func gameDownload(c echo.Context) error {
 }
 
 func getGames(c echo.Context) error {
+	db, err := db.NewDatabaseFromEnv()
 	query := c.Request().URL.Query()
 
 	if query.Has("userid") {
 		userids, _ := query["userid"]
 		// db.GetGamesByUserId(userids[0])
-		return c.JSON(http.StatusOK, "List of games by " + userids[0]);
+		return c.JSON(http.StatusOK, "List of games by "+userids[0])
 	}
 
 	if query.Has("tag") {
 		tags, _ := query["tag"]
-		// db.GetGamesByTags(tags)
-		return c.JSON(http.StatusOK, fmt.Sprintf("List of games with tags %s", strings.Join(tags, ", ")))
-	}
+		if result, err := db.GetGamesByTags(tags); err != nil {
+			log.Error("An error occurred while getting game records: %v", err)
+			return err
+		} else {
+			return c.JSON(http.StatusOK, []interface{}{result})
+		}
 
-	db, err := db.NewDatabaseFromEnv()
+	}
 
 	if err != nil {
 		log.WithError(err).Error("Unable to use database")
@@ -75,8 +78,8 @@ func init() {
 	//registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
 	//registerRoute(route{method: http.MethodGet, path: "/games", handler: getGames})
 	//registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
-  registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
+	registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
 	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGameByID})
 	registerRoute(route{method: http.MethodGet, path: "/game", handler: getGames})
-	registerRoute(route{method: http.MethodPost, path: "/game/add", handler: newGameHandler})
+	registerRestrictedRoute(route{method: http.MethodPost, path: "/game/add", handler: newGameHandler})
 }
