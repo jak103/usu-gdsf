@@ -15,6 +15,7 @@ const (
 )
 
 var connection Database
+var DB Database
 
 type Database interface {
 	GetAllGames() ([]models.Game, error)
@@ -47,6 +48,6 @@ func NewDatabaseFromEnv() (Database, error) {
 			return nil, errors.New("unknown RUN_ENV")
 		}
 	}
-
+	DB = connection
 	return connection, nil
 }
