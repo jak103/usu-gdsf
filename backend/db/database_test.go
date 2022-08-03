@@ -11,7 +11,7 @@ import (
 var (
 	game0 = models.Game{
 		Name:         "game0",
-		Author:       "tester",
+		Developer:    "tester",
 		CreationDate: time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC),
 		Version:      "0.0.0",
 		Tags:         []string{"tag0", "tag1"},
@@ -19,7 +19,7 @@ var (
 
 	game1 = models.Game{
 		Name:         "game1",
-		Author:       "tester",
+		Developer:    "tester",
 		CreationDate: time.Date(1900, 1, 2, 0, 0, 0, 0, time.UTC),
 		Version:      "0.0.1",
 		Tags:         []string{"tag1", "tag2"},
