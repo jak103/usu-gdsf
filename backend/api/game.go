@@ -9,10 +9,15 @@ import (
 )
 
 func getGameByID(c echo.Context) error {
+	db, err := db.NewDatabaseFromEnv()
 
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return err
+	}
 	gameID := c.Param("id")
 
-	if result, err := db.DB.GetGameByID(gameID); err != nil {
+	if result, err := db.GetGameByID(gameID); err != nil {
 		log.Error("An error occurred while getting game records: %v", err)
 		return err
 	} else {
@@ -27,6 +32,7 @@ func gameDownload(c echo.Context) error {
 }
 
 func getGames(c echo.Context) error {
+	db, err := db.NewDatabaseFromEnv()
 	query := c.Request().URL.Query()
 
 	if query.Has("userid") {
@@ -37,7 +43,7 @@ func getGames(c echo.Context) error {
 
 	if query.Has("tag") {
 		tags, _ := query["tag"]
-		if result, err := db.DB.GetGamesByTags(tags); err != nil {
+		if result, err := db.GetGamesByTags(tags); err != nil {
 			log.Error("An error occurred while getting game records: %v", err)
 			return err
 		} else {
@@ -46,7 +52,12 @@ func getGames(c echo.Context) error {
 
 	}
 
-	if result, err := db.DB.GetAllGames(); err != nil {
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return err
+	}
+
+	if result, err := db.GetAllGames(); err != nil {
 		log.Error("An error occurred while getting game records: %v", err)
 		return err
 	} else {
