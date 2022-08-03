@@ -13,9 +13,9 @@ import (
 const (
 	// TODO these are placeholder form var names for adding a new game
 	// TODO match these strings with the view's form var names for '/game' POST
-	NAME    = "Name"
-	AUTHOR  = "Author"
-	VERSION = "Version"
+	NAME      = "Name"
+	DEVELOPER = "Developer"
+	VERSION   = "Version"
 )
 
 func gameInfoHandler(c echo.Context) error {
@@ -56,7 +56,7 @@ func newGameHandler(c echo.Context) error {
 	// TODO need a security layer in between the form and our new game struct
 	newGame := models.Game{
 		Name:         c.FormValue(NAME),
-		Developer:    c.FormValue(AUTHOR),
+		Developer:    c.FormValue(DEVELOPER),
 		CreationDate: time.Now(),
 		Version:      c.FormValue(VERSION),
 	}
