@@ -69,9 +69,12 @@
 
 <script>
 import Game from "../models/game.js"
+import Rating from '../components/Rating.vue';
 export default {
 	name: 'AllGamesPage',
-
+	components: {
+		Rating
+	},
 	data: () => ({
 		games: [new Game(), new Game(), new Game()]
 	}),

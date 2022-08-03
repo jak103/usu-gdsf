@@ -12,7 +12,6 @@
 		starBackgroundColor="#8a8d8f"
 		:rating="game.rating"
 		>
-
 	</Rating>
     <v-card-text>{{ game.description }}</v-card-text>
   </v-card>

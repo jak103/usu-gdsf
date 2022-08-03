@@ -41,7 +41,7 @@ export default {
         isHalfIncrements:Boolean,
         isHover:Boolean,
         value:Number,
-        ["rating"]
+        rating:Number
     },
 
     data: () => ({}),
