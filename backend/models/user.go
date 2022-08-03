@@ -17,6 +17,7 @@ type User struct {
 
 	ID       uuid.UUID
 	Username     string
+	EmailAddress string
 	Password     string
 	Displayname  string
 	Role         Role

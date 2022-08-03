@@ -5,12 +5,13 @@ import (
 )
 
 type Game struct {
-	ID            uuid.UUID
-	Title         string
-	Description   string
-	UserID        uuid.UUID
-	VersionNumber string
-	Tags          []string
+	ID               uuid.UUID
+	Title            string
+	Description      string
+	UserID           uuid.UUID
+	VersionNumber    string
+	PublishTimestamp string
+	Tags             []string
 }
 
 // todo, create and store unqiue uuids

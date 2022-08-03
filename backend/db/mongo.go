@@ -22,8 +22,8 @@ type Mongo struct {
 	games    *mongo.Collection
 }
 
-func (db Mongo) GetGameByID(id string) (*models.Game, error) {
-	uuidID, err := uuid.Parse(id)
+func (db Mongo) GetGameByID(id uuid.UUID) (*models.Game, error) {
+	uuidID, err := uuid.Parse(id.String())
 	if err != nil {
 		return nil, err
 	}
@@ -74,6 +74,76 @@ func (db Mongo) GetAllGames() ([]models.Game, error) {
 	}
 
 	return games, nil
+}
+
+func (d *Mongo) GetGamesByPublishDate(startRange string, endRange string) ([]models.Game, error) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) CreateGame(newGame models.Game) error {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) DeleteGame(id uuid.UUID) error {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) UpdateGame(updatedGame models.Game) error {
+	panic("not implemented") // TODO: Implement
+}
+
+// Users
+func (d *Mongo) GetAllUsers() ([]models.User, error) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) GetUserByID(id uuid.UUID) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) GetUsersByRole(role int64) ([]models.User, error) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) CreateUser(newUser models.User) error {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) DeleteUser(id uuid.UUID) error {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) UpdateUser(updatedUser models.User) error {
+	panic("not implemented") // TODO: Implement
+}
+
+// Ratings
+func (d *Mongo) GetRatingByID(id uuid.UUID) (*models.GameRating, error) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) GetRatingsByGame(gameID uuid.UUID) ([]models.GameRating, error) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) GetRatingsByUser(userID uuid.UUID) ([]models.GameRating, error) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) CreateRating(newRating models.GameRating) error {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) DeleteRating(id uuid.UUID) error {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) DeleteRatingsByGame(gameID uuid.UUID) error {
+	panic("not implemented") // TODO: Implement
+}
+
+func (d *Mongo) updateRating(updatedRating models.GameRating) error {
+	panic("not implemented") // TODO: Implement
 }
 
 // disconnect disconnects from the remote database

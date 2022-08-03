@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/labstack/echo/v4"
@@ -15,7 +16,7 @@ func getGameByID(c echo.Context) error {
 		log.WithError(err).Error("Unable to use database")
 		return err
 	}
-	gameID := c.Param("id")
+	gameID, _ := uuid.Parse(c.Param("ID"))
 
 	if result, err := db.GetGameByID(gameID); err != nil {
 		log.Error("An error occurred while getting game records: %v", err)
@@ -80,5 +81,5 @@ func init() {
 	registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
 	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGameByID})
 	registerRoute(route{method: http.MethodGet, path: "/game", handler: getGames})
-	registerRoute(route{method: http.MethodPost, path: "/game/add", handler: newGameHandler})
+	registerRestrictedRoute(route{method: http.MethodPost, path: "/game/add", handler: newGameHandler})
 }
