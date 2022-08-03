@@ -9,6 +9,7 @@ type Game struct {
 	Name         string
 	Rating       float32
 	TimesPlayed  int
+	ImagePath    string
 	Description  string
 	Developer    string
 	CreationDate time.Time
