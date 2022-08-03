@@ -70,7 +70,7 @@ func newGameHandler(c echo.Context) error {
 	}
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Database add game error")
-	}	
+	}
 
 	// TODO return successful game add
 	return c.JSON(http.StatusOK, "New game handler")
