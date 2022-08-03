@@ -6,6 +6,7 @@ import (
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -15,6 +16,7 @@ const (
 	NAME    = "Name"
 	AUTHOR  = "Author"
 	VERSION = "Version"
+	TAGS    = "Tags"
 )
 
 func gameInfoHandler(c echo.Context) error {
@@ -32,6 +34,30 @@ func gameInfoHandler(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, game)
+}
+
+func getGamesWithTags(c echo.Context) error {
+	// connect the db
+	_db, err := db.NewDatabaseFromEnv()
+	if err != nil {
+		log.WithError(err).Error("Database connection error in API getGamesWithTags")
+		return c.JSON(http.StatusInternalServerError, "Database connection error")
+	}
+
+	// grab tags from context
+	rawTags := c.FormValue(TAGS)
+
+	// split string into array
+	tags := strings.Split(rawTags, ",")
+
+	// fetch games with tags
+	games, err := _db.GetGamesByTags(tags, false)
+	if err != nil {
+		log.WithError(err).Error("Database GetGamesByTags error in API getGamesWithTags")
+		return c.JSON(http.StatusInternalServerError, "Database fetch games with tags error")
+	}
+
+	return c.JSON(http.StatusOK, games)
 }
 
 func getAllGames(c echo.Context) error {
@@ -70,7 +96,7 @@ func newGameHandler(c echo.Context) error {
 	}
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Database add game error")
-	}	
+	}
 
 	// TODO return successful game add
 	return c.JSON(http.StatusOK, "New game handler")
@@ -81,4 +107,5 @@ func init() {
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
+	registerRoute(route{method: http.MethodPost, path: "/search/tags", handler: getGamesWithTags})
 }
