@@ -26,15 +26,16 @@ var (
 	}
 )
 
-func TestDatabase_GameID(t *testing.T) {
+func TestMongo_GameID(t *testing.T) {
 	_db, _ := NewDatabaseFromEnv()
 
 	// assign IDs on add
 	id0A, _ := _db.AddGame(game0)
 	id1A, _ := _db.AddGame(game1)
 
-	game0.Id = id0A
-	game1.Id = id1A
+	// find IDs with game details
+	id0F, _ := _db.GetGameID(game0)
+	id1F, _ := _db.GetGameID(game1)
 
 	// assigned IDs
 	game0A, _ := _db.GetGameByID(id0A)
@@ -42,32 +43,38 @@ func TestDatabase_GameID(t *testing.T) {
 	assert.Equal(t, game0, game0A)
 	assert.Equal(t, game1, game1A)
 
+	// found IDs
+	game0F, _ := _db.GetGameByID(id0F)
+	game1F, _ := _db.GetGameByID(id1F)
+	assert.Equal(t, game0, game0F)
+	assert.Equal(t, game1, game1F)
+
 	// cleanup
 	_db.RemoveGame(game0)
 	_db.RemoveGame(game1)
 }
 
-func TestDatabase_Tags(t *testing.T) {
+func TestMongo_Tags(t *testing.T) {
 	_db, _ := NewDatabaseFromEnv()
-	id0, _ := _db.AddGame(game0)
-	id1, _ := _db.AddGame(game1)
-
-	game0.Id = id0
-	game1.Id = id1
+	_db.AddGame(game0)
+	_db.AddGame(game1)
 
 	res0, _ := _db.GetGamesByTags([]string{"tag0"}, false)
 	res1, _ := _db.GetGamesByTags([]string{"tag1"}, false)
+	res2, _ := _db.GetGamesByTags([]string{"tag3"}, false)
 	res3, _ := _db.GetGamesByTags([]string{"bad tag"}, false)
 
 	// result size
 	assert.Equal(t, 1, len(res0))
 	assert.Equal(t, 2, len(res1))
+	assert.Equal(t, 1, len(res2))
 	assert.Equal(t, 0, len(res3))
 
 	// result elements
 	assert.Contains(t, res0, game0)
 	assert.Contains(t, res1, game0)
 	assert.Contains(t, res1, game1)
+	assert.Contains(t, res2, game1)
 
 	// cleanup
 	_db.RemoveGame(game0)

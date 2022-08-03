@@ -7,7 +7,10 @@ import (
 type Game struct {
 	Id           string
 	Name         string
-	Author       string
+	Rating       float32
+	TimesPlayed  int
+	Description  string
+	Developer    string
 	CreationDate time.Time
 	Version      string
 	Tags         []string

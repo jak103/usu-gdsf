@@ -1,12 +1,13 @@
 package api
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
-	"net/http"
-	"time"
 )
 
 const (
@@ -55,7 +56,7 @@ func newGameHandler(c echo.Context) error {
 	// TODO need a security layer in between the form and our new game struct
 	newGame := models.Game{
 		Name:         c.FormValue(NAME),
-		Author:       c.FormValue(AUTHOR),
+		Developer:    c.FormValue(AUTHOR),
 		CreationDate: time.Now(),
 		Version:      c.FormValue(VERSION),
 	}
@@ -70,7 +71,7 @@ func newGameHandler(c echo.Context) error {
 	}
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Database add game error")
-	}	
+	}
 
 	// TODO return successful game add
 	return c.JSON(http.StatusOK, "New game handler")
