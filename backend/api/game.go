@@ -1,9 +1,7 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/db"
@@ -35,6 +33,7 @@ func gameDownload(c echo.Context) error {
 }
 
 func getGames(c echo.Context) error {
+	db, err := db.NewDatabaseFromEnv()
 	query := c.Request().URL.Query()
 
 	if query.Has("userid") {
@@ -45,11 +44,14 @@ func getGames(c echo.Context) error {
 
 	if query.Has("tag") {
 		tags, _ := query["tag"]
-		// db.GetGamesByTags(tags)
-		return c.JSON(http.StatusOK, fmt.Sprintf("List of games with tags %s", strings.Join(tags, ", ")))
-	}
+		if result, err := db.GetGamesByTags(tags); err != nil {
+			log.Error("An error occurred while getting game records: %v", err)
+			return err
+		} else {
+			return c.JSON(http.StatusOK, []interface{}{result})
+		}
 
-	db, err := db.NewDatabaseFromEnv()
+	}
 
 	if err != nil {
 		log.WithError(err).Error("Unable to use database")

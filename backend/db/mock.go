@@ -1,8 +1,9 @@
 package db
 
 import (
-	"encoding/json"
 	"errors"
+
+	"encoding/json"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -26,6 +27,28 @@ func (db *Mock) GetGameByID(id uuid.UUID) (*models.Game, error) {
 	}
 	return nil, errors.New("mockdb: game not found")
 }
+func (db *Mock) GetGamesByTags(tags []string) ([]models.Game, error) {
+	games := make(map[string]models.Game)
+
+	for _, game := range db.games {
+		for _, tag := range tags {
+			valid := map[string]bool{}
+			game_tags := make([]string, 0)
+			for _, v := range game_tags {
+				valid[v] = true
+			}
+			if valid[tag] {
+				games[game.ID.String()] = game
+			}
+		}
+	}
+	game_slice := []models.Game{}
+	for _, game := range games {
+		game_slice = append(game_slice, game)
+	}
+
+	return game_slice, nil
+}
 
 func (db *Mock) GetAllGames() ([]models.Game, error) {
 	games := make([]models.Game, 0)
@@ -35,10 +58,6 @@ func (db *Mock) GetAllGames() ([]models.Game, error) {
 	}
 
 	return games, nil
-}
-
-func (d *Mock) GetGamesByTags(tags []string) ([]models.Game, error) {
-	panic("not implemented") // TODO: Implement
 }
 
 func (d *Mock) GetGamesByPublishDate(startRange string, endRange string) ([]models.Game, error) {

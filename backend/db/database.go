@@ -16,6 +16,7 @@ const (
 )
 
 var connection Database
+var DB Database
 
 type Database interface {
 	// Games
@@ -70,6 +71,6 @@ func NewDatabaseFromEnv() (Database, error) {
 			return nil, errors.New("unknown DB_TYPE")
 		}
 	}
-
+	DB = connection
 	return connection, nil
 }

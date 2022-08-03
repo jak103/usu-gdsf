@@ -11,6 +11,7 @@ type Game struct {
 	UserID           uuid.UUID
 	VersionNumber    string
 	PublishTimestamp string
+	Tags             []string
 }
 
 // todo, create and store unqiue uuids
