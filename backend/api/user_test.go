@@ -3,18 +3,15 @@ package api
 import (
 	"net/http"
 	"net/http/httptest"
-	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func AssertResponseCode(t *testing.T, method string, path string, expectedCode int) bool {
-	var s Server = *NewServer(&sync.WaitGroup{})
-	s.Start()
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(method, path, nil)
-	s.echo.ServeHTTP(recorder, request)
+	GlobalTestServer.echo.ServeHTTP(recorder, request)
 	return expectedCode == recorder.Code
 }
 
