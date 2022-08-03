@@ -39,3 +39,18 @@ func TestGetAllGames(t *testing.T) {
 	assert.Equal(t, http.StatusOK, recorder.Code)
 	// assert.True(t, AssertResponseCode(t, http.MethodGet, "/games", 500))
 }
+
+func TestGameInfoHandler(t *testing.T) {
+	var s Server = *NewServer(&sync.WaitGroup{})
+	s.Start()
+
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest(http.MethodGet, "/game/1", nil)
+	s.echo.ServeHTTP(recorder, request)
+
+	t.Log("Hello, World ----------------------------------------")
+	t.Log(recorder.Body)
+	t.Log("Hello, World ----------------------------------------")
+
+	assert.Equal(t, http.StatusOK, recorder.Code)
+}
