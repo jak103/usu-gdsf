@@ -97,7 +97,7 @@ func (d *Mongo) GetAllUsers() ([]models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) GetUserByID(id uuid.UUID) {
+func (d *Mongo) GetUserByID(id uuid.UUID)(*models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
 
