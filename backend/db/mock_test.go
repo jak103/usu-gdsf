@@ -148,6 +148,34 @@ func TestGetUserByID(t *testing.T) {
 	assert.Equal(t, randUser.ID, id)
 }
 
+func TestGetUserByRole(t *testing.T) {
+	mock := Mock{}
+	mock.users = make(map[uuid.UUID]models.User)
+	user := models.User{
+		Username:     "default",
+		EmailAddress: "default@gmail.com",
+		Password:     "default",
+		Displayname:  "Default",
+		Role:         models.Admin,
+	}
+	userCount := 10
+	halfUsers := int(userCount / 2)
+	for i := 0; i < userCount; i++ {
+		user.ID = uuid.New()
+		if i < halfUsers {
+			user.Role = models.Publisher
+		} else {
+			user.Role = models.Admin
+		}
+		mock.users[user.ID] = user
+	}
+	admins, _ := mock.GetUsersByRole(0)
+	publishers, _ := mock.GetUsersByRole(1)
+
+	assert.Equal(t, halfUsers, len(admins))
+	assert.Equal(t, halfUsers, len(publishers))
+}
+
 func TestCreateUser(t *testing.T) {
 	mock := Mock{}
 	mock.users = make(map[uuid.UUID]models.User)
