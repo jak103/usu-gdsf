@@ -158,7 +158,17 @@ func (d *Mock) DeleteUser(id uuid.UUID) error {
 }
 
 func (d *Mock) UpdateUser(updatedUser models.User) error {
-	panic("not implemented") // TODO: Implement
+	if updatedUser.ID == uuid.Nil {
+		log.Error("updatedUser struct has nil ID")
+		return errors.New("updatedUser struct has nil ID")
+	}
+	if _, exists := d.users[updatedUser.ID]; !exists {
+		log.Error("updatedUser ID does not exists in mock db")
+		return errors.New("updatedUser ID does not exists in mock db")
+
+	}
+	d.users[updatedUser.ID] = updatedUser
+	return nil
 }
 
 // Ratings
