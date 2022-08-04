@@ -15,6 +15,7 @@ var _ Database = (*Mock)(nil)
 
 type Mock struct {
 	games map[uuid.UUID]models.Game
+	users map[uuid.UUID]models.User
 }
 
 func (db *Mock) GetGameByID(id uuid.UUID) (*models.Game, error) {
@@ -115,9 +116,7 @@ func (db *Mock) GetAllUsers() ([]models.User, error) {
 	return users, nil
 }
 
-func (db *Mock) GetUserByID(id uuid.UUID) {
-	
-
+func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error){
 	if id.String() != "" {
 		bs, _ := json.Marshal(db.users)
 		fmt.Println(string(bs))
@@ -129,17 +128,13 @@ func (db *Mock) GetUserByID(id uuid.UUID) {
 }
 
 func (db *Mock) GetUsersByRole(role int64) ([]models.User, error) {
-	users := make(map[String]models.User)
-
-	for _, user := range db.users {
-
-		if(user.Role == role){
-			users[user.ID.string] = user
-		}
-	}
+	typeRole := models.Role(role)
 	user_slice := []models.User{}
-	for _, user := range users {
-		user_slice = append(user_slice, user)
+	for _, user := range db.users {
+		if(user.Role == typeRole){
+			user_slice = append(user_slice, user)
+		}
+		
 	}
 
 	return user_slice, nil
@@ -181,7 +176,7 @@ func (db *Mock) UpdateUser(updatedUser models.User) error {
 		return errors.New("updatedUser ID does not exist in mock db")
 
 	}
-	d.users[updatedUser.ID] = updatedUser
+	db.users[updatedUser.ID] = updatedUser
 	return nil
 }
 

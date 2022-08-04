@@ -10,7 +10,7 @@ type Role int64
 const (
 	Admin Role  = 0
 	Publisher   = 1
-	User = 2
+	Basic = 2
 )
 
 type User struct {
