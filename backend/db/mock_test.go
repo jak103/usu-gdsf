@@ -167,11 +167,12 @@ func TestDeleteUser(t *testing.T){
 		Displayname  "testDisplayName",
 		Role: 2
 	}
-	err := mock.CreateUser(newUser)
-	assert.Contains(t, mock.users, userID)
+	mock.CreateUser(newUser)
+	err := mock.DeleteUser(userID)
 	assert.Equal(t, nil, err)
-	err = mock.CreateUser(newUser)
+	var id uuid.UUID
+	err = mock.DeleteUser(id)
 	assert.NotEqual(t, nil, err)
-	err = mock.CreateUser(models.User{})
+	err = mock.DeleteUser(uuid.New())
 	assert.NotEqual(t, nil, err)
 }
