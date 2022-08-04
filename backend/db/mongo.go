@@ -142,7 +142,7 @@ func (d *Mongo) DeleteRatingsByGame(gameID uuid.UUID) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) updateRating(updatedRating models.GameRating) error {
+func (d *Mongo) UpdateRating(updatedRating models.GameRating) error {
 	panic("not implemented") // TODO: Implement
 }
 

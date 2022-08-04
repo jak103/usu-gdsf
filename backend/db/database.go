@@ -43,7 +43,7 @@ type Database interface {
 	CreateRating(newRating models.GameRating) error
 	DeleteRating(id uuid.UUID) error
 	DeleteRatingsByGame(gameID uuid.UUID) error
-	updateRating(updatedRating models.GameRating) error
+	UpdateRating(updatedRating models.GameRating) error
 
 	Disconnect() error
 	Connect() error

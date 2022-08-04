@@ -196,7 +196,7 @@ func (d *Mock) DeleteRatingsByGame(gameID uuid.UUID) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mock) updateRating(updatedRating models.GameRating) error {
+func (d *Mock) UpdateRating(updatedRating models.GameRating) error {
 	panic("not implemented") // TODO: Implement
 }
 
