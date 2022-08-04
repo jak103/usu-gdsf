@@ -123,9 +123,9 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 		log.WithError(err).Error("Invalid id in Mongo ID search")
 	}
 
+
 	// find game with object ID
 	result := db.database.Collection("games").FindOne(context.Background(), bson.M{"_id": objID})
-
 	// decode into bson
 	data := bson.M{}
 	err = result.Decode(&data)
@@ -188,7 +188,7 @@ func DecodeBsonData(data bson.M) (models.Game, error) {
 	game := models.Game{
 		Id:           data["_id"].(primitive.ObjectID).Hex(),
 		Name:         data["name"].(string),
-		Developer:    data["author"].(string),
+		Developer:    data["developer"].(string),
 		CreationDate: date,
 		Version:      data["version"].(string),
 		Tags:         tags,
