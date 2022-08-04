@@ -116,6 +116,11 @@ func sanitizeBirthdayInput(input string) (time.Time, error) {
 	return birthday, nil
 }
 
+func verifyPassword() bool {
+
+	return false
+}
+
 func downloads(c echo.Context) error {
 	// Return games that a user has downloaded/played
 	return c.JSON(http.StatusOK, "User downloads handler")

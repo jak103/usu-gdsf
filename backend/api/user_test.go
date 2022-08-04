@@ -29,3 +29,9 @@ func TestRegisterRoute(t *testing.T) {
 func TestDownloadsRoute(t *testing.T) {
 	assert.True(t, AssertResponseCode(t, http.MethodGet, "/user/downloads", 200))
 }
+
+func TestPasswordHashing(t *testing.T, testpass string) {
+	var s Server = *NewServer(&sync.WaitGroup{})
+	s.Start()
+
+}
