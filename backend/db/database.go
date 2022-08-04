@@ -30,7 +30,7 @@ type Database interface {
 
 	// Users
 	GetAllUsers() ([]models.User, error)
-	GetUserByID(id uuid.UUID)
+	GetUserByID(id uuid.UUID) (*models.User, error)
 	GetUsersByRole(role int64) ([]models.User, error)
 	CreateUser(newUser models.User) error
 	DeleteUser(id uuid.UUID) error
