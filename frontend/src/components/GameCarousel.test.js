@@ -18,5 +18,5 @@ test('renders single URL Game Carousel', () => {
       }
     })
     const carouselItems = wrapper.findAll('v-carousel-item')
-    expect(carouselItems.length).toBe(2)
+    expect(carouselItems.length).toBe(1)
   })
