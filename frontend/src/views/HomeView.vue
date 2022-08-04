@@ -64,6 +64,7 @@
 <script>
 import { defineComponent } from 'vue';
 import GameCarousel from '../components/GameCarousel.vue';
+import Game from '../models/game.js'
 import GameList from '../components/GameList.vue';
 import GameCardView from '../components/GameCardView.vue';
 import Footer from "../components/Footer.vue";
@@ -77,6 +78,12 @@ export default defineComponent({
     GameList,
     GameCardView,
     Footer
+  },
+
+  data() {
+    return {
+      exampleGame: new Game()
+    }
   },
 
   computed: {
