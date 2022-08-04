@@ -28,10 +28,16 @@ func (db Mongo) RemoveGame(game models.Game) error {
 	gc := db.database.Collection("games")
 	res, err := gc.DeleteOne(context.Background(), bson.M{
 		"name":         game.Name,
-		"author":       game.Author,
+		"rating":       game.Rating,
+		"timesplayed":  game.TimesPlayed,
+		"imagepath":    game.ImagePath,
+		"description":  game.Description,
+		"developer":    game.Developer,
 		"creationdate": game.CreationDate,
 		"version":      game.Version,
 		"tags":         game.Tags,
+		"downloads":    game.Downloads,
+		"downloadlink": game.DownloadLink,
 	})
 	if err != nil {
 		log.WithError(err).Error("Mongo RemoveGame deletion error")
@@ -71,35 +77,48 @@ func (db Mongo) GetGamesByTag(s string) ([]models.Game, error) {
 	return games, nil
 }
 
-// GetGameID search for the given game and return its hex ID
-func (db Mongo) GetGameID(game models.Game) (string, error) {
-	gc := db.database.Collection("games")
-	result := gc.FindOne(context.Background(), bson.M{
-		"name":         game.Name,
-		"author":       game.Author,
-		"creationdate": game.CreationDate,
-		"version":      game.Version,
-		"tags":         game.Tags,
-	}, options.FindOne().SetShowRecordID(true))
-
-	// handle no doc found error
-	if result.Err() == mongo.ErrNoDocuments {
-		log.Error("No document found in Mongo GetGameID")
-		return "", result.Err()
-	}
-
-	// decode found document
-	data := bson.M{}
-	err := result.Decode(&data)
+// GetGamesByTag search and return all games with given tag
+func (db Mongo) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, error) {
+	result, err := db.GetGamesByTag(tags[0])
 	if err != nil {
-		log.WithError(err).Error("Cannot decode result in Mongo GetGameID")
-		return "", err
+		log.WithError(err).Error("Error getting games with tags")
+		return nil, err
 	}
 
-	// convert objectID to hex
-	id := data["_id"].(primitive.ObjectID).Hex()
+	for _, tag := range tags[1:] {
+		games, err := db.GetGamesByTag(tag)
 
-	return id, nil
+		if err != nil {
+			log.WithError(err).Error("Error getting games with tags")
+			return nil, err
+		}
+
+		if matchAll {
+			for i, game := range result {
+				if !containsGame(games, game) {
+					result[i] = result[len(result)-1]
+					result = result[:len(result)-1]
+				}
+			}
+		} else {
+			for _, game := range games {
+				if !containsGame(result, game) {
+					result = append(result, game)
+				}
+			}
+		}
+	}
+	return result, nil
+}
+
+// Helper function to check if one array contains an element
+func containsGame(games []models.Game, game models.Game) bool {
+	for _, v := range games {
+		if v.Id == game.Id {
+			return true
+		}
+	}
+	return false
 }
 
 // GetGameByID find and return the game with the given db hex id
@@ -173,11 +192,18 @@ func DecodeBsonData(data bson.M) (models.Game, error) {
 
 	// load game model
 	game := models.Game{
+		Id:           data["_id"].(primitive.ObjectID).Hex(),
 		Name:         data["name"].(string),
-		Author:       data["author"].(string),
+		Rating:       float32(data["rating"].(float64)),
+		TimesPlayed:  int(data["timesplayed"].(int32)),
+		ImagePath:    data["imagepath"].(string),
+		Description:  data["description"].(string),
+		Developer:    data["developer"].(string),
 		CreationDate: date,
 		Version:      data["version"].(string),
 		Tags:         tags,
+		Downloads:    data["downloads"].(int64),
+		DownloadLink: data["downloadlink"].(string),
 	}
 
 	return game, nil

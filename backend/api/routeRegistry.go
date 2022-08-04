@@ -3,10 +3,11 @@ package api
 import "github.com/labstack/echo/v4"
 
 type route struct {
-	method      string
-	path        string
-	handler     echo.HandlerFunc
-	requireAuth bool
+	method       string
+	path         string
+	handler      echo.HandlerFunc
+	requireAuth  bool
+	requireAdmin bool
 }
 
 var routes []route = make([]route, 0)

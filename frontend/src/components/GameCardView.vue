@@ -7,14 +7,28 @@
 
     <v-card-title>{{ gameTitle }}</v-card-title>
     <v-card-subtitle>{{ developer }}</v-card-subtitle>
+	<Rating
+		starColor="#0F2439"
+		starBackgroundColor="#8a8d8f"
+		:isHover="true"
+		:isHalfIncrements="true"
+		>
+
+	</Rating>
     <v-card-text>{{ description }}</v-card-text>
   </v-card>
 
 </template>
 
 <script>
+import Rating from './Rating.vue';
 export default {
 	name: 'GameCardView',
+
+	components: {
+		Rating,
+	},
+	
 
 	data: () => ({
 		gameTitle: 'Minecraft',

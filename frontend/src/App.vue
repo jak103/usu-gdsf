@@ -11,9 +11,6 @@
       </v-container>
     </v-main>
 
-    <v-footer color="teal" app>
-      Bottom navigation info and copyright stuff. &copy; 2022
-    </v-footer>
   </v-app>
 </template>
 

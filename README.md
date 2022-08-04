@@ -8,19 +8,24 @@ To start the project with docker-compose, simply run `docker-compose up -d`
 
 Once everything is up and running, simply try hitting the `/game` endpoint at `localhost:8080`
 
+
+# Front end testing info
+
+* We are using the jest testing framework with the vue/test-utils to mount a component
+* To create a test just have the file extention be `<filename>.test.spec`
+* Use the command `npm test` to run the tests.
+* To test elements of a component the data-test attribute will need to be added to find the element eg. `data-test="listItem1`
+* 
+
 ## Backend Server Configuration
 
-Server settings are configured using environment variables. The following environment variables are *required* to be defined for the server to function properly:
+Server settings are configured using environment variables, or by a `.env` file. Environment variables may be specified in the shell or placed in a `.env` file in the current working directory. Environment variables loaded in the shell will override those from the `.env` file. **A `sample.env` file is included in the repository. This file contains helpful default values for required environment variables. This file may be duplicated and renamed to `.env` for development testing purposes.** The following environment variables are *required* to be defined for the server to function properly:
 
 ### Environment
 
 * `DB_TYPE`
 
   Specifies which database to use. Valid values are `firestore` and `mongo`
-  
-* `RUN_ENV`
-
-  Specifies which database to use. Valid values are `firestore`, `mongo`, and `mock`
 
 * `MONGO_URI` (only if `DB_TYPE` is `mongo`)
 
