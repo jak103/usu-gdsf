@@ -2,8 +2,9 @@ package db
 
 import (
 	"errors"
-	"os"
+	"strings"
 
+	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 )
@@ -18,33 +19,36 @@ var connection Database
 
 type Database interface {
 	GetAllGames() ([]models.Game, error)
-
+	AddGame(models.Game) (string, error)
+	RemoveGame(models.Game) error
+	GetGameByID(string) (models.Game, error)
+	GetGamesByTags([]string, bool) ([]models.Game, error)
 	Disconnect() error
 	Connect() error
 }
 
 func NewDatabaseFromEnv() (Database, error) {
 	if connection == nil {
-		runningEnv, wasSet := os.LookupEnv("RUN_ENV")
+		dbType := strings.ToLower(config.DbType)
 
-		if !wasSet || len(runningEnv) == 0 {
-			log.Error("Environment variable RUN_ENV was not set correctly")
-			return nil, errors.New("RUN_ENV not set")
-		}
-
-		switch runningEnv {
-		case MOCK:
+		switch dbType {
+		case "mock":
 			connection = &Mock{}
-		case FIRESTORE:
+		case "firestore":
 			connection = &Firestore{}
-		case MONGO:
+		case "mongo":
 			connection = &Mongo{}
 
 		default:
-			log.Error("Unknown RUN_ENV set %v", runningEnv)
-			return nil, errors.New("unknown RUN_ENV")
+			log.Error("Unknown DB_TYPE %v", dbType)
+			return nil, errors.New("unknown DB_TYPE")
+		}
+
+		err := connection.Connect()
+		if err != nil {
+			log.WithError(err).Error("Could not connect to database")
+			return nil, err
 		}
 	}
-
 	return connection, nil
 }

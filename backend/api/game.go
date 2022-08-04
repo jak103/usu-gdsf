@@ -2,25 +2,48 @@ package api
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
+	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
 )
 
-func game(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Successful game get!")
+const (
+	// TODO these are placeholder form var names for adding a new game
+	// TODO match these strings with the view's form var names for '/game' POST
+	NAME      = "Name"
+	DEVELOPER = "Developer"
+	VERSION   = "Version"
+)
+
+func gameInfoHandler(c echo.Context) error {
+	// get id from path
+	id := c.Param("id")
+
+	// get game from db with id
+	_db, getDbErr := db.NewDatabaseFromEnv()
+	if getDbErr != nil {
+		return c.JSON(http.StatusInternalServerError, "Database connection error")
+	}
+	game, err := _db.GetGameByID(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Database find game ID error")
+	}
+
+	return c.JSON(http.StatusOK, game)
 }
 
 func getAllGames(c echo.Context) error {
-	db, err := db.NewDatabaseFromEnv()
+	_db, err := db.NewDatabaseFromEnv()
 
 	if err != nil {
 		log.WithError(err).Error("Unable to use database")
 		return err
 	}
 
-	if result, err := db.GetAllGames(); err != nil {
+	if result, err := _db.GetAllGames(); err != nil {
 		log.Error("An error occurred while getting game records: %v", err)
 		return err
 	} else {
@@ -29,8 +52,28 @@ func getAllGames(c echo.Context) error {
 }
 
 func newGameHandler(c echo.Context) error {
-	// TODO #5 We should probably actually create a game here
+	// create new game model
+	// TODO need a security layer in between the form and our new game struct
+	newGame := models.Game{
+		Name:         c.FormValue(NAME),
+		Developer:    c.FormValue(DEVELOPER),
+		CreationDate: time.Now(),
+		Version:      c.FormValue(VERSION),
+	}
 
+	// Add new game to database
+	_db, getDbErr := db.NewDatabaseFromEnv()
+	_, err := _db.AddGame(newGame)
+
+	// error handling
+	if getDbErr != nil {
+		return c.JSON(http.StatusInternalServerError, "Database connection error")
+	}
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Database add game error")
+	}
+
+	// TODO return successful game add
 	return c.JSON(http.StatusOK, "New game handler")
 }
 
@@ -55,8 +98,8 @@ func updateGameHandler(c echo.Context) error {
 
 func init() {
 	log.Info("Running game init")
-	registerRoute(route{method: http.MethodGet, path: "/game", handler: game})
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 	registerRoute(route{method: http.MethodPut, path: "/game/:id/update", handler: updateGameHandler})
+	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
 }

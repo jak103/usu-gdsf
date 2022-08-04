@@ -1,37 +1,32 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-      app
-      color="primary"
-    >
-      <NavMenu/>
-    </v-navigation-drawer>
+    <NavMenu app/>
 
-  <!-- Sizes your content based upon application components -->
-  <v-main>
+    <!-- Sizes your content based upon application components -->
+    <v-main>
 
-    <!-- Provides the application the proper gutter -->
-    <v-container fluid>
-      <router-view></router-view>
-    </v-container>
-  </v-main>
+      <!-- Provides the application the proper gutter -->
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
+    </v-main>
 
-  <v-footer color="teal" app>
-    Bottom navigation info and copyright stuff. &copy; 2022
-  </v-footer>
+   <Footer/> 
   </v-app>
 </template>
 
 <script>
 import HomeView from './views/HomeView.vue'
 import NavMenu from './components/NavMenu.vue'
+import Footer from './components/Footer.vue'
 
 export default {
   name: 'App',
 
   components: {
     HomeView,
-    NavMenu
+    NavMenu,
+    Footer
 },
 
   data: () => ({
