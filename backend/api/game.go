@@ -34,9 +34,29 @@ func newGameHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, "New game handler")
 }
 
+func updateGameHandler(c echo.Context) error {
+	// db, err := db.NewDatabaseFromEnv()
+
+	// gameId := c.FormValue("id")
+
+	// if err != nil {
+	// 	log.WithError(err).Error("Unable to use database")
+	// 	return err
+	// }
+
+	// if result, err := db.UpdateGame(); err != nil {
+	// 	log.Error("An error occurred while updating the game record: %v", err)
+	// 	return err
+	// } else {
+	// 	return c.JSON(http.StatusOK, []interface{}{result})
+	// }
+	return c.JSON(http.StatusOK, "Update game handler")
+}
+
 func init() {
 	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/game", handler: game})
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
+	registerRoute(route{method: http.MethodPut, path: "/game/:id/update", handler: updateGameHandler})
 }
