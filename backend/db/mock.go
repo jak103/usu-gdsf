@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/log"
@@ -109,7 +110,6 @@ func (d *Mock) GetUsersByRole(role int64) ([]models.User, error) {
 	return users, nil
 }
 
-<<<<<<< HEAD
 func (d *Mock) CreateUser(newUser models.User) error {
 	if newUser.ID == uuid.Nil {
 		log.Error("newUser struct has nil ID")
@@ -121,13 +121,6 @@ func (d *Mock) CreateUser(newUser models.User) error {
 	}
 	log.Error("newUser ID already exists in mock db")
 	return errors.New("newUser already exists in mock db")
-=======
-func (db *Mock) CreateUser(user models.User) error {
-	log.Info("mock connect")
-	db.users[user.ID] = user
-
-	return nil
->>>>>>> 9aba4d0c05788f668572813a5a20c1300e70455f
 }
 
 func (d *Mock) DeleteUser(id uuid.UUID) error {
@@ -199,9 +192,6 @@ func (db *Mock) Connect() error {
 
 	if len(db.users) == 0 {
 		users := make(map[uuid.UUID]models.User)
-		// for _, v := range CreateGamesFromJson() {
-		// 	games[v.ID.String()] = v
-		// }
 		db.users = users
 	}
 

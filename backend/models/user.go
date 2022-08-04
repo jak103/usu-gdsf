@@ -12,11 +12,12 @@ const (
 )
 
 type User struct {
-	ID          uuid.UUID
-	Username    string
-	Password    string
-	Displayname string
-	Role        Role
+	ID           uuid.UUID
+	Username     string
+	Password     string
+	Displayname  string
+	EmailAddress string
+	Role         Role
 }
 
 func (user *User) SetUUID() {
