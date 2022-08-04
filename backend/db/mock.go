@@ -145,7 +145,16 @@ func (d *Mock) CreateUser(newUser models.User) error {
 }
 
 func (d *Mock) DeleteUser(id uuid.UUID) error {
-	panic("not implemented") // TODO: Implement
+	if id == uuid.Nil {
+		log.Error("nil id provided")
+		return errors.New("nil id provided")
+	}
+	if _, exists := d.users[id]; exists {
+		delete(d.users, id)
+		return nil
+	}
+	log.Error("provided user id doesn't exist in db")
+	return errors.New("provided user id doesn't exist in db")
 }
 
 func (d *Mock) UpdateUser(updatedUser models.User) error {

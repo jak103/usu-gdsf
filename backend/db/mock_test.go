@@ -169,3 +169,25 @@ func TestCreateUser(t *testing.T) {
 	err = mock.CreateUser(models.User{})
 	assert.NotEqual(t, nil, err)
 }
+
+func TestDeleteUser(t *testing.T) {
+	mock := Mock{}
+	mock.users = make(map[uuid.UUID]models.User)
+	userID := uuid.New()
+	newUser := models.User{
+		ID:           userID,
+		Username:     "default",
+		EmailAddress: "default@gmail.com",
+		Password:     "default",
+		Displayname:  "Default",
+		Role:         models.Admin,
+	}
+	mock.users[userID] = newUser
+	err := mock.DeleteUser(userID)
+	assert.Equal(t, nil, err)
+	var id uuid.UUID
+	err = mock.DeleteUser(id)
+	assert.NotEqual(t, nil, err)
+	err = mock.DeleteUser(uuid.New())
+	assert.NotEqual(t, nil, err)
+}
