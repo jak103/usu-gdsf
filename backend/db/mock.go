@@ -128,6 +128,9 @@ func (d *Mock) GetUserByID(id uuid.UUID) (*models.User, error) {
 }
 
 func (d *Mock) GetUsersByRole(role int64) ([]models.User, error) {
+	if role != 0 && role != 1 {
+		return nil, errors.New(fmt.Sprintf("User role %v does not exist", role))
+	}
 	users := make([]models.User, 0)
 	queryRole := models.Role(role)
 	for _, user := range d.users {

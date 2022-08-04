@@ -174,6 +174,11 @@ func TestGetUserByRole(t *testing.T) {
 
 	assert.Equal(t, halfUsers, len(admins))
 	assert.Equal(t, halfUsers, len(publishers))
+	_, err := mock.GetUsersByRole(3)
+	assert.NotEqual(t, nil, err)
+	_, err = mock.GetUsersByRole(-1)
+	assert.NotEqual(t, nil, err)
+
 }
 
 func TestCreateUser(t *testing.T) {
