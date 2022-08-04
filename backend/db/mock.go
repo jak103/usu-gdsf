@@ -3,9 +3,6 @@ package db
 import (
 	"errors"
 
-	"encoding/json"
-	"fmt"
-
 	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
@@ -15,18 +12,18 @@ var _ Database = (*Mock)(nil)
 
 type Mock struct {
 	games map[uuid.UUID]models.Game
+	users map[uuid.UUID]models.User
 }
 
 func (db *Mock) GetGameByID(id uuid.UUID) (*models.Game, error) {
 	if id.String() != "" {
-		bs, _ := json.Marshal(db.games)
-		fmt.Println(string(bs))
 		if game, ok := db.games[id]; ok {
 			return &game, nil
 		}
 	}
 	return nil, errors.New("mockdb: game not found")
 }
+
 func (db *Mock) GetGamesByTags(tags []string) ([]models.Game, error) {
 	games := make(map[string]models.Game)
 
@@ -65,43 +62,15 @@ func (d *Mock) GetGamesByPublishDate(startRange string, endRange string) ([]mode
 }
 
 func (d *Mock) CreateGame(newGame models.Game) error {
-	if newGame.ID == uuid.Nil {
-		log.Error("newGame struct has nil ID")
-		return errors.New("newGame struct has nil ID")
-	}
-	if _, exists := d.games[newGame.ID]; !exists {
-		d.games[newGame.ID] = newGame
-		return nil
-	}
-	log.Error("newGame ID already exists in mock db")
-	return errors.New("game already exists in mock db")
+	panic("not implemented") // TODO: Implement
 }
 
 func (d *Mock) DeleteGame(id uuid.UUID) error {
-	if id == uuid.Nil {
-		log.Error("nil id provided")
-		return errors.New("nil id provided")
-	}
-	if _, exists := d.games[id]; exists {
-		delete(d.games, id)
-		return nil
-	}
-	log.Error("provided id doesn't exist in db")
-	return errors.New("provided id doesn't exist in db")
+	panic("not implemented") // TODO: Implement
 }
 
 func (d *Mock) UpdateGame(updatedGame models.Game) error {
-	if updatedGame.ID == uuid.Nil {
-		log.Error("updatedGame struct has nil ID")
-		return errors.New("updatedGame struct has nil ID")
-	}
-	if _, exists := d.games[updatedGame.ID]; !exists {
-		log.Error("updatedGame ID does not exists in mock db")
-		return errors.New("updatedGame ID does not exists in mock db")
-
-	}
-	d.games[updatedGame.ID] = updatedGame
-	return nil
+	panic("not implemented") // TODO: Implement
 }
 
 // Users
@@ -109,16 +78,24 @@ func (d *Mock) GetAllUsers() ([]models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mock) GetUserByID(id uuid.UUID) {
-	panic("not implemented") // TODO: Implement
+func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error) {
+	if id.String() != "" {
+		if user, ok := db.users[id]; ok {
+			return &user, nil
+		}
+	}
+	return nil, errors.New("mockdb: game not found")
 }
 
 func (d *Mock) GetUsersByRole(role int64) ([]models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mock) CreateUser(newUser models.User) error {
-	panic("not implemented") // TODO: Implement
+func (db *Mock) CreateUser(user models.User) error {
+	log.Info("mock connect")
+	db.users[user.ID] = user
+
+	return nil
 }
 
 func (d *Mock) DeleteUser(id uuid.UUID) error {
@@ -167,6 +144,14 @@ func (db *Mock) Connect() error {
 			games[v.ID] = v
 		}
 		db.games = games
+	}
+
+	if len(db.users) == 0 {
+		users := make(map[uuid.UUID]models.User)
+		// for _, v := range CreateGamesFromJson() {
+		// 	games[v.ID.String()] = v
+		// }
+		db.users = users
 	}
 
 	log.Debug("Sample Database Initialized")
