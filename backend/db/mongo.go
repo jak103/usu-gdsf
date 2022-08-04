@@ -25,14 +25,17 @@ type Mongo struct {
 
 // RemoveGame removes the given game from the db
 func (db Mongo) RemoveGame(game models.Game) error {
+	primitiveObjectId, err := primitive.ObjectIDFromHex(game.Id)
+	if err != nil{
+		log.WithError(err).Error("error on getting primitive object id from hex string")
+		return err
+	}
+
 	gc := db.database.Collection("games")
 	res, err := gc.DeleteOne(context.Background(), bson.M{
-		"name":         game.Name,
-		"author":       game.Developer,
-		"creationdate": game.CreationDate,
-		"version":      game.Version,
-		"tags":         game.Tags,
+		"_id": primitiveObjectId,
 	})
+
 	if err != nil {
 		log.WithError(err).Error("Mongo RemoveGame deletion error")
 		return err

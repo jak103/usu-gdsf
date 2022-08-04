@@ -14,7 +14,7 @@ var (
 		Developer:    "tester",
 		CreationDate: time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC),
 		Version:      "0.0.0",
-		Tags:         []string{"tag9", "tag10"},
+		Tags:         []string{"tag000", "tag001"},
 	}
 
 	game1 = models.Game{
@@ -22,7 +22,7 @@ var (
 		Developer:    "tester",
 		CreationDate: time.Date(1900, 1, 2, 0, 0, 0, 0, time.UTC),
 		Version:      "0.0.1",
-		Tags:         []string{"tag11", "tag12"},
+		Tags:         []string{"tag001", "tag011"},
 	}
 )
 
@@ -32,7 +32,7 @@ var (
 		Developer:    "tester",
 		CreationDate: time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC),
 		Version:      "0.0.0",
-		Tags:         []string{"tag6", "tag7"},
+		Tags:         []string{"tag100", "tag101"},
 	}
 
 	game3 = models.Game{
@@ -40,7 +40,7 @@ var (
 		Developer:    "tester",
 		CreationDate: time.Date(1900, 1, 2, 0, 0, 0, 0, time.UTC),
 		Version:      "0.0.1",
-		Tags:         []string{"tag7", "tag8"},
+		Tags:         []string{"tag101", "tag110"},
 	}
 )
 
@@ -74,8 +74,8 @@ func TestDatabase_Tags(t *testing.T) {
 	game2.Id = id0
 	game3.Id = id1
 
-	res0, _ := _db.GetGamesByTags([]string{"tag6"}, false)
-	res1, _ := _db.GetGamesByTags([]string{"tag7"}, false)
+	res0, _ := _db.GetGamesByTags([]string{"tag100"}, false)
+	res1, _ := _db.GetGamesByTags([]string{"tag101"}, false)
 	res3, _ := _db.GetGamesByTags([]string{"bad tag"}, false)
 
 	// result size
