@@ -34,6 +34,7 @@ func (db Mongo) RemoveGame(game models.Game) error {
 	gc := db.database.Collection("games")
 	res, err := gc.DeleteOne(context.Background(), bson.M{
 		"_id": primitiveObjectId,
+
 	})
 
 	if err != nil {
@@ -191,10 +192,16 @@ func DecodeBsonData(data bson.M) (models.Game, error) {
 	game := models.Game{
 		Id:           data["_id"].(primitive.ObjectID).Hex(),
 		Name:         data["name"].(string),
+		Rating:       float32(data["rating"].(float64)),
+		TimesPlayed:  int(data["timesplayed"].(int32)),
+		ImagePath:    data["imagepath"].(string),
+		Description:  data["description"].(string),
 		Developer:    data["developer"].(string),
 		CreationDate: date,
 		Version:      data["version"].(string),
 		Tags:         tags,
+		Downloads:    data["downloads"].(int64),
+		DownloadLink: data["downloadlink"].(string),
 	}
 
 	return game, nil
