@@ -59,8 +59,8 @@ func (s *Server) setupRoutes() {
 	for _, route := range routes {
 		handler := route.handler
 
-		if route.requireAuth {
-			handler = auth.RequireAuthorization(route.handler)
+		if route.requireAuth || route.requireAdmin {
+			handler = auth.RequireAuthorization(route.handler, route.requireAdmin)
 		}
 		
 		switch route.method {
