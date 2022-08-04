@@ -8,14 +8,17 @@ type Role int64
 
 const (
 	Admin     Role = 0
-	Publisher      = 1
+	Publisher Role = 1
 )
 
 type User struct {
-	ID           uuid.UUID
-	Username     string
-	EmailAddress string
-	Password     string
-	Displayname  string
-	Role         Role
+	ID          uuid.UUID
+	Username    string
+	Password    string
+	Displayname string
+	Role        Role
+}
+
+func (user *User) SetUUID() {
+	user.ID = uuid.New()
 }
