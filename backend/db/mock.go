@@ -106,7 +106,13 @@ func (d *Mock) UpdateGame(updatedGame models.Game) error {
 
 // Users
 func (d *Mock) GetAllUsers() ([]models.User, error) {
-	panic("not implemented") // TODO: Implement
+	userList := make([]models.User, 0)
+
+	for _, user := range db.users {
+		userList = append(users, user)
+	}
+
+	return userList, nil
 }
 
 func (d *Mock) GetUserByID(id uuid.UUID) {
