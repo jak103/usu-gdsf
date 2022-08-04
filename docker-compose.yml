@@ -28,7 +28,6 @@ services:
       - DB_TYPE=mongo
       - RUN_ENV=mongo
       - MONGO_URI=mongodb://gdsf:gdsf@db:27017
-      - USUGDSF_AUTH_TOKEN=triangle
     command: gin --appPort 8080 -i run .
 
   db:
@@ -43,16 +42,5 @@ services:
     ports:
       - '27017-27019:27017-27019'
 
-  gcs:
-    image: fsouza/fake-gcs-server
-    container_name: cloud-storage
-    build: ./gcs
-    volumes:
-      - gcs-volume:/data
-    ports:
-      - 4443:4443
-    command: "-scheme http"
-
 volumes:
   mongo-volume:
-  gcs-volume:
