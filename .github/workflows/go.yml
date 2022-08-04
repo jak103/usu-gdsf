@@ -20,16 +20,11 @@ jobs:
       - name: Build
         run: cd backend && go build -v .
 
-<<<<<<< HEAD
       - name: Test
-        run: cd backend && cp test.env .env && go test -v ./...
-=======
-    - name: Test
-      run: cd backend && go test -v ./...
+        run: cd backend && cp -f test.env .env && go test -v ./...
 
-    - name: WriteGoList
-      run: cd backend && go list -json -m all > ../go.list
+      - name: WriteGoList
+        run: cd backend && go list -json -m all > ../go.list
 
-    - name: Nancy
-      uses: sonatype-nexus-community/nancy-github-action@main
->>>>>>> team1-main
+      - name: Nancy
+        uses: sonatype-nexus-community/nancy-github-action@main
