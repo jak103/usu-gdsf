@@ -10,33 +10,23 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func findTestRouter(r *route, routes []route) bool {
-	for _, route := range routes {
-		if route.method == r.method &&
-			route.path == r.path &&
-			runtime.FuncForPC(reflect.ValueOf(route.handler).Pointer()).Name() ==
-				runtime.FuncForPC(reflect.ValueOf(r.handler).Pointer()).Name() {
-			return true
-		}
-	}
-
-	return false
-
-}
-
 func TestRouteRegistry(t *testing.T) {
-	myTestRouter := route{method: http.MethodGet, path: "/test/path", handler: testHandler}
-	registerRoute(myTestRouter)
-
-	assert.True(t, findTestRouter(&myTestRouter, routes))
-
-	myRestrictedTestRoute := route{method: http.MethodGet, path: "/test/restricted", handler: testHandler}
-	registerRestrictedRoute(myRestrictedTestRoute)
-
-	assert.True(t, findTestRouter(&myRestrictedTestRoute, restrictedRoutes))
+	myTestRoute := route{method: http.MethodGet, path: "/test/path", handler: testHandler}
+	registerRoute(myTestRoute)
 
 	assert.GreaterOrEqual(t, len(routes), 1)
 
+	found := false
+	for _, route := range routes {
+		if route.method == myTestRoute.method &&
+			route.path == myTestRoute.path &&
+			runtime.FuncForPC(reflect.ValueOf(route.handler).Pointer()).Name() ==
+				runtime.FuncForPC(reflect.ValueOf(myTestRoute.handler).Pointer()).Name() {
+			found = true
+		}
+	}
+
+	assert.True(t, found)
 }
 
 func testHandler(c echo.Context) error {
