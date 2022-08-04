@@ -132,7 +132,16 @@ func (d *Mock) GetUsersByRole(role int64) ([]models.User, error) {
 }
 
 func (d *Mock) CreateUser(newUser models.User) error {
-	panic("not implemented") // TODO: Implement
+	if newUser.ID == uuid.Nil {
+		log.Error("newUser struct has nil ID")
+		return errors.New("newUser struct has nil ID")
+	}
+	if _, exists := d.users[newUser.ID]; !exists {
+		d.users[newUser.ID] = newUser
+		return nil
+	}
+	log.Error("newUser ID already exists in mock db")
+	return errors.New("newUser already exists in mock db")
 }
 
 func (d *Mock) DeleteUser(id uuid.UUID) error {

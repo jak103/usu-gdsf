@@ -147,3 +147,25 @@ func TestGetUserByID(t *testing.T) {
 
 	assert.Equal(t, randUser.ID, id)
 }
+
+func TestCreateUser(t *testing.T) {
+	mock := Mock{}
+	mock.users = make(map[uuid.UUID]models.User)
+	userID := uuid.New()
+	newUser := models.User{
+		ID:           userID,
+		Username:     "default",
+		EmailAddress: "default@gmail.com",
+		Password:     "default",
+		Displayname:  "Default",
+		Role:         models.Admin,
+	}
+	err := mock.CreateUser(newUser)
+	assert.Contains(t, mock.users, userID)
+	assert.Equal(t, nil, err)
+	// verify that you cannot overwrite a user, even though it's unlikely
+	err = mock.CreateUser(newUser)
+	assert.NotEqual(t, nil, err)
+	err = mock.CreateUser(models.User{})
+	assert.NotEqual(t, nil, err)
+}
