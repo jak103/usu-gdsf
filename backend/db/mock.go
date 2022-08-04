@@ -90,7 +90,7 @@ func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error) {
 		log.Error("nil id provided")
 		return nil, errors.New("nil id provided")
 	}
-	if user, ok := d.users[id]; ok {
+	if user, ok := db.users[id]; ok {
 		return &user, nil
 	}
 	return nil, errors.New("mockdb: user not found")

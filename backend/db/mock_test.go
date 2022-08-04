@@ -111,11 +111,10 @@ func TestGetAllUsers(t *testing.T) {
 	mock := Mock{}
 	mock.users = make(map[uuid.UUID]models.User)
 	user := models.User{
-		Username:     "default",
-		EmailAddress: "default@gmail.com",
-		Password:     "default",
-		Displayname:  "Default",
-		Role:         models.Admin,
+		Username:    "default",
+		Password:    "default",
+		Displayname: "Default",
+		Role:        models.Admin,
 	}
 	for i := 0; i < 10; i++ {
 		user.ID = uuid.New()
@@ -130,11 +129,10 @@ func TestGetUserByID(t *testing.T) {
 	mock := Mock{}
 	mock.users = make(map[uuid.UUID]models.User)
 	user := models.User{
-		Username:     "default",
-		EmailAddress: "default@gmail.com",
-		Password:     "default",
-		Displayname:  "Default",
-		Role:         models.Admin,
+		Username:    "default",
+		Password:    "default",
+		Displayname: "Default",
+		Role:        models.Admin,
 	}
 	for i := 0; i < 10; i++ {
 		user.ID = uuid.New()
@@ -152,11 +150,10 @@ func TestGetUserByRole(t *testing.T) {
 	mock := Mock{}
 	mock.users = make(map[uuid.UUID]models.User)
 	user := models.User{
-		Username:     "default",
-		EmailAddress: "default@gmail.com",
-		Password:     "default",
-		Displayname:  "Default",
-		Role:         models.Admin,
+		Username:    "default",
+		Password:    "default",
+		Displayname: "Default",
+		Role:        models.Admin,
 	}
 	userCount := 10
 	halfUsers := int(userCount / 2)
@@ -181,17 +178,16 @@ func TestGetUserByRole(t *testing.T) {
 
 }
 
-func TestCreateUser(t *testing.T) {
+func TestCreateUser_duplicate(t *testing.T) {
 	mock := Mock{}
 	mock.users = make(map[uuid.UUID]models.User)
 	userID := uuid.New()
 	newUser := models.User{
-		ID:           userID,
-		Username:     "default",
-		EmailAddress: "default@gmail.com",
-		Password:     "default",
-		Displayname:  "Default",
-		Role:         models.Admin,
+		ID:          userID,
+		Username:    "default",
+		Password:    "default",
+		Displayname: "Default",
+		Role:        models.Admin,
 	}
 	err := mock.CreateUser(newUser)
 	assert.Contains(t, mock.users, userID)
@@ -208,12 +204,11 @@ func TestDeleteUser(t *testing.T) {
 	mock.users = make(map[uuid.UUID]models.User)
 	userID := uuid.New()
 	newUser := models.User{
-		ID:           userID,
-		Username:     "default",
-		EmailAddress: "default@gmail.com",
-		Password:     "default",
-		Displayname:  "Default",
-		Role:         models.Admin,
+		ID:          userID,
+		Username:    "default",
+		Password:    "default",
+		Displayname: "Default",
+		Role:        models.Admin,
 	}
 	mock.users[userID] = newUser
 	err := mock.DeleteUser(userID)
@@ -230,12 +225,11 @@ func TestUpdateUser(t *testing.T) {
 	mock.users = make(map[uuid.UUID]models.User)
 	userID := uuid.New()
 	newUser := models.User{
-		ID:           userID,
-		Username:     "default",
-		EmailAddress: "default@gmail.com",
-		Password:     "default",
-		Displayname:  "Default",
-		Role:         models.Admin,
+		ID:          userID,
+		Username:    "default",
+		Password:    "default",
+		Displayname: "Default",
+		Role:        models.Admin,
 	}
 	mock.users[userID] = newUser
 	updatedUsername := "username"
