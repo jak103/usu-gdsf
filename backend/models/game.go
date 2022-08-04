@@ -15,6 +15,6 @@ type Game struct {
 	CreationDate time.Time
 	Version      string
 	Tags         []string
-	downloads    uint64
-	downloadLink string
+	Downloads    int64 // firestore doesn't support uint64
+	DownloadLink string
 }
