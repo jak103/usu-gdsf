@@ -1,5 +1,6 @@
 <template>
 	<div v-if="!dataLoading && allGames.length > 0">
+		<h1 class="ml-10 pb-5">All Games</h1>
 		<v-table 
 			height="80vh"
 		>
@@ -15,50 +16,64 @@
 					<th class="text-left" width="5%">
 					Version
 					</th>
-					<th class="text-left" width="10%">
+					<th class="text-left" width="7%">
 					Created
 					</th>
 					<th class="text-left" width="10%">
 					Tags
 					</th>
 					<th class="text-left" width="10%">
-					Downloads
+					Times Played/Downloads
 					</th>
-					<th class="text-left" width="15%">
+					<th class="text-left" width="10%">
 					Rating
 					</th>
 					<th></th><!--Tooltip info with description-->
 				</tr>
 			</thead>
 			<tbody>
-				<tr	link v-for="item in allGames.slice(((page - 1) * perPage), ((page - 1) * perPage) + perPage)" :key="item.id" @click.stop="handleClickGame(item.id)">
+				<tr	link v-for="item in allGames.slice(((page - 1) * perPage), ((page - 1) * perPage) + perPage)" :key="item.Id" @click.stop="handleClickGame(item.Id)">
 					<td>
-						<v-img
+						<v-img v-if="item.ImagePath"
 							height="50"
-							:src="item.imagePath"
+							:src="item.ImagePath"
 						></v-img>
+						<v-icon v-else color="gray">
+							mdi-gamepad-square
+						</v-icon>
 					</td>
 					<td>{{ item.Name }}</td>
-					<td>{{ item.Author }}</td>
+					<td>{{ item.Developer }}</td>
 					<td>v{{ item.Version }}</td>
 					<td>{{ getDateString(new Date(item.CreationDate)) }}</td>
 					<td>
-						<v-chip v-for="tag in item.Tags">
+						<div v-if="!item.Tags">-</div>
+						<v-chip v-if="item.Tags" v-for="tag in item.Tags">
 							{{ tag }}
 						</v-chip>
 					</td>
-					<td>{{ item.downloads }}</td>
+					<td>
+						<div v-if="item.TimesPlayed != null">
+							Times Played: {{ item.TimesPlayed }}
+						</div>
+						<div v-if="item.downloads != null">
+							Downloads: {{ item.downloads }}
+						</div>
+						<div v-if="item.TimesPlayed == null && item.downloads == null">
+							-
+						</div>
+					</td>
 					<td>
 						<v-tooltip>
 							<template v-slot:activator="{ props }">
 								<v-rating
 									v-bind="props"
-									:model-value="item.rating"
+									:model-value="item.Rating"
 									density="compact"
 									half-increments
 								></v-rating>
 							</template>
-							<span>{{ item.rating ? item.rating : 0 }} Stars</span>
+							<span>{{ item.Rating ? item.Rating : 0 }} Stars</span>
 						</v-tooltip>	
 					</td>
 					<td>
@@ -68,7 +83,7 @@
 									mdi-information
 								</v-icon>
 							</template>
-							<span>{{ item.description ? item.description : "No description available" }}</span>
+							<span>{{ item.Description ? item.Description : "No description available" }}</span>
 						</v-tooltip>
 					</td>
 				</tr>
@@ -90,8 +105,7 @@
 		name: 'AllGamesPage',
 		components: {
 			Rating,
-			Loading,
-			TableFilter
+			Loading
 		},
 		data() {
 			return {
