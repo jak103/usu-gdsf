@@ -106,3 +106,44 @@ func TestUpdateGame(t *testing.T) {
 	err = mock.UpdateGame(models.Game{})
 	assert.NotEqual(t, nil, err)
 }
+
+func TestGetAllUsers(t *testing.T) {
+	mock := Mock{}
+	mock.users = make(map[uuid.UUID]models.User)
+	user := models.User{
+		Username:     "default",
+		EmailAddress: "default@gmail.com",
+		Password:     "default",
+		Displayname:  "Default",
+		Role:         models.Admin,
+	}
+	for i := 0; i < 10; i++ {
+		user.ID = uuid.New()
+		mock.users[user.ID] = user
+	}
+	allUsers, _ := mock.GetAllUsers()
+	assert.Equal(t, len(mock.users), len(allUsers))
+	assert.Greater(t, len(allUsers), 0)
+}
+
+func TestGetUserByID(t *testing.T) {
+	mock := Mock{}
+	mock.users = make(map[uuid.UUID]models.User)
+	user := models.User{
+		Username:     "default",
+		EmailAddress: "default@gmail.com",
+		Password:     "default",
+		Displayname:  "Default",
+		Role:         models.Admin,
+	}
+	for i := 0; i < 10; i++ {
+		user.ID = uuid.New()
+		mock.users[user.ID] = user
+	}
+
+	keys := reflect.ValueOf(mock.users).MapKeys()
+	id := keys[rand.Intn(len(keys))].Interface().(uuid.UUID)
+	randUser, _ := mock.GetUserByID(id)
+
+	assert.Equal(t, randUser.ID, id)
+}

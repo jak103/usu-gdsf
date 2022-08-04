@@ -15,6 +15,7 @@ var _ Database = (*Mock)(nil)
 
 type Mock struct {
 	games map[uuid.UUID]models.Game
+	users map[uuid.UUID]models.User
 }
 
 func (db *Mock) GetGameByID(id uuid.UUID) (*models.Game, error) {
@@ -106,11 +107,24 @@ func (d *Mock) UpdateGame(updatedGame models.Game) error {
 
 // Users
 func (d *Mock) GetAllUsers() ([]models.User, error) {
-	panic("not implemented") // TODO: Implement
+	users := make([]models.User, 0)
+
+	for _, user := range d.users {
+		users = append(users, user)
+	}
+
+	return users, nil
 }
 
-func (d *Mock) GetUserByID(id uuid.UUID) {
-	panic("not implemented") // TODO: Implement
+func (d *Mock) GetUserByID(id uuid.UUID) (*models.User, error) {
+	if id == uuid.Nil {
+		log.Error("nil id provided")
+		return nil, errors.New("nil id provided")
+	}
+	if user, ok := d.users[id]; ok {
+		return &user, nil
+	}
+	return nil, errors.New("mockdb: user not found")
 }
 
 func (d *Mock) GetUsersByRole(role int64) ([]models.User, error) {
