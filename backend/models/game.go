@@ -16,4 +16,5 @@ type Game struct {
 	Version      string
 	Tags         []string
 	downloads    uint64
+	downloadLink string
 }
