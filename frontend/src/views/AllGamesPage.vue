@@ -85,7 +85,6 @@
 <script>
 	import Rating from '../components/Rating.vue';
 	import Loading from '../components/Loading.vue';
-	import TableFilter from '../components/TableFilter.vue';
 	import axios from "axios";
 	export default {
 		name: 'AllGamesPage',
