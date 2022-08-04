@@ -1,7 +1,11 @@
 <template>
-	<div v-if="!dataLoading && allGames.length > 0">
-		<h1 class="ml-10 pb-5">All Games</h1>
-		<v-table 
+	<div
+		data-test="table"
+		v-if="!dataLoading && allGames.length > 0"
+	>
+		<h1 data-test="title" class="ml-10 pb-5">All Games</h1>
+		<v-table
+			data-test="data-table"
 			height="80vh"
 		>
 			<thead>
@@ -32,7 +36,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr	link v-for="item in allGames.slice(((page - 1) * perPage), ((page - 1) * perPage) + perPage)" :key="item.Id" @click.stop="handleClickGame(item.Id)">
+				<tr	
+					v-for="item in allGames.slice(((page - 1) * perPage), ((page - 1) * perPage) + perPage)"
+					:key="item.Id"
+					:id="item.Id"
+					@click.stop="handleClickGame(item.Id)">
 					<td>
 						<v-img v-if="item.ImagePath"
 							height="50"
@@ -90,11 +98,12 @@
 			</tbody>
 		</v-table>
 		<v-pagination
+			data-test="pagination" 
 			v-model="page"
 			:length="Math.ceil(allGames.length / perPage)"
 		></v-pagination>
 	</div>
-	<Loading v-if="dataLoading" text="Loading Game Data" containerStyle="height: 75vh"/>
+	<Loading data-test="loadbar" v-if="dataLoading" text="Loading Game Data" containerStyle="height: 75vh"/>
 </template>
 
 <script>
@@ -109,25 +118,20 @@
 		},
 		data() {
 			return {
-				allGames: {},
+				allGames: [],
 				dataLoading: false,
 				page: 1,
 				perPage: 13
 			};
 		},
-
-		computed: {
-
-		},
-
 		methods: {
 			handleClickGame(id) {
 				this.$router.push("/games/info/" + id)
 			},
-			getGames() {
+			async getGames() {
 				this.dataLoading = true;
 				// we may want to configure a base-url for this, because it won't work on production
-				axios.get('http://127.0.0.1:8080/games')
+				await axios.get('http://127.0.0.1:8080/games')
 					.then(response => {
 						this.allGames = response.data[0];
 						this.dataLoading = false
