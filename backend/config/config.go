@@ -80,8 +80,7 @@ func getEnvVarString(key string, envFileMap map[string]string) string {
 		if value, isInMap := envFileMap[key]; isInMap {
 			envVar = value
 		} else {
-			log.Error("Environment variable ", key, " not set!")
-			os.Exit(1)
+			panic("Environment variable " + key + " not set!")
 		}
 	}
 
@@ -93,8 +92,7 @@ func getEnvVarInt64(key string, envFileMap map[string]string) int64 {
 	envVarInt, err := strconv.Atoi(envVarStr)
 
 	if err != nil {
-		log.Error("Environment variable ", key, " must be an integer")
-		os.Exit(1)
+		panic("Environment variable " + key + " must be an integer")
 	}
 
 	return int64(envVarInt)
