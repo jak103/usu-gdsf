@@ -84,7 +84,7 @@ func getEnvVarString(key string, envFileMap map[string]string) string {
 		}
 	}
 
-	return envVar
+	return strings.TrimSpace(envVar)
 }
 
 func getEnvVarInt64(key string, envFileMap map[string]string) int64 {
