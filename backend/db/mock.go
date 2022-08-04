@@ -62,15 +62,43 @@ func (d *Mock) GetGamesByPublishDate(startRange string, endRange string) ([]mode
 }
 
 func (d *Mock) CreateGame(newGame models.Game) error {
-	panic("not implemented") // TODO: Implement
+	if newGame.ID == uuid.Nil {
+		log.Error("newGame struct has nil ID")
+		return errors.New("newGame struct has nil ID")
+	}
+	if _, exists := d.games[newGame.ID]; !exists {
+		d.games[newGame.ID] = newGame
+		return nil
+	}
+	log.Error("newGame ID already exists in mock db")
+	return errors.New("game already exists in mock db")
 }
 
 func (d *Mock) DeleteGame(id uuid.UUID) error {
-	panic("not implemented") // TODO: Implement
+	if id == uuid.Nil {
+		log.Error("nil id provided")
+		return errors.New("nil id provided")
+	}
+	if _, exists := d.games[id]; exists {
+		delete(d.games, id)
+		return nil
+	}
+	log.Error("provided id doesn't exist in db")
+	return errors.New("provided id doesn't exist in db")
 }
 
 func (d *Mock) UpdateGame(updatedGame models.Game) error {
-	panic("not implemented") // TODO: Implement
+	if updatedGame.ID == uuid.Nil {
+		log.Error("updatedGame struct has nil ID")
+		return errors.New("updatedGame struct has nil ID")
+	}
+	if _, exists := d.games[updatedGame.ID]; !exists {
+		log.Error("updatedGame ID does not exists in mock db")
+		return errors.New("updatedGame ID does not exists in mock db")
+
+	}
+	d.games[updatedGame.ID] = updatedGame
+	return nil
 }
 
 // Users
