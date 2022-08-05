@@ -25,7 +25,7 @@ test('Empty list', () => {
 test('Valid list', () => {
   let objects = stringsToObjects(strings);
   objects.forEach((object, index) => {
-    expect(index).toBe(objectsExpected[index].id);
+    expect(object.id).toBe(objectsExpected[index].id);
     expect(object.firstName).toBe(objectsExpected[index].firstName);
     expect(object.lastName).toBe(objectsExpected[index].lastName);
   });
