@@ -89,73 +89,77 @@ func (db Firestore) GetAllGames() ([]models.Game, error) {
 // 	panic("not implemented") // TODO: Implement
 // }
 
-func (d *Firestore) GetGamesByPublishDate(startRange string, endRange string) ([]models.Game, error) {
+func (db *Firestore) GetGamesByPublishDate(startRange string, endRange string) ([]models.Game, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) CreateGame(newGame models.Game) error {
+func (db *Firestore) CreateGame(newGame models.Game) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) DeleteGame(id uuid.UUID) error {
+func (db *Firestore) DeleteGame(id uuid.UUID) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) UpdateGame(updatedGame models.Game) error {
+func (db *Firestore) UpdateGame(updatedGame models.Game) error {
 	panic("not implemented") // TODO: Implement
 }
 
 // Users
-func (d *Firestore) GetAllUsers() ([]models.User, error) {
+func (db *Firestore) GetAllUsers() ([]models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) GetUserByID(id uuid.UUID)(*models.User, error) {
+func (db *Firestore) GetUserByID(id uuid.UUID) (*models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) GetUsersByRole(role int64) ([]models.User, error) {
+func (db *Firestore) GetUserByUserName(userName string) (*models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) CreateUser(newUser models.User) error {
+func (db *Firestore) GetUsersByRole(role int64) ([]models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) DeleteUser(id uuid.UUID) error {
+func (db *Firestore) CreateUser(newUser models.User) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) UpdateUser(updatedUser models.User) error {
+func (db *Firestore) DeleteUser(id uuid.UUID) error {
+	panic("not implemented") // TODO: Implement
+}
+
+func (db *Firestore) UpdateUser(updatedUser models.User) error {
 	panic("not implemented") // TODO: Implement
 }
 
 // Ratings
-func (d *Firestore) GetRatingByID(id uuid.UUID) (*models.GameRating, error) {
+func (db *Firestore) GetRatingByID(id uuid.UUID) (*models.GameRating, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) GetRatingsByGame(gameID uuid.UUID) ([]models.GameRating, error) {
+func (db *Firestore) GetRatingsByGame(gameID uuid.UUID) ([]models.GameRating, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) GetRatingsByUser(userID uuid.UUID) ([]models.GameRating, error) {
+func (db *Firestore) GetRatingsByUser(userID uuid.UUID) ([]models.GameRating, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) CreateRating(newRating models.GameRating) error {
+func (db *Firestore) CreateRating(newRating models.GameRating) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) DeleteRating(id uuid.UUID) error {
+func (db *Firestore) DeleteRating(id uuid.UUID) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) DeleteRatingsByGame(gameID uuid.UUID) error {
+func (db *Firestore) DeleteRatingsByGame(gameID uuid.UUID) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) UpdateRating(updatedRating models.GameRating) error {
+func (db *Firestore) UpdateRating(updatedRating models.GameRating) error {
 	panic("not implemented") // TODO: Implement
 }
 
