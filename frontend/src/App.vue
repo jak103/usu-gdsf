@@ -11,22 +11,19 @@
       </v-container>
     </v-main>
 
-   <Footer/> 
   </v-app>
 </template>
 
 <script>
 import HomeView from './views/HomeView.vue'
 import NavMenu from './components/NavMenu.vue'
-import Footer from './components/Footer.vue'
 
 export default {
   name: 'App',
 
   components: {
     HomeView,
-    NavMenu,
-    Footer
+    NavMenu
 },
 
   data: () => ({

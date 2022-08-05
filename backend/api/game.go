@@ -1,20 +1,21 @@
 package api
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
-	"net/http"
-	"time"
 )
 
 const (
 	// TODO these are placeholder form var names for adding a new game
 	// TODO match these strings with the view's form var names for '/game' POST
-	NAME    = "Name"
-	AUTHOR  = "Author"
-	VERSION = "Version"
+	NAME      = "Name"
+	DEVELOPER = "Developer"
+	VERSION   = "Version"
 )
 
 func gameInfoHandler(c echo.Context) error {
@@ -55,7 +56,7 @@ func newGameHandler(c echo.Context) error {
 	// TODO need a security layer in between the form and our new game struct
 	newGame := models.Game{
 		Name:         c.FormValue(NAME),
-		Author:       c.FormValue(AUTHOR),
+		Developer:    c.FormValue(DEVELOPER),
 		CreationDate: time.Now(),
 		Version:      c.FormValue(VERSION),
 	}
@@ -72,9 +73,6 @@ func newGameHandler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Database add game error")
 	}
 
-	// register new route with ID
-	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
-
 	// TODO return successful game add
 	return c.JSON(http.StatusOK, "New game handler")
 }
@@ -83,18 +81,5 @@ func init() {
 	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
-
-	// register routes for all games from the db
-	log.Info("Creating routes for all games in database")
-	_db, getDbErr := db.NewDatabaseFromEnv()
-	if getDbErr != nil {
-		return
-	}
-	games, getGamesErr := _db.GetAllGames()
-	if getGamesErr != nil {
-		return
-	}
-	for range games {
-		registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
-	}
+	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
 }

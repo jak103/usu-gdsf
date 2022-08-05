@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func RequireAuthorization(handler echo.HandlerFunc) echo.HandlerFunc {
+func RequireAuthorization(handler echo.HandlerFunc, requireAdmin bool) echo.HandlerFunc {
 	return func(ctx echo.Context) error {
 		var token string
 
@@ -31,6 +31,10 @@ func RequireAuthorization(handler echo.HandlerFunc) echo.HandlerFunc {
 		
 		if err != nil {
 			return echo.NewHTTPError(http.StatusUnauthorized, fmt.Sprintf("Unauthorized: %s", err))
+		}
+
+		if requireAdmin && tokenClaims.UserType != ADMIN_USER {
+			return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized: Must be admin")
 		}
 
 		ctx.Set("tokenClaims", tokenClaims)

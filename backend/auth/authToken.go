@@ -13,23 +13,33 @@ import (
 	"github.com/jak103/usu-gdsf/config"
 )
 
+type UserType int8
+
+const (
+	ADMIN_USER   UserType = iota
+	REGULAR_USER
+)
+
+
 type TokenType int8
 
 const (
-	ACCESS_TOKEN TokenType = iota
+	ACCESS_TOKEN  TokenType = iota
 	REFRESH_TOKEN
 )
 
 type TokenClaims struct {
 	Type       TokenType
 	Expiration int64    
-	UserId     uint64    
-	UserEmail  string   
+	UserId     uint64
+	UserType   UserType
+	UserEmail  string
 }
 
 type TokenParams struct {
 	Type      TokenType
 	UserId    uint64
+	UserType  UserType
 	UserEmail string
 }
 
@@ -49,6 +59,7 @@ func GenerateToken(params TokenParams) (string, error) {
 		Type: params.Type,
 		Expiration: expiration,
 		UserId: params.UserId,
+		UserType: params.UserType,
 		UserEmail: params.UserEmail,
 	}
 	

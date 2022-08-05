@@ -19,17 +19,13 @@ Once everything is up and running, simply try hitting the `/game` endpoint at `l
 
 ## Backend Server Configuration
 
-Server settings are configured using environment variables. The following environment variables are *required* to be defined for the server to function properly:
+Server settings are configured using environment variables, or by a `.env` file. Environment variables may be specified in the shell or placed in a `.env` file in the current working directory. Environment variables loaded in the shell will override those from the `.env` file. **A `sample.env` file is included in the repository. This file contains helpful default values for required environment variables. This file may be duplicated and renamed to `.env` for development testing purposes.** The following environment variables are *required* to be defined for the server to function properly:
 
 ### Environment
 
 * `DB_TYPE`
 
   Specifies which database to use. Valid values are `firestore` and `mongo`
-  
-* `RUN_ENV`
-
-  Specifies which database to use. Valid values are `firestore`, `mongo`, and `mock`
 
 * `MONGO_URI` (only if `DB_TYPE` is `mongo`)
 
