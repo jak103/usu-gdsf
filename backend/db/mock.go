@@ -1,7 +1,7 @@
 package db
 
 import (
-	"context"
+	// "context"
 	"errors"
 	"reflect"
 	"strconv"
@@ -92,13 +92,13 @@ func (db Mock) GetAllGames() ([]models.Game, error) {
 }
 
 func (db Mock) CreateUser(newUser models.User) (models.User, error) {
-	users := db.database.Collection("users")
+	// users := db.database.Collection("users")
 
-	newUserDoc, err := users.InsertOne(context.Background(), newUser, nil)
-	if err != nil {
-		log.WithError(err).Error("Failed to insert new user")
-		return nil, err
-	}
+	// newUserDoc, err := users.InsertOne(context.Background(), newUser, nil)
+	// if err != nil {
+	// 	log.WithError(err).Error("Failed to insert new user")
+	// 	return nil, err
+	// }
 
 	return newUser, nil
 }
