@@ -28,10 +28,22 @@ func TestGetGameByID(t *testing.T) {
 
 func TestGetAllGames(t *testing.T) {
 	mock := Mock{}
-	mock.Connect()
+	mock.games = make(map[uuid.UUID]models.Game)
+	newGame := models.Game{
+		Title:            "NewGame",
+		Description:      "lame",
+		VersionNumber:    "1.0.0",
+		PublishTimestamp: "7/29/2022",
+	}
+	count := 10
+	for i := 0; i < count; i++ {
+		newGame.ID = uuid.New()
+		newGame.UserID = uuid.New()
+		mock.games[newGame.ID] = newGame
+	}
 	allGames, _ := mock.GetAllGames()
 	assert.Equal(t, len(mock.games), len(allGames))
-	assert.Greater(t, len(allGames), 0)
+	assert.Equal(t, 10, len(allGames))
 }
 
 func TestCreateGame(t *testing.T) {
