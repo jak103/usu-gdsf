@@ -3,9 +3,6 @@ package db
 import (
 	"errors"
 
-	"encoding/json"
-	"fmt"
-
 	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
@@ -20,14 +17,13 @@ type Mock struct {
 
 func (db *Mock) GetGameByID(id uuid.UUID) (*models.Game, error) {
 	if id.String() != "" {
-		bs, _ := json.Marshal(db.games)
-		fmt.Println(string(bs))
 		if game, ok := db.games[id]; ok {
 			return &game, nil
 		}
 	}
 	return nil, errors.New("mockdb: game not found")
 }
+
 func (db *Mock) GetGamesByTags(tags []string) ([]models.Game, error) {
 	games := make(map[string]models.Game)
 
@@ -124,7 +120,7 @@ func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error){
 			return &user, nil
 		}
 	}
-	return nil, errors.New("mockdb: user not found")
+	return nil, errors.New("mockdb: game not found")
 }
 
 func (db *Mock) GetUsersByRole(role int64) ([]models.User, error) {
@@ -218,6 +214,14 @@ func (db *Mock) Connect() error {
 			games[v.ID] = v
 		}
 		db.games = games
+	}
+
+	if len(db.users) == 0 {
+		users := make(map[uuid.UUID]models.User)
+		// for _, v := range CreateGamesFromJson() {
+		// 	games[v.ID.String()] = v
+		// }
+		db.users = users
 	}
 
 	log.Debug("Sample Database Initialized")
