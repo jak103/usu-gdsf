@@ -3,18 +3,29 @@ package api
 import (
 	"net/http"
 	"net/http/httptest"
-	"sync"
 	"testing"
 
+	"github.com/jak103/usu-gdsf/auth"
 	"github.com/stretchr/testify/assert"
 )
 
 func AssertResponseCode(t *testing.T, method string, path string, expectedCode int) bool {
-	var s Server = *NewServer(&sync.WaitGroup{})
-	s.Start()
+	params := auth.TokenParams{
+		Type:      auth.ACCESS_TOKEN,
+		UserId:    42,
+		UserEmail: "tst@example.com",
+	}
+
+	token, _ := auth.GenerateToken(params)
+
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(method, path, nil)
-	s.echo.ServeHTTP(recorder, request)
+	request.AddCookie(&http.Cookie{
+		Name:  "accessToken",
+		Value: token,
+	})
+	GlobalTestServer.echo.ServeHTTP(recorder, request)
+
 	return expectedCode == recorder.Code
 }
 
