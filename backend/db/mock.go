@@ -250,7 +250,14 @@ func (d *Mock) DeleteRating(id uuid.UUID) error {
 }
 
 func (d *Mock) DeleteRatingsByGame(gameID uuid.UUID) error {
-	panic("not implemented") // TODO: Implement
+	ratings, err := d.GetRatingsByGame(gameID)
+	if ratings == nil {
+		return err
+	}
+	for _, rating := range ratings {
+		delete(d.ratings, rating.ID)
+	}
+	return nil
 }
 
 func (d *Mock) UpdateRating(updatedRating models.GameRating) error {
