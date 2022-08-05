@@ -57,12 +57,15 @@
 		@save="handleSave(selectedUser)"
 		@createAdmin="handleCreateAdmin(selectedUser)"	
 	/>
+
+	<Footer></Footer>
 	
 	</div>
 </template>
 
 <script>
 import UserForm from '../components/UserForm.vue'
+import Footer from '../components/Footer.vue'
 import {ref} from "vue";
 export default {
 
@@ -107,7 +110,7 @@ export default {
 						})
         };
     },
-    components: { UserForm },
+    components: { UserForm, Footer },
 
 		methods: {
 			handleClickUser(user) {
