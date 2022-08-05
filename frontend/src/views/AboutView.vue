@@ -25,14 +25,20 @@
       </v-card-text>
     </v-card>
   </v-container>
+  <Footer></Footer>
 </template>
 
 <script>
 import names from './names.js'
 import stringsToObjects from './nameFunctions.js'
+import Footer from "../components/Footer.vue";
+
 
 export default {
   name: 'AboutView',
+  components: {
+    Footer,
+  },
 
   data: () => ({
     words: 'This application was created as a project for the Intro to DevOps and Cloud Based Services course at USU. Our Mission is to deliver and showcase student projects created for the CS 5410 - Game Development course at USU. Our Project works by using Docker and Google Cloud to deploy the application. Firestore is used for our database.',
