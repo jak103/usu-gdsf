@@ -319,3 +319,25 @@ func TestGetRatingsByUser(t *testing.T) {
 	ratingsByUser, _ := mock.GetRatingsByUser(userID)
 	assert.Equal(t, count, len(ratingsByUser))
 }
+
+func TestCreateRating(t *testing.T) {
+	mock := Mock{}
+	mock.ratings = make(map[uuid.UUID]models.GameRating)
+	ratingID := uuid.New()
+	newRating := models.GameRating{
+		ID:                ratingID,
+		RatingValue:       "5",
+		RatingDescription: "good",
+		RatingTimestamp:   "1234567890",
+		GameId:            uuid.New(),
+		UserID:            uuid.New(),
+	}
+	err := mock.CreateRating(newRating)
+	assert.Contains(t, mock.ratings, ratingID)
+	assert.Equal(t, nil, err)
+	// verify that you cannot overwrite a game, even though it's unlikely
+	err = mock.CreateRating(newRating)
+	assert.NotEqual(t, nil, err)
+	err = mock.CreateRating(models.GameRating{})
+	assert.NotEqual(t, nil, err)
+}

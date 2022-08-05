@@ -224,7 +224,16 @@ func (d *Mock) GetRatingsByUser(userID uuid.UUID) ([]models.GameRating, error) {
 }
 
 func (d *Mock) CreateRating(newRating models.GameRating) error {
-	panic("not implemented") // TODO: Implement
+	if newRating.ID == uuid.Nil {
+		log.Error("newRating struct has nil ID")
+		return errors.New("newRating struct has nil ID")
+	}
+	if _, exists := d.ratings[newRating.ID]; !exists {
+		d.ratings[newRating.ID] = newRating
+		return nil
+	}
+	log.Error("newRating ID already exists in mock db")
+	return errors.New("newRating already exists in mock db")
 }
 
 func (d *Mock) DeleteRating(id uuid.UUID) error {
