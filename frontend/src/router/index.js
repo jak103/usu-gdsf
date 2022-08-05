@@ -27,6 +27,10 @@ const router = createRouter({
       name: 'admin',
       component: () => import('../views/AdminPage.vue')
     },
+    {
+      path: '/usu-cs',
+      beforeEnter() {location.href='http:www.usu.edu/cs'}
+    }
   ]
 })
 

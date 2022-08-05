@@ -25,12 +25,12 @@ no-gutters
 >
 
 <v-btn
-  color="primary"
+  color="white"
   text
   rounded
   class="my-2"
 >
-      <router-link to="/about">USU CS</router-link>
+      <router-link to="/">Home</router-link>
       </v-btn>
 
 <v-btn
