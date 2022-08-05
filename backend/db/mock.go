@@ -12,8 +12,9 @@ import (
 var _ Database = (*Mock)(nil)
 
 type Mock struct {
-	games map[uuid.UUID]models.Game
-	users map[uuid.UUID]models.User
+	games   map[uuid.UUID]models.Game
+	users   map[uuid.UUID]models.User
+	ratings map[uuid.UUID]models.GameRating
 }
 
 func (db *Mock) GetGameByID(id uuid.UUID) (*models.Game, error) {
@@ -180,7 +181,14 @@ func (d *Mock) UpdateUser(updatedUser models.User) error {
 
 // Ratings
 func (d *Mock) GetRatingByID(id uuid.UUID) (*models.GameRating, error) {
-	panic("not implemented") // TODO: Implement
+	if id == uuid.Nil {
+		log.Error("nil rating id provided")
+		return nil, errors.New("nil rating id provided")
+	}
+	if rating, ok := d.ratings[id]; ok {
+		return &rating, nil
+	}
+	return nil, errors.New("mockdb: rating not found")
 }
 
 func (d *Mock) GetRatingsByGame(gameID uuid.UUID) ([]models.GameRating, error) {

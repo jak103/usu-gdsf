@@ -256,3 +256,25 @@ func TestUpdateUser(t *testing.T) {
 	err = mock.UpdateUser(models.User{})
 	assert.NotEqual(t, nil, err)
 }
+
+func TestGetRatingByID(t *testing.T) {
+	mock := Mock{}
+	mock.ratings = make(map[uuid.UUID]models.GameRating)
+	rating := models.GameRating{
+		RatingValue:       "5",
+		RatingDescription: "good",
+		RatingTimestamp:   "1234567890",
+		GameId:            uuid.New(),
+		UserID:            uuid.New(),
+	}
+	for i := 0; i < 10; i++ {
+		rating.ID = uuid.New()
+		mock.ratings[rating.ID] = rating
+	}
+
+	keys := reflect.ValueOf(mock.ratings).MapKeys()
+	id := keys[rand.Intn(len(keys))].Interface().(uuid.UUID)
+	randRating, _ := mock.GetRatingByID(id)
+
+	assert.Equal(t, randRating.ID, id)
+}
