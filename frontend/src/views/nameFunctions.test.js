@@ -1,11 +1,11 @@
-import stringToObjects from "./nameFunctions";
+import stringsToObjects from "./nameFunctions";
 
 let strings = [
   "firstname1 lastname1",
   "firstname2 lastname2"
 ];
 
-let objects = [
+let objectsExpected = [
   {
     id: 0,
     firstName: "firstname1",
@@ -19,16 +19,15 @@ let objects = [
 ];
 
 test('Empty list', () => {
-  expect(stringToObjects([])).toStrictEqual([]);
+  expect(stringsToObjects([])).toStrictEqual([]);
 });
 
 test('Valid list', () => {
-  strings.forEach((fullName, index) => {
-    let firstName = fullName.split(" ")[0];
-    let lastName = fullName.split(" ")[1];
-    expect(index).toBe(objects[index].id);
-    expect(firstName).toBe(objects[index].firstName);
-    expect(lastName).toBe(objects[index].lastName);
+  let objects = stringsToObjects(strings);
+  objects.forEach((object, index) => {
+    expect(index).toBe(objectsExpected[index].id);
+    expect(object.firstName).toBe(objectsExpected[index].firstName);
+    expect(object.lastName).toBe(objectsExpected[index].lastName);
   });
 });
 
