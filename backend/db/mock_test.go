@@ -267,7 +267,8 @@ func TestGetRatingByID(t *testing.T) {
 		GameId:            uuid.New(),
 		UserID:            uuid.New(),
 	}
-	for i := 0; i < 10; i++ {
+	count := 10
+	for i := 0; i < count; i++ {
 		rating.ID = uuid.New()
 		mock.ratings[rating.ID] = rating
 	}
@@ -277,4 +278,44 @@ func TestGetRatingByID(t *testing.T) {
 	randRating, _ := mock.GetRatingByID(id)
 
 	assert.Equal(t, randRating.ID, id)
+}
+
+func TestGetRatingsByGame(t *testing.T) {
+	mock := Mock{}
+	mock.ratings = make(map[uuid.UUID]models.GameRating)
+	gameID := uuid.New()
+	rating := models.GameRating{
+		RatingValue:       "5",
+		RatingDescription: "good",
+		RatingTimestamp:   "1234567890",
+		GameId:            gameID,
+		UserID:            uuid.New(),
+	}
+	count := 10
+	for i := 0; i < count; i++ {
+		rating.ID = uuid.New()
+		mock.ratings[rating.ID] = rating
+	}
+	ratingsByGame, _ := mock.GetRatingsByGame(gameID)
+	assert.Equal(t, count, len(ratingsByGame))
+}
+
+func TestGetRatingsByUser(t *testing.T) {
+	mock := Mock{}
+	mock.ratings = make(map[uuid.UUID]models.GameRating)
+	userID := uuid.New()
+	rating := models.GameRating{
+		RatingValue:       "5",
+		RatingDescription: "good",
+		RatingTimestamp:   "1234567890",
+		GameId:            uuid.New(),
+		UserID:            userID,
+	}
+	count := 10
+	for i := 0; i < count; i++ {
+		rating.ID = uuid.New()
+		mock.ratings[rating.ID] = rating
+	}
+	ratingsByUser, _ := mock.GetRatingsByUser(userID)
+	assert.Equal(t, count, len(ratingsByUser))
 }

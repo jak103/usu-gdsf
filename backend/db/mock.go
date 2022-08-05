@@ -192,11 +192,35 @@ func (d *Mock) GetRatingByID(id uuid.UUID) (*models.GameRating, error) {
 }
 
 func (d *Mock) GetRatingsByGame(gameID uuid.UUID) ([]models.GameRating, error) {
-	panic("not implemented") // TODO: Implement
+	if gameID == uuid.Nil {
+		log.Error("nil game id provided")
+		return nil, errors.New("nil game id provided")
+	}
+	ratings := make([]models.GameRating, 0)
+
+	for _, rating := range d.ratings {
+		if rating.GameId == gameID {
+			ratings = append(ratings, rating)
+		}
+	}
+
+	return ratings, nil
 }
 
 func (d *Mock) GetRatingsByUser(userID uuid.UUID) ([]models.GameRating, error) {
-	panic("not implemented") // TODO: Implement
+	if userID == uuid.Nil {
+		log.Error("nil user id provided")
+		return nil, errors.New("nil user id provided")
+	}
+	ratings := make([]models.GameRating, 0)
+
+	for _, rating := range d.ratings {
+		if rating.UserID == userID {
+			ratings = append(ratings, rating)
+		}
+	}
+
+	return ratings, nil
 }
 
 func (d *Mock) CreateRating(newRating models.GameRating) error {
