@@ -10,23 +10,15 @@ import (
 )
 
 func AssertResponseCode(t *testing.T, method string, path string, expectedCode int) bool {
-	params := auth.TokenParams{
-		Type:      auth.ACCESS_TOKEN,
-		UserId:    42,
-		UserEmail: "tst@example.com",
-	}
-
-	token, _ := auth.GenerateToken(params)
+	e := echo.New()
 
 	recorder := httptest.NewRecorder()
-	request := httptest.NewRequest(method, path, nil)
-	request.AddCookie(&http.Cookie{
-		Name:  "accessToken",
-		Value: token,
-	})
-	GlobalTestServer.echo.ServeHTTP(recorder, request)
+	request := httptest.NewRequest(http.MethodGet, "/game", nil)
+	c := e.NewContext(request, recorder)
 
-	return expectedCode == recorder.Code
+	if assert.NoError(t, getAllGames(c)) {
+		assert.Equal(t, http.StatusOK, recorder.Code)
+	}
 }
 
 func TestUserRoute(t *testing.T) {
