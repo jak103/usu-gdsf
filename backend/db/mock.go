@@ -114,8 +114,6 @@ func (db *Mock) GetAllUsers() ([]models.User, error) {
 
 func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error){
 	if id.String() != "" {
-		bs, _ := json.Marshal(db.users)
-		fmt.Println(string(bs))
 		if user, ok := db.users[id]; ok {
 			return &user, nil
 		}
