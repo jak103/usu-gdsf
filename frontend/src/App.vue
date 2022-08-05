@@ -30,11 +30,13 @@
         text
         rounded
         class="my-2"
+        :href="link.url"
+
       >
-        {{ link }}
+        {{ link.text }}
       </v-btn>
       <v-col
-        class="primary lighten-2 py-4 text-center black--text"
+        class="primary lighten-2 text-center black--text"
         cols="12"
       >
         {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
@@ -58,9 +60,15 @@ export default {
 
   data: () => ({
     links: [
-      'USU CS Department',
-      'About Us',
-      'Contact Us',
+      {
+        text: "USU CS Department",
+        url: "www.usu.edu/cs"
+      },
+      {
+        text: "About Us",
+        url: "/about"
+      },
+
     ],
 
   }),
