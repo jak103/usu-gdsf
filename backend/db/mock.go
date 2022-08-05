@@ -237,7 +237,16 @@ func (d *Mock) CreateRating(newRating models.GameRating) error {
 }
 
 func (d *Mock) DeleteRating(id uuid.UUID) error {
-	panic("not implemented") // TODO: Implement
+	if id == uuid.Nil {
+		log.Error("nil rating id provided")
+		return errors.New("nil rating id provided")
+	}
+	if _, exists := d.ratings[id]; exists {
+		delete(d.ratings, id)
+		return nil
+	}
+	log.Error("provided rating id doesn't exist in db")
+	return errors.New("provided rating id doesn't exist in db")
 }
 
 func (d *Mock) DeleteRatingsByGame(gameID uuid.UUID) error {
