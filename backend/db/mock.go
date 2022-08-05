@@ -261,7 +261,16 @@ func (d *Mock) DeleteRatingsByGame(gameID uuid.UUID) error {
 }
 
 func (d *Mock) UpdateRating(updatedRating models.GameRating) error {
-	panic("not implemented") // TODO: Implement
+	if updatedRating.ID == uuid.Nil {
+		log.Error("updatedRating struct has nil ID")
+		return errors.New("updatedRating struct has nil ID")
+	}
+	if _, exists := d.ratings[updatedRating.ID]; !exists {
+		log.Error("updatedRating ID does not exists in mock db")
+		return errors.New("updatedRating ID does not exists in mock db")
+	}
+	d.ratings[updatedRating.ID] = updatedRating
+	return nil
 }
 
 func (db *Mock) Connect() error {

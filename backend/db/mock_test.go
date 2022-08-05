@@ -391,3 +391,29 @@ func TestDeleteRatingsByGame(t *testing.T) {
 	err = mock.DeleteRating(uuid.New())
 	assert.NotEqual(t, nil, err)
 }
+
+func TestUpdateRating(t *testing.T) {
+	mock := Mock{}
+	mock.ratings = make(map[uuid.UUID]models.GameRating)
+	ratingID := uuid.New()
+	newRating := models.GameRating{
+		ID:                ratingID,
+		RatingValue:       "5",
+		RatingDescription: "good",
+		RatingTimestamp:   "1234567890",
+		GameId:            uuid.New(),
+		UserID:            uuid.New(),
+	}
+	mock.ratings[ratingID] = newRating
+	updatedDescription := "bad"
+	newRating.RatingDescription = updatedDescription
+	err := mock.UpdateRating(newRating)
+	assert.Contains(t, mock.ratings, ratingID)
+	assert.Equal(t, mock.ratings[ratingID].RatingDescription, updatedDescription)
+	assert.Equal(t, nil, err)
+	newRating.ID = uuid.New()
+	err = mock.UpdateRating(newRating)
+	assert.NotEqual(t, nil, err)
+	err = mock.UpdateRating(models.GameRating{})
+	assert.NotEqual(t, nil, err)
+}
