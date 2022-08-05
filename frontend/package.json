@@ -3,7 +3,8 @@
     "serve": "vite preview",
     "build": "vite build",
     "dev": "vite",
-    "test": "jest"
+    "test": "jest",
+    "type": "module"
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
