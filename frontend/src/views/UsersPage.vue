@@ -41,7 +41,7 @@
         v-for="user in users"
         :key="user.email"
 				style="cursor: pointer"
-				@click="handleClickUser(() => { return {...user}})"
+				@click="handleClickUser({...user})"
       >
         <td>{{ user.firstName }} {{user.lastName}}</td>
         <td>{{ user.email }}</td>

@@ -28,6 +28,7 @@
                 <v-text-field
                   label="First Name*"
                   v-model="selectedUser.firstName"
+                  :rules="[rules.counter, rules.required]"
                   required
                 ></v-text-field>
               </v-col>
@@ -39,9 +40,9 @@
               >
                 <v-text-field
                   label="Last Name*"
-                  :rules="[rules.required, rules.counter]"
                   v-model="selectedUser.lastName"
-                  persistent-hint
+                  persistent-hint 
+                  :ruels="[rules.counter, rules.required]"
                   required
                 ></v-text-field>
               </v-col>
@@ -54,6 +55,7 @@
                   label="Birth Date*"
                   type="date"
                   v-model="selectedUser.dob"
+                  :rules="[rules.required]"
                   required
                 ></v-text-field>
               </v-col>
@@ -65,7 +67,7 @@
                 <v-text-field
                   label="Email*"
                   type="email"
-                  :rules="[rules.email]"
+                  :rules="[rules.email, rules.required]"
                   v-model="selectedUser.email"
                   required
                 ></v-text-field>
@@ -77,6 +79,7 @@
                 <v-text-field
                   label="Password*"
                   type="password"
+                  :rules="[rules.password]"
                   required
                 ></v-text-field>
               </v-col>
@@ -128,11 +131,18 @@
   });
 
   let rules = {
+    // Password only required if admin creation
+    // DOB rules?
     required: value => !!value || '',
     counter: value => value.length <= 20 || 'Max 20 characters',
     email: value => {
       const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       return pattern.test(value) || 'Invalid e-mail.'
+    },
+    password: value => {
+      if (isAdmin) {
+        return value.length <= 20 && value.length >= 12
+      }
     }
   }
 </script>
