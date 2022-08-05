@@ -8,13 +8,18 @@
 		<v-card color="primary" width="2000">
 			<v-row>
 				<v-col justify="space-between" style="align-self: center">
-					<v-img src="https://randomuser.me/api/portraits/men/85.jpg" height="100" > </v-img>
+					<v-img 
+						src="https://randomuser.me/api/portraits/men/85.jpg" 
+						height="100"
+						data-test="user-image"
+						> 
+					</v-img>
 				</v-col>
 				<v-col>
 					<v-row class="flex-column ">
-						<v-col> {{ user.firstName }} {{user.lastName}}</v-col>
-						<v-col> {{ user.email }}</v-col>
-						<v-col> Birthday: {{ user.dateOfBirth }}</v-col>
+						<v-col data-test="name"> {{ user.firstName }} {{user.lastName}}</v-col>
+						<v-col data-test="email"> {{ user.email }}</v-col>
+						<v-col data-test="bday"> Birthday: {{ user.dateOfBirth }}</v-col>
 					</v-row>
 				</v-col>
 			</v-row>
