@@ -13,6 +13,7 @@ func TestGenerateTokenDecodeAndValidate(t *testing.T) {
 	params := TokenParams{
 		Type: ACCESS_TOKEN,
 		UserId: 42,
+		UserType: REGULAR_USER,
 		UserEmail: "testing@example.com",
 	}
 
@@ -22,6 +23,7 @@ func TestGenerateTokenDecodeAndValidate(t *testing.T) {
 	claims, _ := DecodeAndVerifyToken(token, params.Type)
  
 	assert.Equal(t, claims.Type, params.Type)
+	assert.Equal(t, claims.UserType, params.UserType)
 	assert.Equal(t, claims.UserId, params.UserId)
 	assert.Equal(t, claims.UserEmail, params.UserEmail)
 
@@ -31,6 +33,7 @@ func TestGenerateTokenDecodeAndValidate(t *testing.T) {
 	params = TokenParams{
 		Type: REFRESH_TOKEN,
 		UserId: 999999,
+		UserType: REGULAR_USER,
 		UserEmail: "te|sting2@example.com|",
 	}
 	
@@ -40,6 +43,7 @@ func TestGenerateTokenDecodeAndValidate(t *testing.T) {
 	claims, _ = DecodeAndVerifyToken(token, params.Type)
 
 	assert.Equal(t, claims.Type, params.Type)
+	assert.Equal(t, claims.UserType, params.UserType)
 	assert.Equal(t, claims.UserId, params.UserId)
 	assert.Equal(t, claims.UserEmail, params.UserEmail)
 
@@ -58,6 +62,7 @@ func TestBadTokenType(t *testing.T) {
 	params := TokenParams{
 		Type: 120,
 		UserId: 42,
+		UserType: REGULAR_USER,
 		UserEmail: "testing@example.com",
 	}
 
@@ -69,6 +74,7 @@ func TestInvalidTokenEncoding(t *testing.T) {
 	params := TokenParams{
 		Type: ACCESS_TOKEN,
 		UserId: 42,
+		UserType: REGULAR_USER,
 		UserEmail: "testing@example.com",
 	}
 
@@ -104,11 +110,13 @@ func TestExpiredToken(t *testing.T) {
 	// TokenParams{
 	// 	Type: ACCESS_TOKEN,
 	// 	UserId: 42,
+	//      UserType: REGULAR_USER,
 	// 	UserEmail: "testing@example.com",
 	// }
-	// The expiration timestamp is 1658548423684
-	
-	token := "eyJUeXBlIjowLCJFeHBpcmF0aW9uIjoxNjU4NTQ4NDIzNjg0LCJVc2VySWQiOjQyLCJVc2VyRW1haWwiOiJ0ZXN0aW5nQGV4YW1wbGUuY29tIn18MzllOWI0ZGUyNzY3OGZlZGQyMGYzNzU5MGZjYmIyMDk2NzVjNzAxN2U1YTNmMWQ0MWMxODA2N2IyNWIwYzI0MA"
+	// The expiration timestamp is 1659402529985
+	// The hashing key is ZUDx!8@76Dri!TI#v1O#Zh!IrzS%8FJZtCNmxqMo
+		
+	token := "eyJUeXBlIjowLCJFeHBpcmF0aW9uIjoxNjU5NDAyNTI5OTg1LCJVc2VySWQiOjQyLCJVc2VyVHlwZSI6MSwiVXNlckVtYWlsIjoidGVzdGluZ0BleGFtcGxlLmNvbSJ9fGE5N2QwMjViYzhkNzc2YjQwZjkyNmExNTBkMzg3OWEyY2Q5YTNmZTVkYTA1YTIyM2VlMDRmMDZlNGQxODFkZGI"
 
 	claims, err := DecodeAndVerifyToken(token, ACCESS_TOKEN)
 	assert.Nil(t, claims)
@@ -135,7 +143,7 @@ func TestIncorrectTokenType(t *testing.T) {
 
 func TestInvalidSignature(t *testing.T) {
 	// The signature here ends with a "g" which is not a legal character for a hex encoding
-	invalidSignatureToken := "{\"Type\":0,\"Expiration\":1658548929402,\"UserId\":42,\"UserEmail\":\"testing@example.com\"}|c0c7b1bc9c8eaae5ab5732fa5bddf9704fc71fbe3afb6af1a797af20fa0040dg"
+	invalidSignatureToken := "{\"Type\":0,\"Expiration\":1659402529985,\"UserId\":42,\"UserType\":1,\"UserEmail\":\"testing@example.com\"}|a97d025bc8d776b40f926a150d3879a2cd9a3fe5da05a223ee04f06e4d181ddg"
 	encodedInvalidToken := base64.RawURLEncoding.EncodeToString([]byte(invalidSignatureToken))
 
 	claims, err := DecodeAndVerifyToken(encodedInvalidToken, ACCESS_TOKEN)

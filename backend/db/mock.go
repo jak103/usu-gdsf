@@ -2,10 +2,11 @@ package db
 
 import (
 	"errors"
-	"github.com/jak103/usu-gdsf/log"
-	"github.com/jak103/usu-gdsf/models"
 	"reflect"
 	"strconv"
+
+	"github.com/jak103/usu-gdsf/log"
+	"github.com/jak103/usu-gdsf/models"
 )
 
 var _ Database = (*Mock)(nil)
@@ -32,26 +33,41 @@ func (db Mock) RemoveGame(game models.Game) error {
 	return nil
 }
 
-// GetGamesByTag search and return all games with given tag
-func (db Mock) GetGamesByTag(tag string) ([]models.Game, error) {
+// GetGamesByTags search and return all games with given tags
+func (db Mock) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, error) {
 	games := make([]models.Game, 0)
 	for _, game := range db.games {
-		for _, t := range game.Tags {
-			if t == tag {
+		if matchAll {
+			matched := []string{}
+			for _, t := range game.Tags {
+				if containsTag(tags, t) {
+					matched = append(matched, t)
+				}
+			}
+			if len(matched) == len(tags) {
 				games = append(games, game)
 			}
+		} else {
+			for _, t := range game.Tags {
+				if containsTag(tags, t) {
+					games = append(games, game)
+					break
+				}
+			}
 		}
+
 	}
 	return games, nil
 }
 
-func (db Mock) GetGameID(game models.Game) (string, error) {
-	for i, v := range db.games {
-		if reflect.DeepEqual(v, game) {
-			return i, nil
+// Helper function to check if one array contains an element
+func containsTag(a []string, el string) bool {
+	for _, v := range a {
+		if v == el {
+			return true
 		}
 	}
-	return "", errors.New("mockDB: ID couldn't be found with given game")
+	return false
 }
 
 func (db Mock) GetGameByID(id string) (models.Game, error) {
