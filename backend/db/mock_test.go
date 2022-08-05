@@ -106,3 +106,73 @@ func TestUpdateGame(t *testing.T) {
 	err = mock.UpdateGame(models.Game{})
 	assert.NotEqual(t, nil, err)
 }
+
+func TestGetAllUsers(t *testing.T){
+	mock := Mock{}
+	mock.Connect()
+	mock.users = make([]models.User, 0)
+	if(len(mock.users) > 0){
+		allUsers, _ := mock.GetAllUsers()
+		assert.Equal(t, len(mock.users), len(allUsers))
+	}
+	
+}
+
+func TestGetUserByID(t *testing.T) {
+	mock := Mock{}
+	mock.Connect()
+	mock.users = make([]models.User, 0)
+	if(len(mock.users) > 0){
+		keys := reflect.ValueOf(mock.users).MapKeys()
+		id := keys[rand.Intn(len(keys))].Interface().(uuid.UUID)
+		user, _ := mock.GetUserByID(id)
+		assert.Equal(t, user.ID, id)
+	}
+}
+
+func TestCreateUser(t *testing.T){
+	mock := Mock{}
+	mock.users = make(map[uuid.UUID]models.User)
+	userID := uuid.New()
+	Role := 1
+	newUser := models.User{
+
+		ID: userID,
+		Username: "testUser",
+		EmailAddress "user@user.com",
+		Password     "testPassword",
+		Displayname  "testDisplayName",
+		Role: 1
+	}
+	err := mock.CreateUser(newUser)
+	assert.Contains(t, mock.users, userID)
+	assert.Equal(t, nil, err)
+	err = mock.CreateUser(newUser)
+	assert.NotEqual(t, nil, err)
+	err = mock.CreateUser(models.User{})
+	assert.NotEqual(t, nil, err)
+}
+
+func TestDeleteUser(t *testing.T){
+	mock := Mock{}
+	mock.users = make(map[uuid.UUID]models.User)
+	userID := uuid.New()
+	Role := 1
+	newUser := models.User{
+
+		ID: userID,
+		Username: "testDeleteUser",
+		EmailAddress "user@user.com",
+		Password     "testPassword",
+		Displayname  "testDisplayName",
+		Role: 2
+	}
+	mock.CreateUser(newUser)
+	err := mock.DeleteUser(userID)
+	assert.Equal(t, nil, err)
+	var id uuid.UUID
+	err = mock.DeleteUser(id)
+	assert.NotEqual(t, nil, err)
+	err = mock.DeleteUser(uuid.New())
+	assert.NotEqual(t, nil, err)
+}

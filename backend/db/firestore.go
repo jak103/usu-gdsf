@@ -110,7 +110,7 @@ func (d *Firestore) GetAllUsers() ([]models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) GetUserByID(id uuid.UUID) (*models.User, error) {
+func (d *Firestore) GetUserByID(id uuid.UUID)(*models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
 

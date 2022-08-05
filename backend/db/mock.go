@@ -102,11 +102,17 @@ func (d *Mock) UpdateGame(updatedGame models.Game) error {
 }
 
 // Users
-func (d *Mock) GetAllUsers() ([]models.User, error) {
-	panic("not implemented") // TODO: Implement
+func (db *Mock) GetAllUsers() ([]models.User, error) {
+	users := make([]models.User, 0)
+
+	for _, user := range db.users {
+		users = append(users, user)
+	}
+
+	return users, nil
 }
 
-func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error) {
+func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error){
 	if id.String() != "" {
 		if user, ok := db.users[id]; ok {
 			return &user, nil
@@ -115,23 +121,57 @@ func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error) {
 	return nil, errors.New("mockdb: game not found")
 }
 
-func (d *Mock) GetUsersByRole(role int64) ([]models.User, error) {
-	panic("not implemented") // TODO: Implement
+func (db *Mock) GetUsersByRole(role int64) ([]models.User, error) {
+	typeRole := models.Role(role)
+	user_slice := []models.User{}
+	for _, user := range db.users {
+		if(user.Role == typeRole){
+			user_slice = append(user_slice, user)
+		}
+		
+	}
+
+	return user_slice, nil
 }
 
-func (db *Mock) CreateUser(user models.User) error {
-	log.Info("mock connect")
-	db.users[user.ID] = user
+func (db *Mock) CreateUser(newUser models.User) error {
+	if newUser.ID == uuid.Nil {
+		log.Error("newUser struct has nil ID")
+		return errors.New("newUser struct has nil ID")
+	}
+	if _, exists := db.users[newUser.ID]; !exists {
+		db.users[newUser.ID] = newUser
+		return nil
+	}
+	log.Error("newUser ID already exists in mock db")
+	return errors.New("user already exists in mock db")
+}
 
+func (db *Mock) DeleteUser(id uuid.UUID) error {
+	if id == uuid.Nil {
+		log.Error("nil id provided")
+		return errors.New("nil id provided")
+	}
+	if _, exists := db.users[id]; exists {
+		delete(db.users, id)
+		return nil
+	}
+	log.Error("provided id doesn't exist in db")
+	return errors.New("provided id doesn't exist in db")
+}
+
+func (db *Mock) UpdateUser(updatedUser models.User) error {
+	if updatedUser.ID == uuid.Nil {
+		log.Error("updatedUser struct has nil ID")
+		return errors.New("updatedUser struct has nil ID")
+	}
+	if _, exists := db.games[updatedUser.ID]; !exists {
+		log.Error("updatedUser ID does not exist in mock db")
+		return errors.New("updatedUser ID does not exist in mock db")
+
+	}
+	db.users[updatedUser.ID] = updatedUser
 	return nil
-}
-
-func (d *Mock) DeleteUser(id uuid.UUID) error {
-	panic("not implemented") // TODO: Implement
-}
-
-func (d *Mock) UpdateUser(updatedUser models.User) error {
-	panic("not implemented") // TODO: Implement
 }
 
 // Ratings
