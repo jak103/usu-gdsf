@@ -11,8 +11,9 @@ import (
 var _ Database = (*Mock)(nil)
 
 type Mock struct {
-	games map[uuid.UUID]models.Game
-	users map[uuid.UUID]models.User
+	games   map[uuid.UUID]models.Game
+	users   map[uuid.UUID]models.User
+	ratings map[uuid.UUID]models.GameRating
 }
 
 func (db *Mock) GetGameByID(id uuid.UUID) (*models.Game, error) {
@@ -112,13 +113,15 @@ func (db *Mock) GetAllUsers() ([]models.User, error) {
 	return users, nil
 }
 
-func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error){
-	if id.String() != "" {
-		if user, ok := db.users[id]; ok {
-			return &user, nil
-		}
+func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error) {
+	if id == uuid.Nil {
+		log.Error("nil id provided")
+		return nil, errors.New("nil id provided")
 	}
-	return nil, errors.New("mockdb: game not found")
+	if user, ok := db.users[id]; ok {
+		return &user, nil
+	}
+	return nil, errors.New("mockdb: user not found")
 }
 
 func (db *Mock) GetUsersByRole(role int64) ([]models.User, error) {
@@ -139,12 +142,13 @@ func (db *Mock) CreateUser(newUser models.User) error {
 		log.Error("newUser struct has nil ID")
 		return errors.New("newUser struct has nil ID")
 	}
+
 	if _, exists := db.users[newUser.ID]; !exists {
 		db.users[newUser.ID] = newUser
 		return nil
 	}
 	log.Error("newUser ID already exists in mock db")
-	return errors.New("user already exists in mock db")
+	return errors.New("newUser already exists in mock db")
 }
 
 func (db *Mock) DeleteUser(id uuid.UUID) error {
@@ -152,6 +156,7 @@ func (db *Mock) DeleteUser(id uuid.UUID) error {
 		log.Error("nil id provided")
 		return errors.New("nil id provided")
 	}
+
 	if _, exists := db.users[id]; exists {
 		delete(db.users, id)
 		return nil
@@ -165,10 +170,10 @@ func (db *Mock) UpdateUser(updatedUser models.User) error {
 		log.Error("updatedUser struct has nil ID")
 		return errors.New("updatedUser struct has nil ID")
 	}
+
 	if _, exists := db.games[updatedUser.ID]; !exists {
 		log.Error("updatedUser ID does not exist in mock db")
 		return errors.New("updatedUser ID does not exist in mock db")
-
 	}
 	db.users[updatedUser.ID] = updatedUser
 	return nil
@@ -176,31 +181,96 @@ func (db *Mock) UpdateUser(updatedUser models.User) error {
 
 // Ratings
 func (d *Mock) GetRatingByID(id uuid.UUID) (*models.GameRating, error) {
-	panic("not implemented") // TODO: Implement
+	if id == uuid.Nil {
+		log.Error("nil rating id provided")
+		return nil, errors.New("nil rating id provided")
+	}
+	if rating, ok := d.ratings[id]; ok {
+		return &rating, nil
+	}
+	return nil, errors.New("mockdb: rating not found")
 }
 
 func (d *Mock) GetRatingsByGame(gameID uuid.UUID) ([]models.GameRating, error) {
-	panic("not implemented") // TODO: Implement
+	if gameID == uuid.Nil {
+		log.Error("nil game id provided")
+		return nil, errors.New("nil game id provided")
+	}
+	ratings := make([]models.GameRating, 0)
+
+	for _, rating := range d.ratings {
+		if rating.GameId == gameID {
+			ratings = append(ratings, rating)
+		}
+	}
+
+	return ratings, nil
 }
 
 func (d *Mock) GetRatingsByUser(userID uuid.UUID) ([]models.GameRating, error) {
-	panic("not implemented") // TODO: Implement
+	if userID == uuid.Nil {
+		log.Error("nil user id provided")
+		return nil, errors.New("nil user id provided")
+	}
+	ratings := make([]models.GameRating, 0)
+
+	for _, rating := range d.ratings {
+		if rating.UserID == userID {
+			ratings = append(ratings, rating)
+		}
+	}
+
+	return ratings, nil
 }
 
 func (d *Mock) CreateRating(newRating models.GameRating) error {
-	panic("not implemented") // TODO: Implement
+	if newRating.ID == uuid.Nil {
+		log.Error("newRating struct has nil ID")
+		return errors.New("newRating struct has nil ID")
+	}
+	if _, exists := d.ratings[newRating.ID]; !exists {
+		d.ratings[newRating.ID] = newRating
+		return nil
+	}
+	log.Error("newRating ID already exists in mock db")
+	return errors.New("newRating already exists in mock db")
 }
 
 func (d *Mock) DeleteRating(id uuid.UUID) error {
-	panic("not implemented") // TODO: Implement
+	if id == uuid.Nil {
+		log.Error("nil rating id provided")
+		return errors.New("nil rating id provided")
+	}
+	if _, exists := d.ratings[id]; exists {
+		delete(d.ratings, id)
+		return nil
+	}
+	log.Error("provided rating id doesn't exist in db")
+	return errors.New("provided rating id doesn't exist in db")
 }
 
 func (d *Mock) DeleteRatingsByGame(gameID uuid.UUID) error {
-	panic("not implemented") // TODO: Implement
+	ratings, err := d.GetRatingsByGame(gameID)
+	if ratings == nil {
+		return err
+	}
+	for _, rating := range ratings {
+		delete(d.ratings, rating.ID)
+	}
+	return nil
 }
 
-func (d *Mock) updateRating(updatedRating models.GameRating) error {
-	panic("not implemented") // TODO: Implement
+func (d *Mock) UpdateRating(updatedRating models.GameRating) error {
+	if updatedRating.ID == uuid.Nil {
+		log.Error("updatedRating struct has nil ID")
+		return errors.New("updatedRating struct has nil ID")
+	}
+	if _, exists := d.ratings[updatedRating.ID]; !exists {
+		log.Error("updatedRating ID does not exists in mock db")
+		return errors.New("updatedRating ID does not exists in mock db")
+	}
+	d.ratings[updatedRating.ID] = updatedRating
+	return nil
 }
 
 func (db *Mock) Connect() error {
@@ -216,9 +286,6 @@ func (db *Mock) Connect() error {
 
 	if len(db.users) == 0 {
 		users := make(map[uuid.UUID]models.User)
-		// for _, v := range CreateGamesFromJson() {
-		// 	games[v.ID.String()] = v
-		// }
 		db.users = users
 	}
 

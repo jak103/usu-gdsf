@@ -155,7 +155,7 @@ func (d *Firestore) DeleteRatingsByGame(gameID uuid.UUID) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Firestore) updateRating(updatedRating models.GameRating) error {
+func (d *Firestore) UpdateRating(updatedRating models.GameRating) error {
 	panic("not implemented") // TODO: Implement
 }
 
