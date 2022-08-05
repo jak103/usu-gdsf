@@ -1,10 +1,13 @@
 package api
 
 import (
+	"bytes"
 	"crypto/rand"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/jak103/usu-gdsf/db"
@@ -116,9 +119,52 @@ func sanitizeBirthdayInput(input string) (time.Time, error) {
 	return birthday, nil
 }
 
-func verifyPassword() bool {
+func verifyPassword(hashedString string, passwordInput string) bool {
 
-	return false
+	p, salt, hash, err := decodeHash(hashedString)
+	if err != nil {
+		return false
+	}
+
+	hashedPassword := argon2.IDKey([]byte(passwordInput), salt, p.iterations, p.memory, p.parallelism, p.keyLength)
+
+	return bytes.Equal(hash, hashedPassword)
+}
+
+func decodeHash(encodedHash string) (p *hashParams, salt, hash []byte, err error) {
+	vals := strings.Split(encodedHash, "$")
+	if len(vals) != 6 {
+		return nil, nil, nil, errors.New("invalid Hash")
+	}
+
+	var version int
+	_, err = fmt.Sscanf(vals[2], "v=%d", &version)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	if version != argon2.Version {
+		return nil, nil, nil, errors.New("incompatible version")
+	}
+
+	p = &hashParams{}
+	_, err = fmt.Sscanf(vals[3], "m=%d,t=%d,p=%d", &p.memory, &p.iterations, &p.parallelism)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	salt, err = base64.RawStdEncoding.Strict().DecodeString(vals[4])
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	p.saltLength = uint32(len(salt))
+
+	hash, err = base64.RawStdEncoding.Strict().DecodeString(vals[5])
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	p.keyLength = uint32(len(hash))
+
+	return p, salt, hash, nil
 }
 
 func downloads(c echo.Context) error {
