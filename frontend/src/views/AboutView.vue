@@ -30,7 +30,7 @@
 <script>
 import names from './names.js'
 import stringsToObjects from './nameFunctions.js'
-import stringToObjects from './nameFunctions.js'
+
 export default {
   name: 'AboutView',
 
@@ -42,7 +42,7 @@ export default {
 
   computed: {
     namesList() {
-      return stringToObjects(names.names);
+      return stringsToObjects(names.names);
     }
   }
 }
