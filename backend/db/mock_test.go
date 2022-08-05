@@ -119,6 +119,7 @@ func TestUpdateGame(t *testing.T) {
 	assert.NotEqual(t, nil, err)
 }
 
+
 func TestGetAllUsers(t *testing.T) {
 	mock := Mock{}
 	mock.users = make(map[uuid.UUID]models.User)
@@ -139,6 +140,7 @@ func TestGetAllUsers(t *testing.T) {
 
 func TestGetUserByID(t *testing.T) {
 	mock := Mock{}
+
 	mock.users = make(map[uuid.UUID]models.User)
 	user := models.User{
 		Username:    "default",
@@ -223,6 +225,7 @@ func TestDeleteUser(t *testing.T) {
 		Role:        models.Admin,
 	}
 	mock.users[userID] = newUser
+
 	err := mock.DeleteUser(userID)
 	assert.Equal(t, nil, err)
 	var id uuid.UUID

@@ -7,8 +7,9 @@ import (
 type Role int64
 
 const (
-	Admin     Role = 0
-	Publisher Role = 1
+	Admin Role  = 0
+	Publisher   = 1
+	Basic = 2
 )
 
 type User struct {
