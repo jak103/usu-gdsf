@@ -1,4 +1,5 @@
 <template>
+  <h1>Edit User</h1>
   <v-form
     ref="form"
     v-model="valid"
@@ -13,26 +14,18 @@
     ></v-text-field>
 
     <v-text-field
+      v-model="username"
+      :rules="usernameRules"
+      label="Username"
+      required
+    ></v-text-field>
+
+    <v-text-field
       v-model="email"
       :rules="emailRules"
       label="E-mail"
       required
     ></v-text-field>
-
-    <v-select
-      v-model="select"
-      :items="items"
-      :rules="[v => !!v || 'Item is required']"
-      label="Item"
-      required
-    ></v-select>
-
-    <v-checkbox
-      v-model="checkbox"
-      :rules="[v => !!v || 'You must agree to continue!']"
-      label="Do you agree?"
-      required
-    ></v-checkbox>
 
     <v-btn
       :disabled="!valid"
@@ -68,12 +61,16 @@
       name: '',
       nameRules: [
         v => !!v || 'Name is required',
-        v => (v && v.length <= 10) || 'Name must be less than 10 characters',
+        v => (v && v.length <= 30) || 'Name must be less than 30 characters',
       ],
       email: '',
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      ],
+      usernameRules: [
+        v => !!v || 'Username is required',
+        v => (v && v.length <= 25) || 'Username must be less than 25 characters',
       ],
       select: null,
       items: [
