@@ -5,7 +5,6 @@ import (
 	"strings"
 	"time"
 
-
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
@@ -18,7 +17,6 @@ const (
 	NAME      = "Name"
 	DEVELOPER = "Developer"
 	VERSION   = "Version"
-	TAGS = "Tags"
 )
 
 func gameInfoHandler(c echo.Context) error {
@@ -47,7 +45,7 @@ func getGamesWithTags(c echo.Context) error {
 	}
 
 	// grab tags from context
-	rawTags := c.FormValue(TAGS)
+	rawTags := c.Param("tags")
 
 	// split string into array
 	tags := strings.Split(rawTags, ",")
@@ -109,5 +107,5 @@ func init() {
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
-	registerRoute(route{method: http.MethodPost, path: "/search/tags", handler: getGamesWithTags})
+	registerRoute(route{method: http.MethodGet, path: "/games/:tags", handler: getGamesWithTags})
 }
