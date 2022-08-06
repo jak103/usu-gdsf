@@ -1,0 +1,61 @@
+<template>
+    <div>
+        <v-table>
+            <thead>
+                <tr>
+                    <th v-for="header in headers"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="user in testUsers" :key="user.ID">
+                    <td>{{ user.ID }}</td>
+                    <td>{{ user.Username }}</td>
+                    <td>{{ user.Displayname }}</td>
+                    <td>{{ user.Role }}</td>
+                </tr>
+            </tbody>
+        </v-table>
+    </div>
+</template>
+
+
+<script>
+export default {
+    name: 'AdminAllUsers',
+
+    data: () => ({
+        users: [],
+        loading: false,
+        headers: [
+            { text: 'ID', value: 'ID' },
+            { text: 'Username', value: 'Username' },
+            { text: 'Name', value: 'Displayname' },
+            { text: 'Role', value: 'Role' }
+        ],
+        testUsers: [
+            {
+                ID: 1,
+                Username: 'test',
+                Displayname: 'Test User',
+                Role: 'Admin'
+            },
+            {
+                ID: 2,
+                Username: 'test2',
+                Displayname: 'Test User 2',
+                Role: 'User'
+            }
+        ]
+    }),
+
+    asyncComputed: {
+        users: {
+            get() {
+                this.loading = true;
+                return this.$axios.get('all');
+                //TODO: check api call once working on backend
+            }
+        }
+    },
+}
+</script>
