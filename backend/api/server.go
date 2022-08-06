@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 	"sync"
-	"os"
 
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/labstack/echo/v4"
@@ -12,9 +11,8 @@ import (
 )
 
 type Server struct {
-	echo      *echo.Echo
-	jwtConfig middleware.JWTConfig
-	wg        *sync.WaitGroup
+	echo *echo.Echo
+	wg   *sync.WaitGroup
 }
 
 func NewServer(wg *sync.WaitGroup) *Server {
@@ -27,9 +25,6 @@ func NewServer(wg *sync.WaitGroup) *Server {
 func (s *Server) Start() {
 	log.Info("Starting API server")
 	s.echo = echo.New()
-
-	s.jwtConfig = middleware.DefaultJWTConfig;
-	s.jwtConfig.SigningKey = os.Getenv("USUGDSF_AUTH_TOKEN");
 
 	s.setupMiddleware()
 	s.setupRoutes()
@@ -57,7 +52,6 @@ func (s *Server) setupMiddleware() {
 		Root:  "/frontend/dist",
 		HTML5: true,
 	}))
-
 }
 
 func (s *Server) setupRoutes() {
@@ -68,19 +62,6 @@ func (s *Server) setupRoutes() {
 
 		case http.MethodPost:
 			s.echo.POST(route.path, route.handler)
-
-		default:
-			log.Error("Failed to register unknown method: %v", route.method)
-		}
-	}
-
-	for _, route := range restrictedRoutes {
-		switch route.method {
-		case http.MethodGet:
-			s.echo.GET(route.path, route.handler, middleware.JWTWithConfig(s.jwtConfig))
-
-		case http.MethodPost:
-			s.echo.POST(route.path, route.handler, middleware.JWTWithConfig(s.jwtConfig))
 
 		default:
 			log.Error("Failed to register unknown method: %v", route.method)
