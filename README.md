@@ -48,3 +48,7 @@ Server settings are configured using environment variables, or by a `.env` file.
 * `REFRESH_TOKEN_LIFETIME_DAYS`
 
   Specifies the length of time, in days, that generated refresh tokens will be valid before they expire.
+
+* `GOOGLE_CLOUD_STORAGE_OAUTH2_TOKEN`
+  
+  The secret key used for uploading executable files to Google Cloud Storage bucket. 

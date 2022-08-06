@@ -7,12 +7,11 @@ import (
 	"github.com/jak103/usu-gdsf/config"
 )
 
-// uploadFile uploads an object.
+// uploadFile uploads an object (.exe to google cloud storage)
 func UploadFile(filePath string, fileName string) error {
 	storageBucket := "BUCKET_NAME"
 	url := "https://storage.googleapis.com/upload/storage/v1/b/"+ storageBucket +"/o?uploadType=media&name=" + fileName
 	var bearer = "Bearer " + config.GoogleCloudStorageToken
-	log.Println(bearer)
 	req, err := http.NewRequest("POST", url, nil)
 	req.Header.Set("Authorization", bearer)
 	req.Header.Set("Content-Type", "exe")
