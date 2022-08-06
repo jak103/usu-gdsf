@@ -26,7 +26,7 @@ type Mongo struct {
 // RemoveGame removes the given game from the db
 func (db Mongo) RemoveGame(game models.Game) error {
 	primitiveObjectId, err := primitive.ObjectIDFromHex(game.Id)
-	if err != nil{
+	if err != nil {
 		log.WithError(err).Error("error on getting primitive object id from hex string")
 		return err
 	}
@@ -34,7 +34,6 @@ func (db Mongo) RemoveGame(game models.Game) error {
 	gc := db.database.Collection("games")
 	res, err := gc.DeleteOne(context.Background(), bson.M{
 		"_id": primitiveObjectId,
-
 	})
 
 	if err != nil {
@@ -46,6 +45,7 @@ func (db Mongo) RemoveGame(game models.Game) error {
 		log.Error("Mongo RemoveGame deleted more than one record")
 		return errors.New("mongo deleted more than one record")
 	}
+	//db.database.Collection("games").Drop(context.Background())
 
 	return nil
 }
@@ -75,7 +75,7 @@ func (db Mongo) GetGamesByTag(s string) ([]models.Game, error) {
 	return games, nil
 }
 
-// GetGamesByTag search and return all games with given tag
+// GetGamesByTags search and return all games with given tag
 func (db Mongo) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, error) {
 	result, err := db.GetGamesByTag(tags[0])
 	if err != nil {
@@ -126,7 +126,6 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 	if err != nil {
 		log.WithError(err).Error("Invalid id in Mongo ID search")
 	}
-
 
 	// find game with object ID
 	result := db.database.Collection("games").FindOne(context.Background(), bson.M{"_id": objID})
@@ -191,20 +190,27 @@ func DecodeBsonData(data bson.M) (models.Game, error) {
 	// load game model
 	game := models.Game{
 		Id:           data["_id"].(primitive.ObjectID).Hex(),
-		Name:         data["name"].(string),
-		Rating:       float32(data["rating"].(float64)),
-		TimesPlayed:  int(data["timesplayed"].(int32)),
-		ImagePath:    data["imagepath"].(string),
-		Description:  data["description"].(string),
-		Developer:    data["developer"].(string),
+		Name:         convert[string](data["name"]).(string),
+		Rating:       float32(convert[float64](data["rating"]).(float64)),
+		TimesPlayed:  int(convert[int32](data["timesplayed"]).(int32)),
+		ImagePath:    convert[string](data["imagepath"]).(string),
+		Description:  convert[string](data["description"]).(string),
+		Developer:    convert[string](data["developer"]).(string),
 		CreationDate: date,
-		Version:      data["version"].(string),
+		Version:      convert[string](data["version"]).(string),
 		Tags:         tags,
-		Downloads:    data["downloads"].(int64),
-		DownloadLink: data["downloadlink"].(string),
+		Downloads:    convert[int64](data["downloads"]).(int64),
+		DownloadLink: convert[string](data["downloadlink"]).(string),
 	}
 
 	return game, nil
+}
+
+func convert[T any](v any) any {
+	if v == nil {
+		return *new(T)
+	}
+	return v.(T)
 }
 
 func (db Mongo) GetAllGames() ([]models.Game, error) {
