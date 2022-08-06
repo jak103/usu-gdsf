@@ -103,10 +103,10 @@ func (d *Mock) UpdateGame(updatedGame models.Game) error {
 }
 
 // Users
-func (db *Mock) GetAllUsers() ([]models.User, error) {
+func (d *Mock) GetAllUsers() ([]models.User, error) {
 	users := make([]models.User, 0)
 
-	for _, user := range db.users {
+	for _, user := range d.users {
 		users = append(users, user)
 	}
 
