@@ -1,30 +1,36 @@
 <template>
-  <v-container>
-    <v-card color="#10243c" style="color:#FFFFFF;margin-bottom: 1em;">
-      <v-card-title style="font-size:2em">
-        About our Project
+  <div style="background-color:#10243c; margin:0%">
+    <v-card color="#10243c" style="color:#FFFFFF;padding: 2em;">
+      <v-card-title>
+        <div style="font-size:48px;text-align:center;line-height:48px;">
+          About Our Project
+        </div>
       </v-card-title>
-      <v-card-text style="font-size:1em">
+      <v-card-text style="font-size:24px;margin:0%;padding:1em;text-align:center;display:flex;line-height:36px;">
         {{ words }}
       </v-card-text>
     </v-card>
 
-    <v-card color="#10243c" style="color:#FFFFFF;margin-top: 1em;">
-      <v-card-title style="font-size:2em">
-        Contributors
+    <v-card color="#10243c" style="color:#FFFFFF;padding: 2em;">
+      <v-card-title>
+        <div style="font-size:48px;text-align:center;line-height:48px;">
+          Contributors
+        </div>      
       </v-card-title>
-      <v-card-text style="font-size:1em">
-        {{ moreWords }}
+      <v-card-text style="font-size:24px;margin:0%;padding:1em;text-align:center;display:flex;line-height:36px;">
+          {{ moreWords }}
       </v-card-text>
-      <v-card-text>
-        <li v-for="name in namesList" :key="name.id">
-          <label>
-            {{ name.firstName }} {{ name.lastName }}
-          </label>
-        </li>
+      <v-card-text style="display:flex;justify-content: center;">
+        <div>
+          <li v-for="name in namesList" :key="name.id">
+            <label>
+              {{ name.firstName }} {{ name.lastName }}
+            </label>
+          </li>
+        </div>
       </v-card-text>
     </v-card>
-  </v-container>
+  </div>
   <Footer></Footer>
 </template>
 
