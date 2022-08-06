@@ -35,6 +35,8 @@ var (
 		CreationDate: time.Date(1900, 1, 2, 0, 0, 0, 0, time.UTC),
 		Version:      "0.0.1",
 		Tags:         []string{"tag1", "tag2"},
+		Downloads:    36,
+		DownloadLink: "dummy1.test",
 	}
 )
 
