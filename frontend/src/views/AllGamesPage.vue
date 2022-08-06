@@ -1,7 +1,7 @@
 <template>
 	<div
 		data-test="table"
-		v-if="!dataLoading && allGames.length > 0"
+		v-if="!dataLoading &&  allGames.length > 0"
 	>
 		<h1 data-test="title" class="ml-10 pb-5">All Games</h1>
 		<v-table
@@ -40,7 +40,7 @@
 					v-for="item in allGames.slice(((page - 1) * perPage), ((page - 1) * perPage) + perPage)"
 					:key="item.Id"
 					:id="item.Id"
-					@click.stop="handleClickGame(item.Id)">
+					@click.stop="handleClickGame(item.Id, item.Name)">
 					<td>
 						<v-img v-if="item.ImagePath"
 							height="50"
@@ -65,7 +65,7 @@
 							Times Played: {{ item.TimesPlayed }}
 						</div>
 						<div v-if="item.downloads != null">
-							Downloads: {{ item.downloads }}
+							Downloads: {{ item.Downloads }}
 						</div>
 						<div v-if="item.TimesPlayed == null && item.downloads == null">
 							-
@@ -103,18 +103,24 @@
 			:length="Math.ceil(allGames.length / perPage)"
 		></v-pagination>
 	</div>
-	<Loading data-test="loadbar" v-if="dataLoading" text="Loading Game Data" containerStyle="height: 75vh"/>
+	<Loading data-test="loadbar" v-if="dataLoading" text="Game Data" containerStyle="height: 75vh"/>
+	<NoData data-test="noData" v-if="!dataLoading && (allGames === null || allGames.length === 0)" text="All Games" containerStyle="height: 75vh"/>
+	<Footer />
 </template>
 
 <script>
 	import Rating from '../components/Rating.vue';
 	import Loading from '../components/Loading.vue';
+	import Footer from '../components/Footer.vue';
+	import NoData from '../components/NoData.vue';
 	import axios from "axios";
 	export default {
 		name: 'AllGamesPage',
 		components: {
 			Rating,
-			Loading
+			Loading,
+			Footer,
+			NoData
 		},
 		data() {
 			return {
@@ -125,8 +131,8 @@
 			};
 		},
 		methods: {
-			handleClickGame(id) {
-				this.$router.push("/games/info/" + id)
+			handleClickGame(id, name) {
+				this.$router.push(`/games/info/${name}/${id}`)
 			},
 			async getGames() {
 				this.dataLoading = true;
@@ -137,6 +143,7 @@
 						this.dataLoading = false
 					}).catch(error => {
 						console.log(error.response.data);
+						this.allGames = [];
 						this.dataLoading = false
 					});
 			},
