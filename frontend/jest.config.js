@@ -3,14 +3,10 @@ module.exports = {
     "js",
     "json",
     "vue",
-    "node"
  ],
   transform: {
-      // "^.+\\.js$": "babel-jest",
-      // '^.+\\.js$': 'babel-jest',
-      // "^.+\\.vue$": "@vue/vue3-jest",
-      ".*\\.js$": "<rootDir>/node_modules/babel-jest",
-      ".*\\.(vue)$": "@/vue/vue3-jest"
+      "^.+\\.js$": "babel-jest",
+      ".*\\.(vue)$": "@vue/vue3-jest"
   },
   transformIgnorePatterns: ['<rootDir>/node_modules/'],
   modulePaths: [
