@@ -45,7 +45,6 @@ func (db Mongo) RemoveGame(game models.Game) error {
 		log.Error("Mongo RemoveGame deleted more than one record")
 		return errors.New("mongo deleted more than one record")
 	}
-	//db.database.Collection("games").Drop(context.Background())
 
 	return nil
 }
