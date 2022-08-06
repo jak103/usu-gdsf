@@ -24,7 +24,6 @@ func getGameByID(c echo.Context) error {
 	} else {
 		return c.JSON(http.StatusOK, []interface{}{result})
 	}
-
 }
 
 // for downloaded games, this route allows you to play them
