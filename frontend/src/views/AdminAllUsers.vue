@@ -3,7 +3,7 @@
         <v-table>
             <thead>
                 <tr>
-                    <th v-for="header in headers"></th>
+                    <th v-for="header in headers" :key="header.value">{{ header.text }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -52,7 +52,7 @@ export default {
         users: {
             get() {
                 this.loading = true;
-                return this.$axios.get('all');
+                return this.$axios.get('/allusers');
                 //TODO: check api call once working on backend
             }
         }
