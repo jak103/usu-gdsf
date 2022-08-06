@@ -35,6 +35,7 @@ func VerifyUser(c echo.Context) (*models.User, error) {
 	db.Connect()
 	defer db.Disconnect()
 
+	// TODO make sure that this function is working once fully implmented
 	user, _ := db.GetUserByUserName(username)
 
 	if user != nil {
@@ -90,5 +91,6 @@ func SetTokenCookie(name, token string, expiration time.Time, c echo.Context) {
 	cookie.Path = "/"
 	cookie.HttpOnly = true
 
+	log.Info("Cookie generated")
 	c.SetCookie(cookie)
 }
