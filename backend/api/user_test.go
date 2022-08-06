@@ -5,19 +5,22 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/jak103/usu-gdsf/auth"
+	// "github.com/jak103/usu-gdsf/auth"
 	"github.com/stretchr/testify/assert"
+	"github.com/labstack/echo/v4"
 )
 
 func AssertResponseCode(t *testing.T, method string, path string, expectedCode int) bool {
 	e := echo.New()
 
 	recorder := httptest.NewRecorder()
-	request := httptest.NewRequest(http.MethodGet, "/game", nil)
+	request := httptest.NewRequest(method, path, nil)
 	c := e.NewContext(request, recorder)
 
 	if assert.NoError(t, getAllGames(c)) {
-		assert.Equal(t, http.StatusOK, recorder.Code)
+		return expectedCode == recorder.Code
+	} else {
+		return false
 	}
 }
 
