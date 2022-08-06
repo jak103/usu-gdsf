@@ -2,7 +2,9 @@ package config
 
 import (
 	"bufio"
+	"errors"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	
@@ -40,7 +42,13 @@ func init() {
 func mapVariablesFromEnvFile() map[string]string {
 	envMap := make(map[string]string)
 
-	envFile, err := os.Open("./.env")
+	envFilePath, err := findEnvFilePath(".")
+
+	if err != nil {
+		return envMap
+	}
+	
+	envFile, err := os.Open(envFilePath)
 
 	if err != nil {
 		return envMap
@@ -72,6 +80,19 @@ func mapVariablesFromEnvFile() map[string]string {
 
 	return envMap
 }
+
+func findEnvFilePath(start string) (string, error) {
+	if path, err := filepath.Abs(start); err != nil || path == filepath.FromSlash("/") {
+		return "", errors.New("Found no .env file")
+	}
+	
+	if _, err := os.Stat(filepath.Join(start, ".env")); err != nil {
+		return findEnvFilePath(filepath.Join(start, ".."))
+	}
+
+	return filepath.Join(start, ".env"), nil
+}
+
 
 func getEnvVarString(key string, envFileMap map[string]string) string {
 	envVar := os.Getenv(key)

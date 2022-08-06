@@ -32,11 +32,11 @@ func NewDatabaseFromEnv() (Database, error) {
 		dbType := strings.ToLower(config.DbType)
 
 		switch dbType {
-		case "mock":
+		case MOCK:
 			connection = &Mock{}
-		case "firestore":
+		case FIRESTORE:
 			connection = &Firestore{}
-		case "mongo":
+		case MONGO:
 			connection = &Mongo{}
 
 		default:

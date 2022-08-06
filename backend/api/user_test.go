@@ -5,28 +5,23 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/jak103/usu-gdsf/auth"
+	// "github.com/jak103/usu-gdsf/auth"
 	"github.com/stretchr/testify/assert"
+	"github.com/labstack/echo/v4"
 )
 
 func AssertResponseCode(t *testing.T, method string, path string, expectedCode int) bool {
-	params := auth.TokenParams{
-		Type:      auth.ACCESS_TOKEN,
-		UserId:    42,
-		UserEmail: "tst@example.com",
-	}
-
-	token, _ := auth.GenerateToken(params)
+	e := echo.New()
 
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(method, path, nil)
-	request.AddCookie(&http.Cookie{
-		Name:  "accessToken",
-		Value: token,
-	})
-	GlobalTestServer.echo.ServeHTTP(recorder, request)
+	c := e.NewContext(request, recorder)
 
-	return expectedCode == recorder.Code
+	if assert.NoError(t, getAllGames(c)) {
+		return expectedCode == recorder.Code
+	} else {
+		return false
+	}
 }
 
 func TestUserRoute(t *testing.T) {
