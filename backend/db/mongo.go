@@ -76,75 +76,78 @@ func (db Mongo) GetAllGames() ([]models.Game, error) {
 	return games, nil
 }
 
-func (d *Mongo) GetGamesByPublishDate(startRange string, endRange string) ([]models.Game, error) {
+func (db *Mongo) GetGamesByPublishDate(startRange string, endRange string) ([]models.Game, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) CreateGame(newGame models.Game) error {
+func (db *Mongo) CreateGame(newGame models.Game) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) DeleteGame(id uuid.UUID) error {
+func (db *Mongo) DeleteGame(id uuid.UUID) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) UpdateGame(updatedGame models.Game) error {
+func (db *Mongo) UpdateGame(updatedGame models.Game) error {
 	panic("not implemented") // TODO: Implement
 }
 
 // Users
-func (d *Mongo) GetAllUsers() ([]models.User, error) {
+func (db *Mongo) GetAllUsers() ([]models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-
-func (d *Mongo) GetUserByID(id uuid.UUID)(*models.User, error) {
+func (db *Mongo) GetUserByID(id uuid.UUID) (*models.User, error) {
 
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) GetUsersByRole(role int64) ([]models.User, error) {
+func (db *Mongo) GetUserByUserName(userName string) (*models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) CreateUser(newUser models.User) error {
+func (db *Mongo) GetUsersByRole(role int64) ([]models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) DeleteUser(id uuid.UUID) error {
+func (db *Mongo) CreateUser(newUser models.User) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) UpdateUser(updatedUser models.User) error {
+func (db *Mongo) DeleteUser(id uuid.UUID) error {
+	panic("not implemented") // TODO: Implement
+}
+
+func (db *Mongo) UpdateUser(updatedUser models.User) error {
 	panic("not implemented") // TODO: Implement
 }
 
 // Ratings
-func (d *Mongo) GetRatingByID(id uuid.UUID) (*models.GameRating, error) {
+func (db *Mongo) GetRatingByID(id uuid.UUID) (*models.GameRating, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) GetRatingsByGame(gameID uuid.UUID) ([]models.GameRating, error) {
+func (db *Mongo) GetRatingsByGame(gameID uuid.UUID) ([]models.GameRating, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) GetRatingsByUser(userID uuid.UUID) ([]models.GameRating, error) {
+func (db *Mongo) GetRatingsByUser(userID uuid.UUID) ([]models.GameRating, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) CreateRating(newRating models.GameRating) error {
+func (db *Mongo) CreateRating(newRating models.GameRating) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) DeleteRating(id uuid.UUID) error {
+func (db *Mongo) DeleteRating(id uuid.UUID) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) DeleteRatingsByGame(gameID uuid.UUID) error {
+func (db *Mongo) DeleteRatingsByGame(gameID uuid.UUID) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (d *Mongo) UpdateRating(updatedRating models.GameRating) error {
+func (db *Mongo) UpdateRating(updatedRating models.GameRating) error {
 	panic("not implemented") // TODO: Implement
 }
 

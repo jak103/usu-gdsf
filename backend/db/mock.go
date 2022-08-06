@@ -124,14 +124,18 @@ func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error) {
 	return nil, errors.New("mockdb: user not found")
 }
 
+func (db *Mock) GetUserByUserName(userName string) (*models.User, error) {
+	panic("not implemented") // TODO: Implement
+}
+
 func (db *Mock) GetUsersByRole(role int64) ([]models.User, error) {
 	typeRole := models.Role(role)
 	user_slice := []models.User{}
 	for _, user := range db.users {
-		if(user.Role == typeRole){
+		if user.Role == typeRole {
 			user_slice = append(user_slice, user)
 		}
-		
+
 	}
 
 	return user_slice, nil
