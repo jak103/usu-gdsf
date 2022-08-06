@@ -1,11 +1,11 @@
 <template>
 		<v-card color="primary" id="form-container">
 			<v-card-title>
-				<span>Add Game</span>
+				<span>Game Information</span>
 			</v-card-title>
 
 			<v-card id="form-item">
-				<label for="gameName"> Game Title </label>
+				<label for="gameName"> Title </label>
 				<input id="gameName" type="text" v-model="gameName">
 			</v-card>
 
@@ -22,13 +22,19 @@
 			</v-card>
 
 			<v-card id="form-item">
+				<label for="gameYear"> Semester </label>
+				<textarea type="text" id="gameYeaer" v-model="gameYear"> </textarea>
+			</v-card>
+
+			<!-- Files were to be uploaded via Google Cloud? will edit once that's been figured out -->
+			<v-card id="form-item">
 				<label> Game Files: </label>
 				<input type="text" v-model="gameFile">
 			</v-card>
 
 			<v-card id="form-item">
 			<!-- Image Upload -->
-					<div id="image-upload">
+				<div id="image-upload">
           <label for="gameImage"> Thumbnail: </label>
 					<input id="gameImage" type="file" @change="onFileChange" />
 					 </div>
@@ -56,14 +62,48 @@ export default {
 		gameAuthor: '',
 		gameFile: '',
 		gameImage: '',
-		image:'',
 		url: null,
+		gameYear: '',
 	}),
 
 	//submit
 	methods: {
-		submit() {
-			//send form data to server
+		submitGame() {
+			// //send data to server
+			// this.$http.post('/api/games', {
+			// 	gameName: this.gameName,
+			// 	gameDesc: this.gameDesc,
+			// 	gameAuthor: this.gameAuthor,
+			// 	gameFile: this.gameFile,
+			// 	gameImage: this.gameImage,
+			// }).then(response => {
+			// 	console.log(response);
+			// 	this.gameName = '';
+			// 	this.gameDesc = '';
+			// 	this.gameAuthor = '';
+			// 	this.gameFile = '';
+			// 	this.gameImage = '';
+			// 	this.url = null;
+			// }).catch(error => {
+			// 	console.log(error);
+			// });
+			console.log(this.gameName);
+			console.log(this.gameDesc);
+			console.log(this.gameAuthor);
+			console.log(this.gameFile);
+			console.log(this.gameImage);
+			console.log(this.gameYear);
+			console.log("Submitted!");
+			//refresh form after submission
+			this.gameName = '';
+			this.gameDesc = '';
+			this.gameAuthor = '';
+			this.gameFile = '';
+			this.gameImage = '';
+			this.url = null;
+			this.gameYear = '';
+
+
 		},
 	  addAuthor() {
 			this.authors.push({
