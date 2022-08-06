@@ -9,7 +9,15 @@ import (
 )
 
 func user(c echo.Context) error {
-	return c.JSON(http.StatusOK, "User get handler")
+	user, _ := VerifyUser(c)
+
+	if user != nil {
+		GenerateTokenAndSetCookie(user, c)
+		return nil
+	}
+
+	log.Error("Unable to login user %s.", user.Displayname)
+	return c.JSON(http.StatusUnauthorized, "Invalid user "+user.Displayname)
 }
 
 func createUser(c echo.Context) error {
