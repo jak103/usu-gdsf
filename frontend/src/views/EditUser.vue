@@ -33,22 +33,7 @@
       class="mr-4"
       @click="validate"
     >
-      Validate
-    </v-btn>
-
-    <v-btn
-      color="error"
-      class="mr-4"
-      @click="reset"
-    >
-      Reset Form
-    </v-btn>
-
-    <v-btn
-      color="warning"
-      @click="resetValidation"
-    >
-      Reset Validation
+      Save Changes
     </v-btn>
   </v-form>
 </template>
@@ -71,6 +56,7 @@
       usernameRules: [
         v => !!v || 'Username is required',
         v => (v && v.length <= 25) || 'Username must be less than 25 characters',
+        v => !/\s/g.test(v) || 'Username cannot contain spaces',
       ],
       select: null,
       items: [
@@ -85,12 +71,7 @@
     methods: {
       validate () {
         this.$refs.form.validate()
-      },
-      reset () {
-        this.$refs.form.reset()
-      },
-      resetValidation () {
-        this.$refs.form.resetValidation()
+        //Post user changes to database here
       },
     },
   }
