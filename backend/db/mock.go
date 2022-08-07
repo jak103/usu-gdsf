@@ -26,7 +26,7 @@ func (db *Mock) GetGameByID(id uuid.UUID) (*models.Game, error) {
 }
 
 func (db *Mock) GetGamesByTags(tags []string) ([]models.Game, error) {
-	games := make(map[string]models.Game)
+	games := make(map[uuid.UUID]models.Game)
 
 	for _, game := range db.games {
 		for _, tag := range tags {
@@ -36,7 +36,7 @@ func (db *Mock) GetGamesByTags(tags []string) ([]models.Game, error) {
 				valid[v] = true
 			}
 			if valid[tag] {
-				games[game.ID.String()] = game
+				games[game.ID] = game
 			}
 		}
 	}

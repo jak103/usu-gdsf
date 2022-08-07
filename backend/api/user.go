@@ -46,7 +46,7 @@ func createUser(c echo.Context) error {
 	u.SetUUID()
 
 	if err := db.CreateUser(u); err != nil {
-		log.Error("An error occurred while getting game records: %v", err)
+		log.Error("An error occurred while creating user records %v", err)
 		return err
 	} else {
 		return c.JSON(http.StatusOK, "New User Added")
@@ -55,7 +55,6 @@ func createUser(c echo.Context) error {
 
 func returnAllUsers(c echo.Context) error {
 	db, err := db.NewDatabaseFromEnv()
-
 	if err != nil {
 		log.WithError(err).Error("Unable to use database")
 		return err
@@ -73,8 +72,8 @@ func returnAllUsers(c echo.Context) error {
 func init() {
 	log.Info("Running user init")
 
-	registerRoute(route{method: http.MethodGet, path: "/user/:id", handler: user})
+	registerRoute(route{method: http.MethodGet, path: "/user/:id", handler: getUserByID})
 	registerRoute(route{method: http.MethodGet, path: "/login", handler: user})
 	registerRoute(route{method: http.MethodPost, path: "/register", handler: createUser})
-	registerRoute(route{method: http.MethodGet, path: "/allusers", handler: returnAllUsers})
+	registerRoute(route{method: http.MethodGet, path: "/user", handler: returnAllUsers})
 }

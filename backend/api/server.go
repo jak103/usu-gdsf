@@ -3,8 +3,8 @@ package api
 import (
 	"context"
 	"net/http"
-	"sync"
 	"os"
+	"sync"
 
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/labstack/echo/v4"
@@ -28,8 +28,8 @@ func (s *Server) Start() {
 	log.Info("Starting API server")
 	s.echo = echo.New()
 
-	s.jwtConfig = middleware.DefaultJWTConfig;
-	s.jwtConfig.SigningKey = os.Getenv("USUGDSF_AUTH_TOKEN");
+	s.jwtConfig = middleware.DefaultJWTConfig
+	s.jwtConfig.SigningKey = os.Getenv("USUGDSF_AUTH_TOKEN")
 
 	s.setupMiddleware()
 	s.setupRoutes()
