@@ -4,6 +4,7 @@
 				({{ rating }})
 			</span>
 			<v-rating
+        data-test="rating-main"
 				v-model="rating"
         :background-color="starBackgroundColor"
         :clearable="isClearable"

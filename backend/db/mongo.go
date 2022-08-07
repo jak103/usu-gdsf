@@ -25,14 +25,18 @@ type Mongo struct {
 
 // RemoveGame removes the given game from the db
 func (db Mongo) RemoveGame(game models.Game) error {
+	primitiveObjectId, err := primitive.ObjectIDFromHex(game.Id)
+	if err != nil{
+		log.WithError(err).Error("error on getting primitive object id from hex string")
+		return err
+	}
+
 	gc := db.database.Collection("games")
 	res, err := gc.DeleteOne(context.Background(), bson.M{
-		"name":         game.Name,
-		"author":       game.Developer,
-		"creationdate": game.CreationDate,
-		"version":      game.Version,
-		"tags":         game.Tags,
+		"_id": primitiveObjectId,
+
 	})
+
 	if err != nil {
 		log.WithError(err).Error("Mongo RemoveGame deletion error")
 		return err
@@ -123,9 +127,9 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 		log.WithError(err).Error("Invalid id in Mongo ID search")
 	}
 
+
 	// find game with object ID
 	result := db.database.Collection("games").FindOne(context.Background(), bson.M{"_id": objID})
-
 	// decode into bson
 	data := bson.M{}
 	err = result.Decode(&data)
@@ -188,10 +192,16 @@ func DecodeBsonData(data bson.M) (models.Game, error) {
 	game := models.Game{
 		Id:           data["_id"].(primitive.ObjectID).Hex(),
 		Name:         data["name"].(string),
-		Developer:    data["author"].(string),
+		Rating:       float32(data["rating"].(float64)),
+		TimesPlayed:  int(data["timesplayed"].(int32)),
+		ImagePath:    data["imagepath"].(string),
+		Description:  data["description"].(string),
+		Developer:    data["developer"].(string),
 		CreationDate: date,
 		Version:      data["version"].(string),
 		Tags:         tags,
+		Downloads:    data["downloads"].(int64),
+		DownloadLink: data["downloadlink"].(string),
 	}
 
 	return game, nil
