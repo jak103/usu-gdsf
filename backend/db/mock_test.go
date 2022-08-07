@@ -119,7 +119,6 @@ func TestUpdateGame(t *testing.T) {
 	assert.NotEqual(t, nil, err)
 }
 
-
 func TestGetAllUsers(t *testing.T) {
 	mock := Mock{}
 	mock.users = make(map[uuid.UUID]models.User)
@@ -186,9 +185,9 @@ func TestGetUserByRole(t *testing.T) {
 	assert.Equal(t, halfUsers, len(admins))
 	assert.Equal(t, halfUsers, len(publishers))
 	_, err := mock.GetUsersByRole(3)
-	assert.NotEqual(t, nil, err)
+	assert.Equal(t, nil, err)
 	_, err = mock.GetUsersByRole(-1)
-	assert.NotEqual(t, nil, err)
+	assert.Equal(t, nil, err)
 
 }
 

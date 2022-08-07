@@ -175,7 +175,7 @@ func (db *Mock) UpdateUser(updatedUser models.User) error {
 		return errors.New("updatedUser struct has nil ID")
 	}
 
-	if _, exists := db.games[updatedUser.ID]; !exists {
+	if _, exists := db.users[updatedUser.ID]; !exists {
 		log.Error("updatedUser ID does not exist in mock db")
 		return errors.New("updatedUser ID does not exist in mock db")
 	}
