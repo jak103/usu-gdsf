@@ -10,11 +10,19 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func user(c echo.Context) error {
-	return c.JSON(http.StatusOK, "User get handler")
+func User(c echo.Context) error {
+	user, _ := VerifyUser(c)
+
+	if user != nil {
+		GenerateTokenAndSetCookie(user, c)
+		return nil
+	}
+
+	log.Error("Unable to login user %s.", user.Displayname)
+	return c.JSON(http.StatusUnauthorized, "Invalid user "+user.Displayname)
 }
 
-func getUserByID(c echo.Context) error {
+func GetUserByID(c echo.Context) error {
 	db, err := db.NewDatabaseFromEnv()
 
 	if err != nil {
@@ -31,7 +39,7 @@ func getUserByID(c echo.Context) error {
 	}
 }
 
-func createUser(c echo.Context) error {
+func CreateUser(c echo.Context) error {
 	db, err := db.NewDatabaseFromEnv()
 
 	if err != nil {
@@ -46,14 +54,15 @@ func createUser(c echo.Context) error {
 	u.SetUUID()
 
 	if err := db.CreateUser(u); err != nil {
-		log.Error("An error occurred while getting game records: %v", err)
+		log.Error("An error occurred while creating user: %v", err)
 		return err
 	} else {
+		GenerateTokenAndSetCookie(&u, c)
 		return c.JSON(http.StatusOK, "New User Added")
 	}
 }
 
-func returnAllUsers(c echo.Context) error {
+func ReturnAllUsers(c echo.Context) error {
 	db, err := db.NewDatabaseFromEnv()
 
 	if err != nil {
@@ -61,7 +70,6 @@ func returnAllUsers(c echo.Context) error {
 		return err
 	}
 
-	// TODO make sure this is checked when the DB call is properly implemented.
 	if result, err := db.GetAllUsers(); err != nil {
 		log.Error("An error occurred while getting a record of all users: %v", err)
 		return err
@@ -73,8 +81,8 @@ func returnAllUsers(c echo.Context) error {
 func init() {
 	log.Info("Running user init")
 
-	registerRoute(route{method: http.MethodGet, path: "/user/:id", handler: user})
-	registerRoute(route{method: http.MethodGet, path: "/login", handler: user})
-	registerRoute(route{method: http.MethodPost, path: "/register", handler: createUser})
-	registerRoute(route{method: http.MethodGet, path: "/allusers", handler: returnAllUsers})
+	registerRoute(route{method: http.MethodGet, path: "/user/:id", handler: GetUserByID})
+	registerRoute(route{method: http.MethodPost, path: "/login", handler: User})
+	registerRoute(route{method: http.MethodPost, path: "/register", handler: CreateUser})
+	registerRoute(route{method: http.MethodGet, path: "/allusers", handler: ReturnAllUsers})
 }
