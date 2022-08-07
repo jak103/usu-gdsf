@@ -49,12 +49,13 @@
     </tbody>
   </v-table>
 
-	<UserForm :isAdmin=isAdmin 
+	<UserForm :isAdminCreation=isAdminCreation
 		:showSelf="showForm" 
 		@close="handleClose()" 
 		@leftDialog="resetDefaults()" 
 		:selectedUser="selectedUser" 
-		@save="handleSave(selectedUser)"
+		@save="handleSaveEdit(selectedUser)"
+		@delete="handleDeleteUser(selectedUser)"
 		@createAdmin="handleCreateAdmin(selectedUser)"	
 	/>
 
@@ -101,7 +102,7 @@ export default {
             // Set to false when users have loading, default should be true
             loading: false,
 						showForm: ref(false),
-						isAdmin: ref(false),
+						isAdminCreation: ref(false),
 						selectedUser: ref({
 							firstName: "",
 							lastName: "",
@@ -120,12 +121,12 @@ export default {
 
 			handleClickAdmin() {
 				this.showForm = true
-				this.isAdmin = true
+				this.isAdminCreation = true
 			},
 
 			resetDefaults() {
 				this.showForm = false
-				this.isAdmin = false
+				this.isAdminCreation = false
 				this.selectedUser = {
 					firstName: "",
 					lastName: "",
@@ -140,16 +141,19 @@ export default {
 
 			handleSaveEdit(user) {
 				// Find user
-				this.resetDefaults()
+				console.log("Saved!")
+				this.showForm = false
 			},
 
 			handleDeleteUser(user) {
 				// Find user
-
+				console.log("User deleted")
+				this.showForm = false
 			},
 
 			handleCreateAdmin(user) {
-				console.log(user)
+				console.log("Admin created")
+				this.showForm = false
 			}
 		}
 }

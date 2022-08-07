@@ -4,16 +4,17 @@
   is set to false.
  -->
 <template>
-  <v-form>
+  <v-form ref="formRef" lazy-validation>
     <v-row justify="center">
       <v-dialog
         persistent
         v-model="showSelf"
+        max-width="500px"
         @afterLeave="$emit('leftDialog')"
       >
         <v-card>
           <v-card-title class="text-center">
-            <span v-if="isAdmin" class="text-h5">Create Admin Account</span>
+            <span v-if="isAdminCreation" class="text-h5">Create Admin Account</span>
             <span v-else class="text-h5">Edit User Profile</span>
             <span></span>
           </v-card-title>
@@ -43,7 +44,7 @@
                     label="Last Name*"
                     v-model="selectedUser.lastName"
                     persistent-hint 
-                    :ruels="[rules.counter, rules.required]"
+                    :rules="[rules.counter, rules.required]"
                     required
                   ></v-text-field>
                 </v-col>
@@ -80,6 +81,7 @@
                   <v-text-field
                     label="Password*"
                     type="password"
+                    v-model="newPassword"
                     :rules="[rules.password]"
                     required
                   ></v-text-field>
@@ -87,30 +89,32 @@
               </v-row>
             </v-container>
           </v-card-text>
+          <div style="color: red; margin-left: 40px;">{{errorMsg}}</div>
           <v-card-actions>
             <v-btn
-              v-if="!isAdmin"
+              v-if="!isAdminCreation"
               color="error"
-              @click="$emit('delete', selectedUser)">
+              @click="handleDelete">
               Delete User
             </v-btn>
             <v-spacer></v-spacer>
             <v-btn
               color="secondary"
-              @click="$emit('close')">
+              @click="handleClose">
               Close
             </v-btn>
             <v-btn
-              v-if="!isAdmin"
+              type="submit"
+              v-if="!isAdminCreation"
               color="secondary"
-              @click="$emit('save', selectedUser)">
+              @click="submitUpdate">
               Save
             </v-btn>
 
               <v-btn
-              v-if="isAdmin"
+              v-if="isAdminCreation"
               color="secondary"
-              @click="$emit('createAdmin', selectedUser)">
+              @click="submitCreation">
               Create
             </v-btn>
           </v-card-actions>
@@ -121,26 +125,102 @@
   
 </template>
 
-<script setup>
-  defineProps({
-    showSelf: Boolean,
-    isAdmin: Boolean,
-    selectedUser: {
-      firstName: String,
-      lastName: String,
-      email: String,
-    }
-  });
+<script>
+  export default {
+    props: {
+        showSelf: Boolean,
+        isAdminCreation: Boolean,
+        valid: {
+          type: Boolean,
+          default: false,
+        },
+        selectedUser: {
+          firstName: String,
+          lastName: String,
+          email: String,
+        },
+        newPassword: String
+      },
 
-  let rules = {
-    // Password only required if admin creation
-    // DOB rules?
-    required: value => !!value || '',
-    counter: value => value.length <= 20 || 'Max 20 characters',
-    email: value => {
-      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      return pattern.test(value) || 'Invalid e-mail.'
-    },
-    password: value => value.length >= 12 || 'Password must be at least 12 characters'
+      methods: {
+
+        validate() {
+          this.errorMsg = ''
+          if (!this.selectedUser.firstName || !this.selectedUser.lastName) {
+            this.errorMsg = "Name fields cannot be blank"
+            return false
+          }
+          if (!this.selectedUser.email) {
+            this.errorMsg = "Email field cannot be blank"
+            return false
+          }
+
+          if (!this.selectedUser.dob) {
+            this.errorMsg = "Birth Date field cannot be blank"
+            return false
+          }
+
+          if (this.selectedUser.firstName.length > 30 || this.selectedUser.lastName.length > 30) {
+            return false
+          }
+
+          if (!this.emailPattern.test(this.selectedUser.email)) {
+            return false
+          }
+
+          this.errorMsg = ""
+          return true
+        },
+
+        submitUpdate() {
+          if (this.validate()) {
+            this.$emit('save', this.selectedUser)
+          }
+        },
+
+        submitCreation() {
+          if (this.validate()) {
+            if (!this.newPassword) {
+              this.errorMsg = "Password field cannot be blank"
+            } else {
+              this.$emit('createAdmin', this.selectedUser)
+            }
+          }
+
+        },
+
+        handleClose() {
+          this.errorMsg = ''
+          this.$emit('close')
+        },
+
+        handleDelete() {
+          this.errorMsg = ''
+          this.$emit('delete', this.selectedUser)
+        }
+      },
+
+      data() {
+        return {
+          emailPattern : /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          // These rules are only for visual aspect in the form right now (:rules), actual validation happens in methods
+          rules : {
+            required: value => !!value || '',
+            counter: value => value.length <= 20 || 'Max 30 characters',
+            email: value => {
+              return this.emailPattern.test(value) || 'Invalid e-mail.'
+            },
+            password: value => {
+              if (this.isAdminCreation) {
+               return value.length >= 12 || 'Password must be at least 12 characters'
+              } else {
+                return !!value
+              }
+            }
+          },
+          errorMsg : ''
+        }
+      }
   }
+
 </script>
