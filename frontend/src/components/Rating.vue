@@ -4,6 +4,7 @@
 				({{ rating }})
 			</span>
 			<v-rating
+        data-test="rating-main"
 				v-model="rating"
         :background-color="starBackgroundColor"
         :clearable="isClearable"
@@ -44,6 +45,8 @@ export default {
         isRipple:Boolean,
         isHalfIncrements:Boolean,
         isHover:Boolean,
+        value:Number,
+        rating:Number,
         isSmall:Boolean,
         starSize:Number,
         starValue:Number,
@@ -51,8 +54,6 @@ export default {
         isXSmall:Boolean
     },
 
-    data: () => ({
-        rating: 3,
-    }),
+    data: () => ({}),
 }
 </script>
