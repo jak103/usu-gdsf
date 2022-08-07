@@ -31,6 +31,22 @@ func getAllDownloads(c echo.Context) error {
 	}
 }
 
+func getDownloadByID(c echo.Context) error {
+	id := c.Param("id")
+
+	_db, getDbErr := db.NewDatabaseFromEnv()
+	if getDbErr != nil {
+		return c.JSON(http.StatusInternalServerError, "Database connection error")
+	}
+	download, err := _db.GetDownloadByID(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Database find download ID error")
+	}
+
+	return c.JSON(http.StatusOK, download)
+}
+
+// Method used to handle creating a new Download Record
 func newDownloadHandler( c echo.Context) error {
 	newDownload := models.Download{
 		UserId: c.FormValue(USER),
@@ -55,6 +71,8 @@ func newDownloadHandler( c echo.Context) error {
 }
 
 func init() {
-	registerRoute(route{method: http.MethodGet, path: "/downloads", handler: getAllDownloads})
+	registerRoute(route{method: http.MethodGet,  path: "/downloads", handler: getAllDownloads})
+	registerRoute(route{method: http.MethodGet,  path: "/downloads/:id", handler: getDownloadByID})
 	registerRoute(route{method: http.MethodPost, path: "/downloads", handler: newDownloadHandler})
+	
 }

@@ -88,6 +88,21 @@ func (db Firestore) GetGameByID(id string) (models.Game, error) {
 	return game, nil
 }
 
+func (db Firestore) GetDownloadByID(id string) (models.Download, error) {
+	snapShot, err := db.client.Collection("downloads").Doc(id).Get(context.Background())
+	if status.Code(err) == codes.NotFound {
+		return models.Download{}, err
+	}
+	download := models.Download{}
+	convErr := snapShot.DataTo(&download)
+	download.Id = snapShot.Ref.ID
+	if convErr != nil {
+		log.WithError(convErr).Error("Cannot convert firestore snapshot to download struct")
+	}
+	return download, nil
+	
+}
+
 // AddGame Add a new game to the remote database. Returns unique game ID
 func (db Firestore) AddGame(game models.Game) (string, error) {
 	docRef, _, err := db.client.Collection("games").Add(context.Background(), game)

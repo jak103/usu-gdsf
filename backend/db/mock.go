@@ -75,6 +75,10 @@ func (db Mock) GetGameByID(id string) (models.Game, error) {
 	return db.games[id], nil
 }
 
+func (db Mock) GetDownloadByID(id string) (models.Download, error) {
+	return db.downloads[id], nil
+}
+
 func (db Mock) AddGame(game models.Game) (string, error) {
 	var id = strconv.Itoa(len(db.games) + 1)
 	db.games[id] = game

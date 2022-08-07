@@ -18,13 +18,19 @@ const (
 var connection Database
 
 type Database interface {
+	// Game Methods
 	GetAllGames() ([]models.Game, error)
 	AddGame(models.Game) (string, error)
-	GetAllDownloads() ([]models.Download, error)
-	AddDownload(models.Download) (string, error)
 	RemoveGame(models.Game) error
 	GetGameByID(string) (models.Game, error)
 	GetGamesByTags([]string, bool) ([]models.Game, error)
+
+	// Download Methods
+	GetAllDownloads() ([]models.Download, error)
+	AddDownload(models.Download) (string, error)
+	GetDownloadByID(string) (models.Download, error)
+
+	// General DB Methods
 	Disconnect() error
 	Connect() error
 }
