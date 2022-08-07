@@ -7,7 +7,7 @@
     </v-row>
   </v-container>
   <div v-if="!dataLoading && taggedGames.length == 0">
-    Hey backend team, if you want game cards to show up here, tag games with "{{ tag }} and make sure to add the image URLs"
+    Hey backend team, if you want game cards to show up here, tag games with "{{ tag }}" and make sure to add the image URLs
   </div>
   <Loading data-test="loadbar" v-if="dataLoading" text="Loading Game Data" containerStyle="height: 75vh"/>
 </template>
