@@ -15,6 +15,22 @@ const (
 	GAME      = "GameId"
 )
 
+func getAllDownloads(c echo.Context) error {
+	_db, err := db.NewDatabaseFromEnv()
+
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return err
+	}
+
+	if result, err := _db.GetAllDownloads(); err != nil {
+		log.Error("An error occurred while getting download records: %v", err)
+		return err
+	} else {
+		return c.JSON(http.StatusOK, []interface{}{result})
+	}
+}
+
 func newDownloadHandler( c echo.Context) error {
 	newDownload := models.Download{
 		UserId: c.FormValue(USER),
@@ -39,5 +55,6 @@ func newDownloadHandler( c echo.Context) error {
 }
 
 func init() {
+	registerRoute(route{method: http.MethodGet, path: "/downloads", handler: getAllDownloads})
 	registerRoute(route{method: http.MethodPost, path: "/downloads", handler: newDownloadHandler})
 }

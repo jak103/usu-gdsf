@@ -97,6 +97,16 @@ func (db Mock) GetAllGames() ([]models.Game, error) {
 	return games, nil
 }
 
+func (db Mock) GetAllDownloads() ([]models.Download, error) {
+	downloads := make([]models.Download, 0)
+
+	for _, download := range db.downloads {
+		downloads = append(downloads, download)
+	}
+
+	return downloads, nil
+}
+
 func (db Mock) Connect() error {
 	log.Info("mock connect")
 

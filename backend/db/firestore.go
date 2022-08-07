@@ -134,6 +134,31 @@ func (db Firestore) GetAllGames() ([]models.Game, error) {
 	return games, nil
 }
 
+func (db Firestore) GetAllDownloads() ([]models.Download, error) {
+	downloads := make([]models.Download, 0)
+	gc := db.client.Collection("downloads")
+
+	documents := gc.DocumentRefs(context.Background())
+	for {
+		docRef, docRefErr := documents.Next()
+
+		if docRefErr == iterator.Done {
+			break
+		}
+
+		var download models.Download
+
+		if docSnapshot, _ := docRef.Get(context.Background()); docSnapshot != nil {
+			_ = docSnapshot.DataTo(&download)
+			download.Id = docRef.ID
+		}
+		
+		downloads = append(downloads, download)
+	}
+
+	return downloads, nil
+}
+
 // Disconnect disconnects from the remote database
 func (db *Firestore) Disconnect() error {
 	// Close the client connection if it is open

@@ -186,11 +186,22 @@ func DecodeCursorToGame(cur *mongo.Cursor) (models.Game, error) {
 	data := bson.M{}
 	err := cur.Decode(&data)
 	if err != nil {
-		log.WithError(err).Error("Unable to decode Mongo cursor")
+		log.WithError(err).Error("Unable to decode Mongo game cursor")
 		return models.Game{}, err
 	}
 
 	return DecodeGameBsonData(data)
+}
+
+func DecodeCursorToDownload(cur *mongo.Cursor) (models.Download, error) {
+	data := bson.M{}
+	err := cur.Decode(&data)
+	if err != nil {
+		log.WithError(err).Error("Unable to decode Mongo download cursor")
+		return models.Download{}, err
+	}
+
+	return DecodeDownloadBsonData(data)
 }
 
 func convert[T any](v any) any {
@@ -283,7 +294,7 @@ func (db Mongo) GetAllGames() ([]models.Game, error) {
 	gc := db.database.Collection("games")
 	cursor, err := gc.Find(context.Background(), bson.M{}, nil)
 	if err != nil {
-		log.WithError(err).Error("mongo find failed")
+		log.WithError(err).Error("mongo game find failed")
 		return nil, err
 	}
 
@@ -296,6 +307,27 @@ func (db Mongo) GetAllGames() ([]models.Game, error) {
 	}
 
 	return games, nil
+}
+
+func (db Mongo) GetAllDownloads() ([]models.Download, error) {
+	downloads := make([]models.Download, 0)
+
+	gc := db.database.Collection("downloads")
+	cursor, err := gc.Find(context.Background(), bson.M{}, nil)
+	if err != nil {
+		log.WithError(err).Error("mongo download find failed")
+		return nil, err
+	}
+
+	for cursor.Next(context.Background()) {
+		d, err := DecodeCursorToDownload(cursor)
+		if err != nil {
+			return nil, err
+		}
+		downloads = append(downloads, d)
+	}
+
+	return downloads, nil
 }
 
 // disconnect disconnects from the remote database
