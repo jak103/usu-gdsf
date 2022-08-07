@@ -17,8 +17,6 @@ const (
 	NAME      = "Name"
 	DEVELOPER = "Developer"
 	VERSION   = "Version"
-	USER      = "UserId"
-	GAME      = "GameId"
 	LINK      = "DownloadLink"
 )
 
@@ -106,34 +104,10 @@ func newGameHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, "New game handler")
 }
 
-func newDownloadHandler( c echo.Context) error {
-	newDownload := models.Download{
-		UserId: c.FormValue(USER),
-		GameId: c.FormValue(GAME),
-		CreationDate: time.Now(),
-	}
-
-	_db, getDbErr := db.NewDatabaseFromEnv()
-	_, err := _db.AddDownload(newDownload)
-
-	// error handling
-	if getDbErr != nil {
-		return c.JSON(http.StatusInternalServerError, "Database connection error")
-	}
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "Database add download error")
-	}
-
-	message := "Download added"
-	return c.JSON(http.StatusOK, message)
-}
-
 func init() {
 	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
 	registerRoute(route{method: http.MethodGet, path: "/games/:tags", handler: getGamesWithTags})
-
-	registerRoute(route{method: http.MethodPost, path: "/download", handler: newDownloadHandler})
 }
