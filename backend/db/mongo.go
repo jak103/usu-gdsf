@@ -177,9 +177,8 @@ func (db Mongo) GetDownloadByID(id string) (models.Download, error) {
 		return models.Download{}, err
 	}
 
-
-	// download, _ := DecodeBsonData(data)
-	return models.Download{}, nil
+	download, _ := DecodeDownloadBsonData(data)
+	return download, nil
 }
 
 func DecodeCursorToGame(cur *mongo.Cursor) (models.Game, error) {
