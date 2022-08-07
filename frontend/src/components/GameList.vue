@@ -1,11 +1,14 @@
 <template>
-  <v-container v-if="!dataLoading">
+  <v-container v-if="!dataLoading && taggedGames.length > 0">
     <v-row class="ma-2">
       <v-col v-for="game in taggedGames.slice(0,5)">
         <GameCardView :game="game"></GameCardView>
       </v-col>
     </v-row>
   </v-container>
+  <div v-if="!dataLoading && taggedGames.length == 0">
+    Hey backend team, if you want game cards to show up here, tag games with "{{ tag }} and make sure to add the image URLs"
+  </div>
   <Loading data-test="loadbar" v-if="dataLoading" text="Loading Game Data" containerStyle="height: 75vh"/>
 </template>
 
@@ -23,6 +26,7 @@ export default {
     taggedGames: [],
     dataLoading: true,
   }),
+
   methods: {
     async getTaggedGames() {
       this.dataLoading = true

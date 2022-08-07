@@ -19,7 +19,7 @@
         </v-card>
       </v-col>
       <v-col>
-        <GameCarousel :screenshotUrls="['https://i.ytimg.com/vi/-Gq2S0AXjNw/mqdefault.jpg', 'https://www.techspot.com/images2/news/bigimage/2016/02/2016-02-11-image.jpg', 'https://www.howtogeek.com/wp-content/uploads/2022/03/MinecraftRAMHeader.jpg']"></GameCarousel>
+        <GameCarousel></GameCarousel>
       </v-col>
       <v-col>
         <v-card height="300" color=primary>
@@ -39,21 +39,21 @@
       <h1>Spring 2022</h1>
     </v-row>
     <v-row class="ma-2">
-      <GameList :tag="spring2022"></GameList>
+      <GameList tag="spring2022"></GameList>
     </v-row>
 
     <v-row>
       <h1>Puzzles</h1>
     </v-row>
     <v-row class="ma-2">
-      <GameList :tag="puzzle"></GameList>
+      <GameList tag="puzzle"></GameList>
     </v-row>
 
     <v-row>
-      <h1>Most Popular</h1>
+      <h1>Shooters</h1>
     </v-row>
     <v-row class="ma-2">
-      <GameList :tag="mostPopular"></GameList>
+      <GameList tag="shooter"></GameList>
     </v-row>
   <v-row>
     <Footer></Footer>
