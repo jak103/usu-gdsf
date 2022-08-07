@@ -234,7 +234,21 @@ func DecodeCommonData(data bson.M) ([]string, time.Time, error) {
 }
 
 func DecodeDownloadBsonData(data bson.M) (models.Download, error) {
+	_, date, err := DecodeCommonData(data)
 
+	download := models.Download{
+		Id:            data["_id"].(primitive.ObjectID).Hex(),
+		UserId:        convert[string](data["userid"]).(string),
+		GameId:        convert[string](data["gameid"]).(string),
+		CreationDate:  date,
+	}
+	
+	if err != nil {
+		log.WithError(err).Error("Cannot Decode Download Object")
+	
+	}
+
+	return download, nil
 }
 
 func DecodeGameBsonData(data bson.M) (models.Game, error) {
@@ -257,7 +271,7 @@ func DecodeGameBsonData(data bson.M) (models.Game, error) {
 	}
 
 	if err != nil {
-		log.WithError(err).Error("Cannot Decode Object")
+		log.WithError(err).Error("Cannot Decode Game Object")
 	}
 
 	return game, nil
