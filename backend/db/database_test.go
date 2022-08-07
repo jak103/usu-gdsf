@@ -82,7 +82,18 @@ func TestDatabase_Tags(t *testing.T) {
 	assert.Contains(t, res1, game1)
 	assert.Contains(t, res1, game1)
 }
+// func TestRemoveGame(t *testing.T){
+// 	t.Cleanup(cleanup)
+// 	id0, _ := _db.AddGame(game0)
+// 	id1, _ := _db.AddGame(game1)
 
+// 	game0.Id = id0
+// 	game1.Id = id1
+
+// 	res0, _ := _db.RemoveGame(id0)
+// 	assert.Equal(t, res, game0A)
+
+// }
 func cleanup() {
 	_db.RemoveGame(game0)
 	_db.RemoveGame(game1)
