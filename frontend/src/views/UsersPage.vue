@@ -140,18 +140,19 @@ export default {
 			},
 
 			handleSaveEdit(user) {
-				// Find user
+				// Find user and update info
 				console.log("Saved!")
 				this.showForm = false
 			},
 
 			handleDeleteUser(user) {
-				// Find user
+				// Find user and delete
 				console.log("User deleted")
 				this.showForm = false
 			},
 
 			handleCreateAdmin(user) {
+				// Create new admin user
 				console.log("Admin created")
 				this.showForm = false
 			}
