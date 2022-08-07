@@ -50,6 +50,7 @@ export default createVuetify({
       }
     },
   },
+  
   icons: {
     defaultSet: 'mdi',
     aliases,
@@ -59,4 +60,5 @@ export default createVuetify({
   },
   components,
   directives,
+  
 })
