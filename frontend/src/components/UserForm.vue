@@ -4,7 +4,7 @@
   is set to false.
  -->
 <template>
-  <v-form ref="formRef" lazy-validation>
+  <v-form>
     <v-row justify="center">
       <v-dialog
         persistent
@@ -28,6 +28,7 @@
                   md="6"
                 >
                   <v-text-field
+                    id="firstNameField"
                     label="First Name*"
                     v-model="selectedUser.firstName"
                     :rules="[rules.counter, rules.required]"
@@ -41,6 +42,7 @@
                   md="6"
                 >
                   <v-text-field
+                    id="lastNameField"
                     label="Last Name*"
                     v-model="selectedUser.lastName"
                     persistent-hint 
@@ -54,6 +56,7 @@
                   cols="12"
                 >
                   <v-text-field
+                    id="birthDateField"
                     label="Birth Date*"
                     type="date"
                     v-model="selectedUser.dob"
@@ -67,6 +70,7 @@
                   class="overflow-hidden"
                 >
                   <v-text-field
+                    id="emailField"
                     label="Email*"
                     type="email"
                     :rules="[rules.email, rules.required]"
@@ -92,6 +96,7 @@
           <div style="color: red; margin-left: 40px;">{{errorMsg}}</div>
           <v-card-actions>
             <v-btn
+              id="deleteUserBtn"
               v-if="!isAdminCreation"
               color="error"
               @click="handleDelete">
@@ -99,11 +104,13 @@
             </v-btn>
             <v-spacer></v-spacer>
             <v-btn
+              id="closeBtn"
               color="secondary"
               @click="handleClose">
               Close
             </v-btn>
             <v-btn
+              id="saveEditBtn"
               type="submit"
               v-if="!isAdminCreation"
               color="secondary"
@@ -112,6 +119,7 @@
             </v-btn>
 
               <v-btn
+              id="adminCreateBtn"
               v-if="isAdminCreation"
               color="secondary"
               @click="submitCreation">
@@ -130,14 +138,11 @@
     props: {
         showSelf: Boolean,
         isAdminCreation: Boolean,
-        valid: {
-          type: Boolean,
-          default: false,
-        },
         selectedUser: {
           firstName: String,
           lastName: String,
           email: String,
+          dob: String,
         },
         newPassword: String
       },
