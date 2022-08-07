@@ -1,7 +1,7 @@
 <template>
   <!-- <v-container> -->
     <v-row>
-      <v-card height="200" width="2000" color=primary>
+      <v-card height="165" width="2000" color=primary>
         <p class="text-center font-weight-thin" style="color:#FFFFFF;font-size: 100px">
           USU Game Dev Store Front
         </p>
