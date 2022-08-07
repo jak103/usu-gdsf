@@ -88,7 +88,7 @@ func TestGetGamesWithTags(t *testing.T){
 	_db.RemoveGameByTag("tag0");
 	_db.RemoveGameByTag("tag1");
 	_db.RemoveGameByTag("tag2");
-	
+		
 
 	id0, _ := _db.AddGame(game0)
 	id1, _ := _db.AddGame(game1)
