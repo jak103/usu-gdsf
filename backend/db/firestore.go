@@ -99,6 +99,16 @@ func (db Firestore) AddGame(game models.Game) (string, error) {
 	return docRef.ID, nil
 }
 
+func (db Firestore) AddDownload(download models.Download) (string, error) {
+	docRef, _, err := db.client.Collection("downlaods").Add(context.Background(), download)
+
+	if err != nil {
+		log.WithError(err).Error("Failed to add download to firestore db")
+		return docRef.ID, err
+	}
+	return docRef.ID, nil
+}
+
 func (db Firestore) GetAllGames() ([]models.Game, error) {
 	games := make([]models.Game, 0)
 	gc := db.client.Collection("games")

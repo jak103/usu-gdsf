@@ -6,6 +6,7 @@ import (
 
 type Game struct {
 	Id           string
+	UserId       int64
 	Name         string
 	Rating       float32
 	TimesPlayed  int

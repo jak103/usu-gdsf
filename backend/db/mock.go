@@ -12,7 +12,8 @@ import (
 var _ Database = (*Mock)(nil)
 
 type Mock struct {
-	games map[string]models.Game
+	games     map[string]models.Game
+	downloads map[string]models.Download
 }
 
 // RemoveGame removes the given game from the db
@@ -77,6 +78,12 @@ func (db Mock) GetGameByID(id string) (models.Game, error) {
 func (db Mock) AddGame(game models.Game) (string, error) {
 	var id = strconv.Itoa(len(db.games) + 1)
 	db.games[id] = game
+	return id, nil
+}
+
+func (db Mock) AddDownload(download models.Download) (string, error) {
+	var id = strconv.Itoa(len(db.downloads) + 1)
+	db.downloads[id] = download
 	return id, nil
 }
 

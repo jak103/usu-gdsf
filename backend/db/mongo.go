@@ -137,7 +137,7 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 	}
 
 	// decode bson into game
-	game, _ := DecodeBsonData(data)
+	game, _ := DecodeGameBsonData(data)
 	return game, nil
 }
 
@@ -150,6 +150,38 @@ func (db Mongo) AddGame(game models.Game) (string, error) {
 	return insertResult.InsertedID.(primitive.ObjectID).Hex(), nil
 }
 
+// Add download history object and to return its ID
+func (db Mongo) AddDownload(download models.Download) (string, error) {
+	// Logic to check if one already exists
+
+	insertResult, err := db.database.Collection("downloads").InsertOne(context.Background(), download)
+	if err != nil {
+		log.WithError(err).Error("Failed to add download to Mongo db")
+	}
+	return insertResult.InsertedID.(primitive.ObjectID).Hex(), nil
+}
+
+func (db Mongo) GetDownloadByID(id string) (models.Download, error) {
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.WithError(err).Error("Invalid id in Mongo ID search")
+	}
+
+	result :=db.database.Collection("downloads").FindOne(context.Background(), bson.M{"_id": objID})
+	data:= bson.M{}
+	
+	
+	err = result.Decode(&data)
+	if err != nil {
+		log.WithError(err).Error("Cannot decode record in Mongo GetDownloadByID")
+		return models.Download{}, err
+	}
+
+
+	// download, _ := DecodeBsonData(data)
+	return models.Download{}, nil
+}
+
 func DecodeCursorToGame(cur *mongo.Cursor) (models.Game, error) {
 	data := bson.M{}
 	err := cur.Decode(&data)
@@ -158,10 +190,20 @@ func DecodeCursorToGame(cur *mongo.Cursor) (models.Game, error) {
 		return models.Game{}, err
 	}
 
-	return DecodeBsonData(data)
+	return DecodeGameBsonData(data)
 }
 
-func DecodeBsonData(data bson.M) (models.Game, error) {
+func convert[T any](v any) any {
+	if v == nil {
+		return *new(T)
+	}
+	return v.(T)
+}
+
+// Method used to decode data that is shared across object times. Including tags, and creationDate
+func DecodeCommonData(data bson.M) ([]string, time.Time, error) {
+	var err error
+	
 	// decode tags array
 	var tags []string
 	if data["tags"] != nil {
@@ -174,7 +216,7 @@ func DecodeBsonData(data bson.M) (models.Game, error) {
 
 	//decode creationDate
 	var date time.Time
-	var err error
+	
 	// Check the type of creationDate date (time.Time or string)
 	if _, ok := data["creationdate"].(primitive.DateTime); ok { // creationDate is saved as time.Time
 		date = data["creationdate"].(primitive.DateTime).Time().UTC()
@@ -182,10 +224,22 @@ func DecodeBsonData(data bson.M) (models.Game, error) {
 		date, err = time.Parse("1/2/2006", data["creationdate"].(string))
 		if err != nil {
 			log.WithError(err).Error("Cannot parse string into date in Mongo GetGameByID")
-			return models.Game{}, err
+			var emptyTags []string
+			var blankDate time.Time
+			return emptyTags, blankDate, err
 		}
 	}
 
+	return tags, date, nil
+}
+
+func DecodeDownloadBsonData(data bson.M) (models.Download, error) {
+
+}
+
+func DecodeGameBsonData(data bson.M) (models.Game, error) {
+	tags, date, err := DecodeCommonData(data)
+	
 	// load game model
 	game := models.Game{
 		Id:           data["_id"].(primitive.ObjectID).Hex(),
@@ -202,14 +256,11 @@ func DecodeBsonData(data bson.M) (models.Game, error) {
 		DownloadLink: convert[string](data["downloadlink"]).(string),
 	}
 
-	return game, nil
-}
-
-func convert[T any](v any) any {
-	if v == nil {
-		return *new(T)
+	if err != nil {
+		log.WithError(err).Error("Cannot Decode Object")
 	}
-	return v.(T)
+
+	return game, nil
 }
 
 func (db Mongo) GetAllGames() ([]models.Game, error) {

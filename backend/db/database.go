@@ -20,6 +20,7 @@ var connection Database
 type Database interface {
 	GetAllGames() ([]models.Game, error)
 	AddGame(models.Game) (string, error)
+	AddDownload(models.Download) (string, error)
 	RemoveGame(models.Game) error
 	GetGameByID(string) (models.Game, error)
 	GetGamesByTags([]string, bool) ([]models.Game, error)
