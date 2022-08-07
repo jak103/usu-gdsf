@@ -9,6 +9,8 @@ import (
 )
 
 var (
+	_db, _ = NewDatabaseFromEnv()
+
 	game0 = models.Game{
 		Name:         "game0",
 		Rating:       3.5,
@@ -39,7 +41,8 @@ var (
 )
 
 func TestDatabase_GameID(t *testing.T) {
-	_db, _ := NewDatabaseFromEnv()
+	// cleanup
+	t.Cleanup(cleanup)
 
 	// assign IDs on add
 	id0A, _ := _db.AddGame(game0)
@@ -53,14 +56,12 @@ func TestDatabase_GameID(t *testing.T) {
 	game1A, _ := _db.GetGameByID(id1A)
 	assert.Equal(t, game0, game0A)
 	assert.Equal(t, game1, game1A)
-
-	// cleanup
-	_db.RemoveGame(game0)
-	_db.RemoveGame(game1)
 }
 
 func TestDatabase_Tags(t *testing.T) {
-	_db, _ := NewDatabaseFromEnv()
+	//cleanup
+	t.Cleanup(cleanup)
+
 	id0, _ := _db.AddGame(game0)
 	id1, _ := _db.AddGame(game1)
 
@@ -78,10 +79,11 @@ func TestDatabase_Tags(t *testing.T) {
 
 	// result elements
 	assert.Contains(t, res0, game0)
-	assert.Contains(t, res1, game0)
 	assert.Contains(t, res1, game1)
+	assert.Contains(t, res1, game1)
+}
 
-	// cleanup
+func cleanup() {
 	_db.RemoveGame(game0)
 	_db.RemoveGame(game1)
 }
