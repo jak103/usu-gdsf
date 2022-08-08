@@ -1,6 +1,12 @@
 import { mount } from '@vue/test-utils'
 import rating from './Rating.vue'
 
+test('Rating component is visible', () => {
+    const wrapper = mount(rating)
+    const ratingElement = wrapper.get('[data-test="rating-main"]')
+    expect(ratingElement.isVisible());
+})
+
 test('renders rating componenet', () => {
     const wrapper = mount(rating, {
         propsData: {
@@ -27,7 +33,7 @@ test('renders rating componenet', () => {
       expect(vRating.length).toBe(1)
     })
 
-test('rendering on click for rating', async () => {
+test('rendering on click for rating component', async () => {
     const wrapper = mount(rating)
     await wrapper.find('v-rating').trigger('click')
     expect(wapper.emitted().click[0][0]).toBe("MouseEvent")

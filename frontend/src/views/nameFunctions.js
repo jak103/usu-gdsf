@@ -1,4 +1,4 @@
-export default function stringToObjects(stringList) {
+export default function stringsToObjects(stringList) {
   let objectList = [];
   let i = 0;
   while (i !== stringList.length) {

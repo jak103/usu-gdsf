@@ -9,6 +9,7 @@ export default {
     "Benjamin Winslett",
     "Sriya Gorrepati",
     "Elijah Peterson",
-    "Grant Bruneel"
+    "Grant Bruneel",
+    "Jade Blunt"
   ]
 }

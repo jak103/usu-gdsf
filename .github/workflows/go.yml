@@ -21,7 +21,7 @@ jobs:
         run: cd backend && go build -v .
 
       - name: Test
-        run: cd backend && cp test.env .env && go test -v ./...
+        run: cd backend && cp -f test.env .env && go test -v ./...
 
       - name: WriteGoList
         run: cd backend && go list -json -m all > ../go.list

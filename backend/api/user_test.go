@@ -3,19 +3,25 @@ package api
 import (
 	"net/http"
 	"net/http/httptest"
-	"sync"
 	"testing"
 
+	// "github.com/jak103/usu-gdsf/auth"
 	"github.com/stretchr/testify/assert"
+	"github.com/labstack/echo/v4"
 )
 
 func AssertResponseCode(t *testing.T, method string, path string, expectedCode int) bool {
-	var s Server = *NewServer(&sync.WaitGroup{})
-	s.Start()
+	e := echo.New()
+
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(method, path, nil)
-	s.echo.ServeHTTP(recorder, request)
-	return expectedCode == recorder.Code
+	c := e.NewContext(request, recorder)
+
+	if assert.NoError(t, getAllGames(c)) {
+		return expectedCode == recorder.Code
+	} else {
+		return false
+	}
 }
 
 func TestUserRoute(t *testing.T) {

@@ -41,7 +41,7 @@
         v-for="user in users"
         :key="user.email"
 				style="cursor: pointer"
-				@click="handleClickUser(user)"
+				@click="handleClickUser({...user})"
       >
         <td>{{ user.firstName }} {{user.lastName}}</td>
         <td>{{ user.email }}</td>
@@ -49,13 +49,24 @@
     </tbody>
   </v-table>
 
-	<UserForm :isAdmin=isAdmin :showSelf="showForm" @close="handleClose()" :selectedUser="selectedUser" @save="handleSave(selectedUser)"/>
+	<UserForm :isAdminCreation=isAdminCreation
+		:showSelf="showForm" 
+		@close="handleClose()" 
+		@leftDialog="resetDefaults()" 
+		:selectedUser="selectedUser" 
+		@save="handleSaveEdit(selectedUser)"
+		@delete="handleDeleteUser(selectedUser)"
+		@createAdmin="handleCreateAdmin(selectedUser)"	
+	/>
+
+	<Footer></Footer>
 	
 	</div>
 </template>
 
 <script>
 import UserForm from '../components/UserForm.vue'
+import Footer from '../components/Footer.vue'
 import {ref} from "vue";
 export default {
 
@@ -91,7 +102,7 @@ export default {
             // Set to false when users have loading, default should be true
             loading: false,
 						showForm: ref(false),
-						isAdmin: ref(false),
+						isAdminCreation: ref(false),
 						selectedUser: ref({
 							firstName: "",
 							lastName: "",
@@ -100,7 +111,7 @@ export default {
 						})
         };
     },
-    components: { UserForm },
+    components: { UserForm, Footer },
 
 		methods: {
 			handleClickUser(user) {
@@ -110,12 +121,12 @@ export default {
 
 			handleClickAdmin() {
 				this.showForm = true
-				this.isAdmin = true
+				this.isAdminCreation = true
 			},
 
 			resetDefaults() {
 				this.showForm = false
-				this.isAdmin = false
+				this.isAdminCreation = false
 				this.selectedUser = {
 					firstName: "",
 					lastName: "",
@@ -125,15 +136,26 @@ export default {
 			},
 
 			handleClose() {
-				// small bug here where edit user is shown after closing admin creation
-				this.resetDefaults()
+				this.showForm = false
 			},
 
-			handleSave(user) {
-				this.resetDefaults()
-			}
+			handleSaveEdit(user) {
+				// Find user and update info
+				console.log("Saved!")
+				this.showForm = false
+			},
 
-			// handle admin creation here or in form?
+			handleDeleteUser(user) {
+				// Find user and delete
+				console.log("User deleted")
+				this.showForm = false
+			},
+
+			handleCreateAdmin(user) {
+				// Create new admin user
+				console.log("Admin created")
+				this.showForm = false
+			}
 		}
 }
 </script>
