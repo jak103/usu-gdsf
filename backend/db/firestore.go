@@ -22,6 +22,7 @@ type Firestore struct {
 // RemoveGame removes the given game from the db
 func (db Firestore) RemoveGame(game models.Game) error {
 	// query
+	
 	snapShot, err := db.client.Collection("games").Doc(game.Id).Get(context.Background())
 	if err != nil {
 		log.WithError(err).Error("Firestore query error in RemoveGame")
@@ -35,6 +36,14 @@ func (db Firestore) RemoveGame(game models.Game) error {
 	}
 
 	return nil
+}
+
+func (db Firestore) RemoveGameByTag(tag string) error{
+	return nil
+}
+
+func (db Firestore ) SortGames(field_name string, order int) ([]models.Game, error){
+	return nil, nil
 }
 
 // GetGamesByTag search and return all games with given tag
@@ -88,12 +97,37 @@ func (db Firestore) GetGameByID(id string) (models.Game, error) {
 	return game, nil
 }
 
+func (db Firestore) GetDownloadByID(id string) (models.Download, error) {
+	snapShot, err := db.client.Collection("downloads").Doc(id).Get(context.Background())
+	if status.Code(err) == codes.NotFound {
+		return models.Download{}, err
+	}
+	download := models.Download{}
+	convErr := snapShot.DataTo(&download)
+	download.Id = snapShot.Ref.ID
+	if convErr != nil {
+		log.WithError(convErr).Error("Cannot convert firestore snapshot to download struct")
+	}
+	return download, nil
+	
+}
+
 // AddGame Add a new game to the remote database. Returns unique game ID
 func (db Firestore) AddGame(game models.Game) (string, error) {
 	docRef, _, err := db.client.Collection("games").Add(context.Background(), game)
 
 	if err != nil {
 		log.WithError(err).Error("Failed to add game to firestore db")
+		return docRef.ID, err
+	}
+	return docRef.ID, nil
+}
+
+func (db Firestore) AddDownload(download models.Download) (string, error) {
+	docRef, _, err := db.client.Collection("downlaods").Add(context.Background(), download)
+
+	if err != nil {
+		log.WithError(err).Error("Failed to add download to firestore db")
 		return docRef.ID, err
 	}
 	return docRef.ID, nil
@@ -122,6 +156,44 @@ func (db Firestore) GetAllGames() ([]models.Game, error) {
 	}
 
 	return games, nil
+}
+
+
+func (db Firestore) GetAllDownloads() ([]models.Download, error) {
+	downloads := make([]models.Download, 0)
+	gc := db.client.Collection("downloads")
+
+	documents := gc.DocumentRefs(context.Background())
+	for {
+		docRef, docRefErr := documents.Next()
+
+		if docRefErr == iterator.Done {
+			break
+		}
+
+		var download models.Download
+
+		if docSnapshot, _ := docRef.Get(context.Background()); docSnapshot != nil {
+			_ = docSnapshot.DataTo(&download)
+			download.Id = docRef.ID
+		}
+		
+		downloads = append(downloads, download)
+	}
+
+	return downloads, nil
+}
+
+func (db Firestore) CreateUser(newUser models.User) (models.User, error) {
+	// users := db.database.Collection("users")
+
+	// newUserDoc, err := users.InsertOne(context.Background(), newUser, nil)
+	// if err != nil {
+	// 	log.WithError(err).Error("Failed to insert new user")
+	// 	return nil, err
+	// }
+
+	return newUser, nil
 }
 
 // Disconnect disconnects from the remote database
