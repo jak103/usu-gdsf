@@ -9,6 +9,13 @@
   export default {
     name: 'GameList',
 
+    props: {
+        title: String,
+        author: String,
+        description: String,
+        image: String,
+    },
+
     data: () => ({
       show: false,
     }),
