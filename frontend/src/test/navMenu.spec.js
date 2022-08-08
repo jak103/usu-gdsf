@@ -1,7 +1,7 @@
 import {mount} from '@vue/test-utils'
 import NavMenu from '@/components/navMenu.vue'
 
-
+// tests by Kailey Bales
 
 // test the navigation menu component
 describe('NavMenu.vue', () => {
