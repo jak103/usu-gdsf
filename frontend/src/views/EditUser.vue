@@ -31,7 +31,7 @@
       :disabled="!valid"
       color="success"
       class="mr-4"
-      @click="validate"
+      @click="submit"
     >
       Save Changes
     </v-btn>
@@ -69,8 +69,9 @@
     }),
 
     methods: {
-      validate () {
-        this.$refs.form.validate()
+      submit () {
+        this.$emit('submit', this.form)
+        
         //Post user changes to database here
       },
     },
