@@ -97,6 +97,13 @@ export default {
 		},
 
 		closeForm() {
+			this.selectedGame.name = " "
+			this.selectedGame.developer = " "
+			this.selectedGame.version = " "
+			this.selectedGame.description = " "
+			this.selectedGame.imagePath = " "
+			this.selectedGame.downloadLink = " "
+	
 			this.showEdit = false
 			this.showCreate = false
 		},
