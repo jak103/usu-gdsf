@@ -19,7 +19,7 @@
 			</v-list-item>
 
 			<v-list-item style="text-align: end;">
-				<button type="button" onclick="login()" 
+				<button type="button" v-on:click="login()" 
 				style=" color: #FFFFFF; padding: 16px; font-weight: bold; border-radius: 0.25rem;
 				background-color: #3577c7;">Login</button>
 			</v-list-item>
@@ -40,10 +40,12 @@ export default {
 	},
 	methods: {
 		login() {
-			if (this.input.user == "" || this.input.password == "") {
+			if (this.input.username == "" || this.input.password == "") {
 				console.log("Username/Password cannot be empty")
 			} else {
-				//authenticate user
+				if (this.input.username == "admin" && this.input.password == "adminpass") {
+					return this.$router.push('/')
+				}
 			}
 		}
 	}
