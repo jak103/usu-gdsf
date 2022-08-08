@@ -17,6 +17,7 @@ const (
 	NAME      = "Name"
 	DEVELOPER = "Developer"
 	VERSION   = "Version"
+	LINK      = "DownloadLink"
 )
 
 func gameInfoHandler(c echo.Context) error {
@@ -85,6 +86,7 @@ func newGameHandler(c echo.Context) error {
 		Developer:    c.FormValue(DEVELOPER),
 		CreationDate: time.Now(),
 		Version:      c.FormValue(VERSION),
+		DownloadLink: c.FormValue(LINK),
 	}
 
 	// Add new game to database

@@ -18,6 +18,7 @@ const (
 var connection Database
 
 type Database interface {
+	// Game Methods
 	GetAllGames() ([]models.Game, error)
 	AddGame(models.Game) (string, error)
 	RemoveGameByTag(string) error
@@ -25,9 +26,19 @@ type Database interface {
 	GetGameByID(string) (models.Game, error)
 	GetGamesByTags([]string, bool) ([]models.Game, error)
 	SortGames(string, int)([]models.Game, error)
+
+	// Download Methods
+	GetAllDownloads() ([]models.Download, error)
+	AddDownload(models.Download) (string, error)
+	GetDownloadByID(string) (models.Download, error)
+
+	// User Methods
+
 	CreateUser(models.User) (models.User, error)
 	// VerifyUserLogin(string, string) (models.User, error)
-	Disconnect() error
+	
+  // General DB Methods
+  Disconnect() error
 	Connect() error
 }
 
