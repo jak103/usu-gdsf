@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/log"
@@ -125,16 +126,17 @@ func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error) {
 }
 
 func (db *Mock) GetUsersByRole(role int64) ([]models.User, error) {
-	typeRole := models.Role(role)
-	user_slice := []models.User{}
-	for _, user := range db.users {
-		if(user.Role == typeRole){
-			user_slice = append(user_slice, user)
-		}
-		
+	if role != 0 && role != 1 {
+		return nil, errors.New(fmt.Sprintf("User role %v does not exist", role))
 	}
-
-	return user_slice, nil
+	users := make([]models.User, 0)
+	queryRole := models.Role(role)
+	for _, user := range db.users {
+		if user.Role == queryRole {
+			users = append(users, user)
+		}
+	}
+	return users, nil
 }
 
 func (db *Mock) CreateUser(newUser models.User) error {
@@ -171,7 +173,7 @@ func (db *Mock) UpdateUser(updatedUser models.User) error {
 		return errors.New("updatedUser struct has nil ID")
 	}
 
-	if _, exists := db.games[updatedUser.ID]; !exists {
+	if _, exists := db.users[updatedUser.ID]; !exists {
 		log.Error("updatedUser ID does not exist in mock db")
 		return errors.New("updatedUser ID does not exist in mock db")
 	}

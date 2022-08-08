@@ -119,7 +119,6 @@ func TestUpdateGame(t *testing.T) {
 	assert.NotEqual(t, nil, err)
 }
 
-
 func TestGetAllUsers(t *testing.T) {
 	mock := Mock{}
 	mock.users = make(map[uuid.UUID]models.User)
