@@ -54,7 +54,7 @@ func CreateUser(c echo.Context) error {
 	u.SetUUID()
 
 	if err := db.CreateUser(u); err != nil {
-		log.Error("An error occurred while creating user: %v", err)
+		log.Error("An error occurred while creating user records %v", err)
 		return err
 	} else {
 		GenerateTokenAndSetCookie(&u, c)
@@ -64,7 +64,6 @@ func CreateUser(c echo.Context) error {
 
 func ReturnAllUsers(c echo.Context) error {
 	db, err := db.NewDatabaseFromEnv()
-
 	if err != nil {
 		log.WithError(err).Error("Unable to use database")
 		return err
@@ -84,5 +83,5 @@ func init() {
 	registerRoute(route{method: http.MethodGet, path: "/user/:id", handler: GetUserByID})
 	registerRoute(route{method: http.MethodPost, path: "/login", handler: User})
 	registerRoute(route{method: http.MethodPost, path: "/register", handler: CreateUser})
-	registerRoute(route{method: http.MethodGet, path: "/allusers", handler: ReturnAllUsers})
+	registerRoute(route{method: http.MethodGet, path: "/user", handler: ReturnAllUsers})
 }

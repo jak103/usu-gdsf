@@ -7,16 +7,16 @@ import (
 type Role int64
 
 const (
-	Admin Role  = 0
-	Publisher   = 1
-	Basic = 2
+	Admin     Role = 0
+	Publisher      = 1
+	Basic          = 2
 )
 
 type User struct {
 	ID          uuid.UUID
 	Username    string `json:"username" form:"username"`
 	Password    string `json:"password" form:"password"`
-	Displayname string `json:"displayname" form:"displayname" `
+	Displayname string `json:"displayname" form:"displayname"`
 	Role        Role   `json:"role" form:"role"`
 }
 
