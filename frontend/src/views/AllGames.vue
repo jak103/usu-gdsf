@@ -49,7 +49,7 @@ export default {
         ]
     }),
     asyncComputed: {
-        users: {
+        games: {
             get() {
                 this.loading = true;
                 return this.$axios.get('/games').then(response => {
