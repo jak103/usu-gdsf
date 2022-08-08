@@ -81,6 +81,7 @@
         </v-card-text>
         <v-card-actions>
           <v-btn
+            id = "cancel"
             color="error"
             flat
             @click="$emit('cancel')">
@@ -88,6 +89,7 @@
           </v-btn>
           <v-spacer></v-spacer>
           <v-btn
+            id="save"
             color="secondary"
             text
             @click="$emit('save', game)">
