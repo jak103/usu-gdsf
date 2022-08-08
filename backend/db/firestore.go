@@ -38,6 +38,11 @@ func (db Firestore) RemoveGame(game models.Game) error {
 	return nil
 }
 
+func (db Firestore) GetGamesByFirstLetter(letter string ) ([]models.Game, error) {
+
+	return nil,nil
+}
+
 func (db Firestore) RemoveGameByTag(tag string) error{
 	return nil
 }

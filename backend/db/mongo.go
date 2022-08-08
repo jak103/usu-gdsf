@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"time"
+	
 
 	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
@@ -131,6 +132,8 @@ func (db Mongo) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, err
 		return nil, err
 	}
 
+	
+
 	for _, tag := range tags[1:] {
 		games, err := db.GetGamesByTag(tag)
 
@@ -138,6 +141,7 @@ func (db Mongo) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, err
 			log.WithError(err).Error("Error getting games with tags")
 			return nil, err
 		}
+
 
 		if matchAll {
 			for i, game := range result {
@@ -156,6 +160,35 @@ func (db Mongo) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, err
 	}
 	return result, nil
 }
+
+// GroupGamesByFirstLetter and return all games starting with the given letter
+
+
+func (db Mongo) GetGamesByFirstLetter(letter string ) ([]models.Game, error) {
+    if len(letter)!=1 {
+        log.Error("Please enter a valid character")
+        err1:= errors.New("Not a valid charater entered")
+        return nil, err1
+    }
+    gc := db.database.Collection("games")
+    cur, err := gc.Find(context.Background(), bson.M{"name": bson.M{ "$regxp":"^"+letter,"$options":"i" }})
+    if err != nil {
+        log.WithError(err).Error("Error getting games with Firest Letter")
+        return nil, err
+    }
+    games := make([]models.Game, 0)
+    for cur.Next(context.Background()) {
+        g, err := DecodeCursorToGame(cur)
+        if err != nil {
+            return nil, err
+        }
+        games = append(games, g)
+    }
+    return games, nil
+}
+
+
+
 
 // Helper function to check if one array contains an element
 func containsGame(games []models.Game, game models.Game) bool {
