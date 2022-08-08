@@ -10,6 +10,8 @@
 	<Rating
 		starColor="#0F2439"
 		starBackgroundColor="#8a8d8f"
+		:isHover="true"
+		:isHalfIncrements="true"
 		>
 
 	</Rating>

@@ -23,6 +23,8 @@ type Database interface {
 	RemoveGame(models.Game) error
 	GetGameByID(string) (models.Game, error)
 	GetGamesByTags([]string, bool) ([]models.Game, error)
+	CreateUser(models.User) (models.User, error)
+	// VerifyUserLogin(string, string) (models.User, error)
 	Disconnect() error
 	Connect() error
 }
@@ -32,11 +34,11 @@ func NewDatabaseFromEnv() (Database, error) {
 		dbType := strings.ToLower(config.DbType)
 
 		switch dbType {
-		case "mock":
+		case MOCK:
 			connection = &Mock{}
-		case "firestore":
+		case FIRESTORE:
 			connection = &Firestore{}
-		case "mongo":
+		case MONGO:
 			connection = &Mongo{}
 
 		default:
