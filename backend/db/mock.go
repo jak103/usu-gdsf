@@ -13,7 +13,8 @@ import (
 var _ Database = (*Mock)(nil)
 
 type Mock struct {
-	games map[string]models.Game
+	games     map[string]models.Game
+	downloads map[string]models.Download
 }
 
 // RemoveGame removes the given game from the db
@@ -33,6 +34,16 @@ func (db Mock) RemoveGame(game models.Game) error {
 	delete(db.games, deleteKey)
 	return nil
 }
+
+
+func (db Mock) RemoveGameByTag(tag string) error{
+	return nil
+}
+
+func (db Mock) SortGames(field_name string, order int) ([]models.Game, error){
+	return nil, nil
+}
+
 
 // GetGamesByTags search and return all games with given tags
 func (db Mock) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, error) {
@@ -71,13 +82,28 @@ func containsTag(a []string, el string) bool {
 	return false
 }
 
+func (db Mock) GetGamesByFirstLetter(letter string ) ([]models.Game, error) {
+
+	return nil,nil
+}
+
 func (db Mock) GetGameByID(id string) (models.Game, error) {
 	return db.games[id], nil
+}
+
+func (db Mock) GetDownloadByID(id string) (models.Download, error) {
+	return db.downloads[id], nil
 }
 
 func (db Mock) AddGame(game models.Game) (string, error) {
 	var id = strconv.Itoa(len(db.games) + 1)
 	db.games[id] = game
+	return id, nil
+}
+
+func (db Mock) AddDownload(download models.Download) (string, error) {
+	var id = strconv.Itoa(len(db.downloads) + 1)
+	db.downloads[id] = download
 	return id, nil
 }
 
@@ -89,6 +115,17 @@ func (db Mock) GetAllGames() ([]models.Game, error) {
 	}
 
 	return games, nil
+}
+
+
+func (db Mock) GetAllDownloads() ([]models.Download, error) {
+	downloads := make([]models.Download, 0)
+
+	for _, download := range db.downloads {
+		downloads = append(downloads, download)
+	}
+
+	return downloads, nil
 }
 
 func (db Mock) CreateUser(newUser models.User) (models.User, error) {

@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"time"
+	
 
 	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
@@ -49,6 +51,54 @@ func (db Mongo) RemoveGame(game models.Game) error {
 	return nil
 }
 
+func (db Mongo) RemoveGameByTag(tag string) error {
+	gc := db.database.Collection("games")
+	_, err := gc.DeleteMany(context.Background(), bson.M{"tags": tag})
+	if err != nil {
+		log.WithError(err).Error("error on removing collections with given tag")
+		return err
+	}
+	return nil
+}
+
+func (db Mongo) SortGames(field_name string, order int) ([]models.Game, error) {
+	order1 := float64(order)
+	if math.Abs(order1) != 1 {
+		log.Error("sorting order is not correct")
+		err1 := errors.New("sorting order is not among -1 and 1")
+		return nil, err1
+	}
+	gc := db.database.Collection("games")
+	options := options.Find()
+	options.SetSort(bson.D{{field_name, order}})
+	options.SetLimit(10)
+	cursor, err := gc.Find(context.Background(), bson.D{}, options)
+	// it does not need to close the cursor in this case but just for sanity
+	if err != nil {
+		log.WithError(err).Error("couldn't complete the sorting query")
+	}
+	defer cursor.Close(context.Background())
+
+	results := make([]models.Game, 0)
+	for cursor.Next(context.Background()) {
+		// create a value into which the single document can be decoded
+		var gameObject models.Game
+		err := cursor.Decode(&gameObject)
+		if err != nil {
+			log.WithError(err).Error("couldn't decode the cursor")
+			return nil, err
+		}
+		results = append(results, gameObject)
+
+	}
+
+	if err := cursor.Err(); err != nil {
+		log.WithError(err).Error("last error on reading cursor")
+		return nil, err
+	}
+	return results, nil
+}
+
 // GetGamesByTag search and return all games with given tag
 func (db Mongo) GetGamesByTag(s string) ([]models.Game, error) {
 	// Search for games containing tag
@@ -82,6 +132,8 @@ func (db Mongo) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, err
 		return nil, err
 	}
 
+	
+
 	for _, tag := range tags[1:] {
 		games, err := db.GetGamesByTag(tag)
 
@@ -89,6 +141,7 @@ func (db Mongo) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, err
 			log.WithError(err).Error("Error getting games with tags")
 			return nil, err
 		}
+
 
 		if matchAll {
 			for i, game := range result {
@@ -107,6 +160,35 @@ func (db Mongo) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, err
 	}
 	return result, nil
 }
+
+// GroupGamesByFirstLetter and return all games starting with the given letter
+
+
+func (db Mongo) GetGamesByFirstLetter(letter string ) ([]models.Game, error) {
+    if len(letter)!=1 {
+        log.Error("Please enter a valid character")
+        err1:= errors.New("Not a valid charater entered")
+        return nil, err1
+    }
+    gc := db.database.Collection("games")
+    cur, err := gc.Find(context.Background(), bson.M{"name": bson.M{ "$regxp":"^"+letter,"$options":"i" }})
+    if err != nil {
+        log.WithError(err).Error("Error getting games with Firest Letter")
+        return nil, err
+    }
+    games := make([]models.Game, 0)
+    for cur.Next(context.Background()) {
+        g, err := DecodeCursorToGame(cur)
+        if err != nil {
+            return nil, err
+        }
+        games = append(games, g)
+    }
+    return games, nil
+}
+
+
+
 
 // Helper function to check if one array contains an element
 func containsGame(games []models.Game, game models.Game) bool {
@@ -137,7 +219,7 @@ func (db Mongo) GetGameByID(id string) (models.Game, error) {
 	}
 
 	// decode bson into game
-	game, _ := DecodeBsonData(data)
+	game, _ := DecodeGameBsonData(data)
 	return game, nil
 }
 
@@ -150,18 +232,69 @@ func (db Mongo) AddGame(game models.Game) (string, error) {
 	return insertResult.InsertedID.(primitive.ObjectID).Hex(), nil
 }
 
+// Add download history object and to return its ID
+func (db Mongo) AddDownload(download models.Download) (string, error) {
+	// Logic to check if one already exists
+
+	insertResult, err := db.database.Collection("downloads").InsertOne(context.Background(), download)
+	if err != nil {
+		log.WithError(err).Error("Failed to add download to Mongo db")
+	}
+	return insertResult.InsertedID.(primitive.ObjectID).Hex(), nil
+}
+
+func (db Mongo) GetDownloadByID(id string) (models.Download, error) {
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.WithError(err).Error("Invalid id in Mongo ID search")
+	}
+
+	result := db.database.Collection("downloads").FindOne(context.Background(), bson.M{"_id": objID})
+	data := bson.M{}
+
+	err = result.Decode(&data)
+	if err != nil {
+		log.WithError(err).Error("Cannot decode record in Mongo GetDownloadByID")
+		return models.Download{}, err
+	}
+
+	download, _ := DecodeDownloadBsonData(data)
+	return download, nil
+}
+
 func DecodeCursorToGame(cur *mongo.Cursor) (models.Game, error) {
 	data := bson.M{}
 	err := cur.Decode(&data)
 	if err != nil {
-		log.WithError(err).Error("Unable to decode Mongo cursor")
+		log.WithError(err).Error("Unable to decode Mongo game cursor")
 		return models.Game{}, err
 	}
 
-	return DecodeBsonData(data)
+	return DecodeGameBsonData(data)
 }
 
-func DecodeBsonData(data bson.M) (models.Game, error) {
+func DecodeCursorToDownload(cur *mongo.Cursor) (models.Download, error) {
+	data := bson.M{}
+	err := cur.Decode(&data)
+	if err != nil {
+		log.WithError(err).Error("Unable to decode Mongo download cursor")
+		return models.Download{}, err
+	}
+
+	return DecodeDownloadBsonData(data)
+}
+
+func convert[T any](v any) T {
+	if v == nil {
+		return *new(T)
+	}
+	return v.(T)
+}
+
+// Method used to decode data that is shared across object times. Including tags, and creationDate
+func DecodeCommonData(data bson.M) ([]string, time.Time, error) {
+	var err error
+
 	// decode tags array
 	var tags []string
 	if data["tags"] != nil {
@@ -174,7 +307,7 @@ func DecodeBsonData(data bson.M) (models.Game, error) {
 
 	//decode creationDate
 	var date time.Time
-	var err error
+
 	// Check the type of creationDate date (time.Time or string)
 	if _, ok := data["creationdate"].(primitive.DateTime); ok { // creationDate is saved as time.Time
 		date = data["creationdate"].(primitive.DateTime).Time().UTC()
@@ -182,34 +315,57 @@ func DecodeBsonData(data bson.M) (models.Game, error) {
 		date, err = time.Parse("1/2/2006", data["creationdate"].(string))
 		if err != nil {
 			log.WithError(err).Error("Cannot parse string into date in Mongo GetGameByID")
-			return models.Game{}, err
+			var emptyTags []string
+			var blankDate time.Time
+			return emptyTags, blankDate, err
 		}
 	}
+
+	return tags, date, nil
+}
+
+func DecodeDownloadBsonData(data bson.M) (models.Download, error) {
+	_, date, err := DecodeCommonData(data)
+
+	download := models.Download{
+		Id:           data["_id"].(primitive.ObjectID).Hex(),
+		UserId:       convert[string](data["userid"]),
+		GameId:       convert[string](data["gameid"]),
+		CreationDate: date,
+	}
+
+	if err != nil {
+		log.WithError(err).Error("Cannot Decode Download Object")
+
+	}
+
+	return download, nil
+}
+
+func DecodeGameBsonData(data bson.M) (models.Game, error) {
+	tags, date, err := DecodeCommonData(data)
 
 	// load game model
 	game := models.Game{
 		Id:           data["_id"].(primitive.ObjectID).Hex(),
-		Name:         convert[string](data["name"]).(string),
-		Rating:       float32(convert[float64](data["rating"]).(float64)),
-		TimesPlayed:  int(convert[int32](data["timesplayed"]).(int32)),
-		ImagePath:    convert[string](data["imagepath"]).(string),
-		Description:  convert[string](data["description"]).(string),
-		Developer:    convert[string](data["developer"]).(string),
+		Name:         convert[string](data["name"]),
+		Rating:       float32(convert[float64](data["rating"])),
+		TimesPlayed:  int(convert[int32](data["timesplayed"])),
+		ImagePath:    convert[string](data["imagepath"]),
+		Description:  convert[string](data["description"]),
+		Developer:    convert[string](data["developer"]),
 		CreationDate: date,
-		Version:      convert[string](data["version"]).(string),
+		Version:      convert[string](data["version"]),
 		Tags:         tags,
-		Downloads:    convert[int64](data["downloads"]).(int64),
-		DownloadLink: convert[string](data["downloadlink"]).(string),
+		Downloads:    convert[int64](data["downloads"]),
+		DownloadLink: convert[string](data["downloadlink"]),
+	}
+
+	if err != nil {
+		log.WithError(err).Error("Cannot Decode Game Object")
 	}
 
 	return game, nil
-}
-
-func convert[T any](v any) any {
-	if v == nil {
-		return *new(T)
-	}
-	return v.(T)
 }
 
 func (db Mongo) GetAllGames() ([]models.Game, error) {
@@ -218,7 +374,7 @@ func (db Mongo) GetAllGames() ([]models.Game, error) {
 	gc := db.database.Collection("games")
 	cursor, err := gc.Find(context.Background(), bson.M{}, nil)
 	if err != nil {
-		log.WithError(err).Error("mongo find failed")
+		log.WithError(err).Error("mongo game find failed")
 		return nil, err
 	}
 
@@ -231,6 +387,27 @@ func (db Mongo) GetAllGames() ([]models.Game, error) {
 	}
 
 	return games, nil
+}
+
+func (db Mongo) GetAllDownloads() ([]models.Download, error) {
+	downloads := make([]models.Download, 0)
+
+	gc := db.database.Collection("downloads")
+	cursor, err := gc.Find(context.Background(), bson.M{}, nil)
+	if err != nil {
+		log.WithError(err).Error("mongo download find failed")
+		return nil, err
+	}
+
+	for cursor.Next(context.Background()) {
+		d, err := DecodeCursorToDownload(cursor)
+		if err != nil {
+			return nil, err
+		}
+		downloads = append(downloads, d)
+	}
+
+	return downloads, nil
 }
 
 func (db Mongo) CreateUser(newUser models.User) (models.User, error) {
@@ -274,6 +451,7 @@ func (db *Mongo) Connect() error {
 		return err
 	}
 	db.client = client
+	// if database and collection does not exist it will create one
 	database := client.Database("usu-gdsf")
 	db.database = database
 	db.games = database.Collection("games")
