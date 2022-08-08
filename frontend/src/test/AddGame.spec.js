@@ -1,6 +1,8 @@
 import {mount} from '@vue/test-utils'
 import AddGame from '@/views/AddGame.vue'
 
+// tests by Kailey Bales
+
 describe('AddGame.vue', () => {
   let wrapper;
   beforeEach(() => {
