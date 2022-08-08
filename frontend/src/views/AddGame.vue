@@ -21,10 +21,10 @@
 				<textarea type="text" id="gameDesc" v-model="gameDesc"> </textarea>
 			</v-card>
 
-			<v-card id="form-item">
+			<!-- <v-card id="form-item">
 				<label for="gameYear"> Semester </label>
 				<textarea type="text" id="gameYeaer" v-model="gameYear"> </textarea>
-			</v-card>
+			</v-card> -->
 
 			<!-- Files were to be uploaded via Google Cloud? will edit once that's been figured out -->
 			<v-card id="form-item">
@@ -53,22 +53,25 @@
 
 <script>
 export default {
-	name: 'AdminPage',
+	name: 'AddGame',
 
 
-	data: () => ({
+  data() {
+    return {
+      form: {
 		gameName: '',
 		gameDesc: '',
 		gameAuthor: '',
 		gameFile: '',
 		gameImage: '',
 		url: null,
-		gameYear: '',
-	}),
+						}
+		}
+	},
 
 	//submit
 	methods: {
-		submitGame() {
+		async submitGame() {
 			// //send data to server
 			// this.$http.post('/api/games', {
 			// 	gameName: this.gameName,
@@ -78,15 +81,10 @@ export default {
 			// 	gameImage: this.gameImage,
 			// }).then(response => {
 			// 	console.log(response);
-			// 	this.gameName = '';
-			// 	this.gameDesc = '';
-			// 	this.gameAuthor = '';
-			// 	this.gameFile = '';
-			// 	this.gameImage = '';
-			// 	this.url = null;
 			// }).catch(error => {
 			// 	console.log(error);
 			// });
+			this.$emit('submitGame', this.form)
 			console.log(this.gameName);
 			console.log(this.gameDesc);
 			console.log(this.gameAuthor);
@@ -95,23 +93,13 @@ export default {
 			console.log(this.gameYear);
 			console.log("Submitted!");
 			//refresh form after submission
-			this.gameName = '';
-			this.gameDesc = '';
-			this.gameAuthor = '';
-			this.gameFile = '';
-			this.gameImage = '';
-			this.url = null;
-			this.gameYear = '';
-
-
-		},
-	  addAuthor() {
-			this.authors.push({
-				name: this.authorName,
-				email: this.authorEmail,
-			});
-			this.authorName = '';
-			this.authorEmail = '';
+			
+			// this.gameName = '';
+			// this.gameDesc = '';
+			// this.gameAuthor = '';
+			// this.gameFile = '';
+			// this.gameImage = '';
+			// this.url = null;
 		},
 		onFileChange(e) {
       const file = e.target.files[0];
