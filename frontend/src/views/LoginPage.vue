@@ -34,7 +34,8 @@ export default {
 		return {
 			input: {
 				username: "",
-				password: ""
+				password: "",
+				access: false
 			}
 		}
 	},
@@ -44,6 +45,7 @@ export default {
 				console.log("Username/Password cannot be empty")
 			} else {
 				if (this.input.username == "admin" && this.input.password == "adminpass") {
+					this.input.access = true
 					return this.$router.push('/')
 				}
 			}
