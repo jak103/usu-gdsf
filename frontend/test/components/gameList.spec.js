@@ -1,3 +1,7 @@
+/* 
+    Test that dummy data is properly detected from card creation.
+    Once Backend is implemented, store values in a list to be exported. Modify test to see if propsData is populated.
+*/
 import { shallowMount } from '@vue/test-utils'
 import GameList from "../../src/components/GameList.vue"
 
