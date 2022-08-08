@@ -22,6 +22,7 @@ type Firestore struct {
 // RemoveGame removes the given game from the db
 func (db Firestore) RemoveGame(game models.Game) error {
 	// query
+	
 	snapShot, err := db.client.Collection("games").Doc(game.Id).Get(context.Background())
 	if err != nil {
 		log.WithError(err).Error("Firestore query error in RemoveGame")
@@ -42,6 +43,13 @@ func (db Firestore) GetGamesByFirstLetter(letter string ) ([]models.Game, error)
 	return nil,nil
 }
 
+func (db Firestore) RemoveGameByTag(tag string) error{
+	return nil
+}
+
+func (db Firestore ) SortGames(field_name string, order int) ([]models.Game, error){
+	return nil, nil
+}
 
 // GetGamesByTag search and return all games with given tag
 func (db Firestore) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, error) {

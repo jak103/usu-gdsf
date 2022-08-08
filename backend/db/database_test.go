@@ -11,7 +11,7 @@ import (
 var (
 	_db, _ = NewDatabaseFromEnv()
 
-	game0 = models.Game{
+game0 = models.Game{
 		Name:         "game0",
 		Rating:       3.5,
 		TimesPlayed:  1,
@@ -89,6 +89,26 @@ func TestDatabase_Tags(t *testing.T) {
 	assert.Contains(t, res0, game0)
 	assert.Contains(t, res1, game1)
 	assert.Contains(t, res1, game1)
+}
+
+func TestSortGames(t *testing.T){
+	_db, _ := NewDatabaseFromEnv()
+	
+	//just to make it safe if there is incomplete test condition 
+	_db.RemoveGameByTag("tag0");
+	_db.RemoveGameByTag("tag1");
+	_db.RemoveGameByTag("tag2");
+	//cleanup
+	t.Cleanup(cleanup)
+
+	id0, _ := _db.AddGame(game0)
+	id1, _ := _db.AddGame(game1)
+
+	game0.Id = id0
+	game1.Id = id1
+
+	res, _ := _db.SortGames("_id", 1);
+	fmt.Printf("%+v", res)
 }
 func TestGetGamesByFirstLetter(t *testing.T){
 	// _db, _ := NewDatabaseFromEnv()
