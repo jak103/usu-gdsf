@@ -1,14 +1,15 @@
 import { mount } from '@vue/test-utils'
 import LoginPage from './LoginPage.vue'
 
-let wrapper;
-const testInput = {
-  username: "admin",
-  password: "adminpass"
-}
-
-test('working log in', () => {
-  wrapper = mount(LoginPage)
-  const adminName = "admin"
-  const adminPassword = "adminpass"
+test('redirects when logged in', () => {
+  const wrapper = mount(LoginPage, {
+    input: {
+      username: 'admin',
+      password: 'adminpass'
+    }
+  })
+  
+  const button = wrapper.find('button')
+  button.trigger('click')
+  expect(window.location.href).toBe('http://localhost/')
 })
