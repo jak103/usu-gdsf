@@ -27,7 +27,7 @@ func (db *Mock) GetGameByID(id uuid.UUID) (*models.Game, error) {
 }
 
 func (db *Mock) GetGamesByTags(tags []string) ([]models.Game, error) {
-	games := make(map[string]models.Game)
+	games := make(map[uuid.UUID]models.Game)
 
 	for _, game := range db.games {
 		for _, tag := range tags {
@@ -37,7 +37,7 @@ func (db *Mock) GetGamesByTags(tags []string) ([]models.Game, error) {
 				valid[v] = true
 			}
 			if valid[tag] {
-				games[game.ID.String()] = game
+				games[game.ID] = game
 			}
 		}
 	}
@@ -104,10 +104,10 @@ func (d *Mock) UpdateGame(updatedGame models.Game) error {
 }
 
 // Users
-func (db *Mock) GetAllUsers() ([]models.User, error) {
+func (d *Mock) GetAllUsers() ([]models.User, error) {
 	users := make([]models.User, 0)
 
-	for _, user := range db.users {
+	for _, user := range d.users {
 		users = append(users, user)
 	}
 
@@ -123,6 +123,10 @@ func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error) {
 		return &user, nil
 	}
 	return nil, errors.New("mockdb: user not found")
+}
+
+func (db *Mock) GetUserByUserName(userName string) (*models.User, error) {
+	panic("not implemented") // TODO: Implement
 }
 
 func (db *Mock) GetUsersByRole(role int64) ([]models.User, error) {
