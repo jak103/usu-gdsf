@@ -30,7 +30,24 @@ func TestCreateNewBucket(t *testing.T) {
 	}
 	assert.NotNil(t, bucket)
 	assert.NotEqual(t, uuid.Nil, bucket)
+
+	client := serverMock.Client()
+	// Testing if we can retrieve the created bucket
+	bkt := client.Bucket("TEST_BUCKET")
+	assert.NotNil(t, bkt)
+
 	if err := os.Unsetenv("STORAGE_EMULATOR_HOST"); err != nil {
 		log.WithError(err)
 	}
+
+}
+
+func TestCreateNewBucketManagerWithoutServer(t *testing.T) {
+	instance := NewGcsBucketManager("test")
+
+	bucket, err := instance.CreateBucket("TEST_BUCKET")
+	if assert.Error(t, err) {
+		assert.ErrorContains(t, err, "dialing: google: could not find default credentials.")
+	}
+	assert.Equal(t, bucket, uuid.Nil)
 }
