@@ -30,8 +30,12 @@ type Database interface {
 	AddDownload(models.Download) (string, error)
 	GetDownloadByID(string) (models.Download, error)
 
-	// General DB Methods
-	Disconnect() error
+	// User Methods
+	CreateUser(models.User) (models.User, error)
+	// VerifyUserLogin(string, string) (models.User, error)
+	
+  // General DB Methods
+  Disconnect() error
 	Connect() error
 }
 
