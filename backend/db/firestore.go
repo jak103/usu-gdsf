@@ -124,6 +124,18 @@ func (db Firestore) GetAllGames() ([]models.Game, error) {
 	return games, nil
 }
 
+func (db Firestore) CreateUser(newUser models.User) (models.User, error) {
+	// users := db.database.Collection("users")
+
+	// newUserDoc, err := users.InsertOne(context.Background(), newUser, nil)
+	// if err != nil {
+	// 	log.WithError(err).Error("Failed to insert new user")
+	// 	return nil, err
+	// }
+
+	return newUser, nil
+}
+
 // Disconnect disconnects from the remote database
 func (db *Firestore) Disconnect() error {
 	// Close the client connection if it is open
