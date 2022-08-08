@@ -25,7 +25,7 @@ type Database interface {
 	GetGamesByTags([]string, bool) ([]models.Game, error)
 	Disconnect() error
 	Connect() error
-	GetGameByFirstLetter(string)([]models.Game, error)
+	GetGamesByFirstLetter(string)([]models.Game, error)
 }
 
 func NewDatabaseFromEnv() (Database, error) {

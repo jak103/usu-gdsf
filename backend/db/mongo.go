@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
-	"regex"
+	
 
 	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
@@ -113,37 +113,31 @@ func (db Mongo) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, err
 }
 
 // GroupGamesByFirstLetter and return all games starting with the given letter
-func (db Mongo) GetGameByFirstLetter(letter string ) ([]models.Game, error) {
 
-	if len(letter)!=1 {
-		log.Error("Please enter a valid character")
-		err1:= errors.New("Not a valid charater entered")
-		return nil, err1
-	}
-	
-	gc := db.database.Collection("games")
 
-	cur, err := gc.Find(context.Background(), bson.M{
-		{"name": new regexp('^'+letter,"i") }  },
-	)
-
-	if err != nil {
-		log.WithError(err).Error("Error getting games with Firest Letter")
-		return nil, err
-	}
-
-	
-	games := make([]models.Game, 0)
-	for cur.Next(context.Background()) {
-		g, err := DecodeCursorToGame(cur)
-		if err != nil {
-			return nil, err
-		}
-		games = append(games, g)
-	}
-
-	return games, nil
+func (db Mongo) GetGamesByFirstLetter(letter string ) ([]models.Game, error) {
+    if len(letter)!=1 {
+        log.Error("Please enter a valid character")
+        err1:= errors.New("Not a valid charater entered")
+        return nil, err1
+    }
+    gc := db.database.Collection("games")
+    cur, err := gc.Find(context.Background(), bson.M{"name": bson.M{ "$regxp":"^"+letter,"$options":"i" }})
+    if err != nil {
+        log.WithError(err).Error("Error getting games with Firest Letter")
+        return nil, err
+    }
+    games := make([]models.Game, 0)
+    for cur.Next(context.Background()) {
+        g, err := DecodeCursorToGame(cur)
+        if err != nil {
+            return nil, err
+        }
+        games = append(games, g)
+    }
+    return games, nil
 }
+
 
 
 
@@ -281,32 +275,6 @@ func (db *Mongo) Disconnect() error {
 	if err := db.client.Disconnect(ctx); err != nil {
 		log.WithError(err).Error("Failed to disconnect from mongo")
 		return err
-	}
-
-	return nil
-}
-// RemoveGame removes the given game from the db
-func (db Mongo) RemoveGame(game models.Game) error {
-	primitiveObjectId, err := primitive.ObjectIDFromHex(game.Id)
-	if err != nil{
-		log.WithError(err).Error("error on getting primitive object id from hex string")
-		return err
-	}
-
-	gc := db.database.Collection("games")
-	res, err := gc.DeleteOne(context.Background(), bson.M{
-		"_id": primitiveObjectId,
-
-	})
-
-	if err != nil {
-		log.WithError(err).Error("Mongo RemoveGame deletion error")
-		return err
-	}
-
-	if res.DeletedCount > 1 {
-		log.Error("Mongo RemoveGame deleted more than one record")
-		return errors.New("mongo deleted more than one record")
 	}
 
 	return nil

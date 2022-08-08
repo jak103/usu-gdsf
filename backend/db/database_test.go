@@ -4,7 +4,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
-
+	"fmt"
 	"github.com/jak103/usu-gdsf/models"
 )
 
@@ -82,18 +82,23 @@ func TestDatabase_Tags(t *testing.T) {
 	assert.Contains(t, res1, game1)
 	assert.Contains(t, res1, game1)
 }
-// func TestRemoveGame(t *testing.T){
-// 	t.Cleanup(cleanup)
-// 	id0, _ := _db.AddGame(game0)
-// 	id1, _ := _db.AddGame(game1)
+func TestGetGamesByFirstLetter(t *testing.T){
+	// _db, _ := NewDatabaseFromEnv()
 
-// 	game0.Id = id0
-// 	game1.Id = id1
+	//just to make it safe if there is incomplete test condition 
+	
+	//cleanup
+	t.Cleanup(cleanup)
 
-// 	res0, _ := _db.RemoveGame(id0)
-// 	assert.Equal(t, res, game0A)
+	id0, _ := _db.AddGame(game0)
+	id1, _ := _db.AddGame(game1)
 
-// }
+	game0.Id = id0
+	game1.Id = id1
+
+	res, _ := _db.GetGamesByFirstLetter("p");
+	fmt.Printf("%+v", res)
+}
 func cleanup() {
 	_db.RemoveGame(game0)
 	_db.RemoveGame(game1)
