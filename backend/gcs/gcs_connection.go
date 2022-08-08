@@ -17,7 +17,7 @@ func downloadFile(bucket, object string) error {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx, option.WithoutAuthentication())
 	if err != nil {
-					return fmt.Errorf("storage.NewClient: %v", err)
+		return fmt.Errorf("storage.NewClient: %v", err)
 	}
 	defer client.Close()
 
@@ -36,20 +36,20 @@ func downloadFile(bucket, object string) error {
 
 	// rc, err := client.Bucket(bucket).Object(object).NewReader(ctx)
 	if err != nil {
-					return fmt.Errorf("Object(%q).NewReader: %v", object, err)
+		return fmt.Errorf("Object(%q).NewReader: %v", object, err)
 	}
 	defer rc.Close()
 
 	/*
-	if _, err := io.Copy(f, rc); err != nil {
-					return fmt.Errorf("io.Copy: %v", err)
-	}
+		if _, err := io.Copy(f, rc); err != nil {
+						return fmt.Errorf("io.Copy: %v", err)
+		}
 	*/
 
 	/*
-	if err = f.Close(); err != nil {
-					return fmt.Errorf("f.Close: %v", err)
-	}
+		if err = f.Close(); err != nil {
+						return fmt.Errorf("f.Close: %v", err)
+		}
 	*/
 
 	// fmt.Fprintf(w, "Blob %v downloaded to local file %v\n", object, destFileName)

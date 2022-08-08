@@ -1,6 +1,8 @@
 package gcs
 
 import (
+	"cloud.google.com/go/storage"
+	"context"
 	"os"
 	"testing"
 
@@ -31,7 +33,8 @@ func TestCreateNewBucket(t *testing.T) {
 	assert.NotNil(t, bucket)
 	assert.NotEqual(t, uuid.Nil, bucket)
 
-	client := serverMock.Client()
+	ctx := context.Background()
+	client, err := storage.NewClient(ctx)
 	// Testing if we can retrieve the created bucket
 	bkt := client.Bucket("TEST_BUCKET")
 	assert.NotNil(t, bkt)
