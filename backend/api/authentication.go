@@ -13,7 +13,7 @@ import (
 )
 
 func GetKey() string {
-	return os.Getenv("USUGDSF_AUTH_KEY")
+	return os.Getenv("USUGDSF_AUTH_TOKEN")
 }
 
 type Claims struct {
@@ -35,7 +35,6 @@ func VerifyUser(c echo.Context) (*models.User, error) {
 	db.Connect()
 	defer db.Disconnect()
 
-	// TODO make sure that this function is working once fully implmented
 	user, _ := db.GetUserByUserName(username)
 
 	if user != nil {
@@ -69,7 +68,7 @@ func GenerateToken(user *models.User, expirationTime time.Time) string {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	tokenString, err := token.SignedString(GetKey())
+	tokenString, err := token.SignedString([]byte(GetKey()))
 
 	if err != nil {
 		return "Issue generating token."
