@@ -1,7 +1,7 @@
 import {mount} from '@vue/test-utils'
 import AddGame from '@/views/AddGame.vue'
 
-// tests by Kailey Bales
+//Kailey Bales
 
 describe('AddGame.vue', () => {
   let wrapper;
@@ -23,10 +23,23 @@ describe('AddGame.vue', () => {
   }),
   test('sets the values', async () => {
     const input = wrapper.find('input')
-  
     await input.setValue('test name')
-
-  
     expect(input.element.value).toBe('test name')
+  }),
+  test('test submitGame()', async() => {
+    const input = wrapper.find('input')
+    await input.setValue('test name')
+    const button = wrapper.find('v-btn')
+    await button.trigger('click')
+    //check if gameName is set to test name
+    expect(wrapper.vm.gameName).toBe('test name')
+  }),
+  test('test submitGame() again', async() => {
+    const input = wrapper.find('#gameDesc')
+    await input.setValue('test description')
+    const button = wrapper.find('v-btn')
+    await button.trigger('click')
+    //check if gameName is set to test name
+    expect(wrapper.vm.gameDesc).toBe('test description')
   })
 })
