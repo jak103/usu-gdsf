@@ -48,15 +48,15 @@ var (
 )
 
 func TestGame(t *testing.T) {
-	e := echo.New() 
+	e := echo.New()
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodGet, "/game", nil)
-	e.ServeHTTP(recorder, request)
-	println(recorder.Code)
-	assert.Equal(t, 404, recorder.Code)
-}
+	c := e.NewContext(request, recorder)
 
-// this will need to be changed eventually. It is looking for response 500 now but when we get the database up it will be 200.
+	if assert.NoError(t, getAllGames(c)) {
+		assert.Equal(t, http.StatusOK, recorder.Code)
+	}
+}
 
 func TestGetAllGames(t *testing.T) {
 	e := echo.New()
@@ -71,7 +71,7 @@ func TestGetAllGames(t *testing.T) {
 
 func TestGetGamesWithTags(t *testing.T) {
 	//cleanup
-	e := echo.New() 
+	e := echo.New()
 
 	t.Cleanup(func() {
 		_db.RemoveGame(game0)
