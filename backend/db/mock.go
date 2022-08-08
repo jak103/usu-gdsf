@@ -135,7 +135,10 @@ func (db *Mock) GetUsersByRole(role int64) ([]models.User, error) {
 		if user.Role == typeRole {
 			user_slice = append(user_slice, user)
 		}
+	}
 
+	if len(user_slice) == 0 {
+		return nil, errors.New("no users with that role")
 	}
 
 	return user_slice, nil
