@@ -1,7 +1,6 @@
 package api
 
 import (
-	"bytes"
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
@@ -128,7 +127,17 @@ func verifyPassword(hashedString string, passwordInput string) bool {
 
 	hashedPassword := argon2.IDKey([]byte(passwordInput), salt, p.iterations, p.memory, p.parallelism, p.keyLength)
 
-	return bytes.Equal(hash, hashedPassword)
+	var notEqual byte = 0
+
+	if len(hash) == 0 || len(hashedPassword) == 0 {
+		return false
+	}
+
+	for i := 0; i < len(hash) && i < len(hashedPassword); i++ {
+		notEqual |= hash[i] ^ hashedPassword[i]
+	}
+
+	return notEqual == 0 && len(hash) == len(hashedPassword)
 }
 
 func decodeHash(encodedHash string) (p *hashParams, salt, hash []byte, err error) {
