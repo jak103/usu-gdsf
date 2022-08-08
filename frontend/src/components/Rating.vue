@@ -1,7 +1,7 @@
 <template>
 		<v-card-actions> 
-			<span class="pr-1">
-				({{ rating }})
+			<span class="pr-1" data-rating-test="rating">
+				({{ rating = starValue }})
 			</span>
 			<v-rating
 				v-model="rating"
@@ -22,7 +22,6 @@
         :value="starValue"
         :x-large="isXLarge"
         :x-small="isXSmall"
-        density="compact"
 			></v-rating> 
 		</v-card-actions>
 </template>
@@ -44,8 +43,6 @@ export default {
         isRipple:Boolean,
         isHalfIncrements:Boolean,
         isHover:Boolean,
-        value:Number,
-        rating:Number,
         isSmall:Boolean,
         starSize:Number,
         starValue:Number,
@@ -53,6 +50,10 @@ export default {
         isXSmall:Boolean
     },
 
-    data: () => ({}),
+    data: () => ({
+      return: {
+        rating: 4
+      }
+    }),
 }
 </script>
