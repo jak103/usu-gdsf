@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 	"math"
+	"time"
 
 	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
@@ -50,7 +50,7 @@ func (db Mongo) RemoveGame(game models.Game) error {
 	return nil
 }
 
-func (db Mongo) RemoveGameByTag( tag string) error{
+func (db Mongo) RemoveGameByTag(tag string) error {
 	gc := db.database.Collection("games")
 	_, err := gc.DeleteMany(context.Background(), bson.M{"tags": tag})
 	if err != nil {
@@ -60,17 +60,17 @@ func (db Mongo) RemoveGameByTag( tag string) error{
 	return nil
 }
 
-func (db Mongo ) SortGames(field_name string, order int) ([]models.Game, error){
+func (db Mongo) SortGames(field_name string, order int) ([]models.Game, error) {
 	order1 := float64(order)
-	if math.Abs(order1) != 1{
+	if math.Abs(order1) != 1 {
 		log.Error("sorting order is not correct")
-		err1:= errors.New("sorting order is not among -1 and 1")
+		err1 := errors.New("sorting order is not among -1 and 1")
 		return nil, err1
 	}
 	gc := db.database.Collection("games")
 	options := options.Find()
 	options.SetSort(bson.D{{field_name, order}})
-	options.SetLimit(10);
+	options.SetLimit(10)
 	cursor, err := gc.Find(context.Background(), bson.D{}, options)
 	// it does not need to close the cursor in this case but just for sanity
 	if err != nil {
@@ -92,7 +92,7 @@ func (db Mongo ) SortGames(field_name string, order int) ([]models.Game, error){
 	}
 
 	if err := cursor.Err(); err != nil {
-		log.WithError(err).Error("last error on reading cursor")	
+		log.WithError(err).Error("last error on reading cursor")
 		return nil, err
 	}
 	return results, nil
@@ -216,10 +216,9 @@ func (db Mongo) GetDownloadByID(id string) (models.Download, error) {
 		log.WithError(err).Error("Invalid id in Mongo ID search")
 	}
 
-	result :=db.database.Collection("downloads").FindOne(context.Background(), bson.M{"_id": objID})
-	data:= bson.M{}
-	
-	
+	result := db.database.Collection("downloads").FindOne(context.Background(), bson.M{"_id": objID})
+	data := bson.M{}
+
 	err = result.Decode(&data)
 	if err != nil {
 		log.WithError(err).Error("Cannot decode record in Mongo GetDownloadByID")
@@ -252,7 +251,7 @@ func DecodeCursorToDownload(cur *mongo.Cursor) (models.Download, error) {
 	return DecodeDownloadBsonData(data)
 }
 
-func convert[T any](v any) any {
+func convert[T any](v any) T {
 	if v == nil {
 		return *new(T)
 	}
@@ -262,7 +261,7 @@ func convert[T any](v any) any {
 // Method used to decode data that is shared across object times. Including tags, and creationDate
 func DecodeCommonData(data bson.M) ([]string, time.Time, error) {
 	var err error
-	
+
 	// decode tags array
 	var tags []string
 	if data["tags"] != nil {
@@ -275,7 +274,7 @@ func DecodeCommonData(data bson.M) ([]string, time.Time, error) {
 
 	//decode creationDate
 	var date time.Time
-	
+
 	// Check the type of creationDate date (time.Time or string)
 	if _, ok := data["creationdate"].(primitive.DateTime); ok { // creationDate is saved as time.Time
 		date = data["creationdate"].(primitive.DateTime).Time().UTC()
@@ -296,15 +295,15 @@ func DecodeDownloadBsonData(data bson.M) (models.Download, error) {
 	_, date, err := DecodeCommonData(data)
 
 	download := models.Download{
-		Id:            data["_id"].(primitive.ObjectID).Hex(),
-		UserId:        convert[string](data["userid"]).(string),
-		GameId:        convert[string](data["gameid"]).(string),
-		CreationDate:  date,
+		Id:           data["_id"].(primitive.ObjectID).Hex(),
+		UserId:       convert[string](data["userid"]),
+		GameId:       convert[string](data["gameid"]),
+		CreationDate: date,
 	}
-	
+
 	if err != nil {
 		log.WithError(err).Error("Cannot Decode Download Object")
-	
+
 	}
 
 	return download, nil
@@ -312,21 +311,21 @@ func DecodeDownloadBsonData(data bson.M) (models.Download, error) {
 
 func DecodeGameBsonData(data bson.M) (models.Game, error) {
 	tags, date, err := DecodeCommonData(data)
-	
+
 	// load game model
 	game := models.Game{
 		Id:           data["_id"].(primitive.ObjectID).Hex(),
-		Name:         convert[string](data["name"]).(string),
-		Rating:       float32(convert[float64](data["rating"]).(float64)),
-		TimesPlayed:  int(convert[int32](data["timesplayed"]).(int32)),
-		ImagePath:    convert[string](data["imagepath"]).(string),
-		Description:  convert[string](data["description"]).(string),
-		Developer:    convert[string](data["developer"]).(string),
+		Name:         convert[string](data["name"]),
+		Rating:       float32(convert[float64](data["rating"])),
+		TimesPlayed:  int(convert[int32](data["timesplayed"])),
+		ImagePath:    convert[string](data["imagepath"]),
+		Description:  convert[string](data["description"]),
+		Developer:    convert[string](data["developer"]),
 		CreationDate: date,
-		Version:      convert[string](data["version"]).(string),
+		Version:      convert[string](data["version"]),
 		Tags:         tags,
-		Downloads:    convert[int64](data["downloads"]).(int64),
-		DownloadLink: convert[string](data["downloadlink"]).(string),
+		Downloads:    convert[int64](data["downloads"]),
+		DownloadLink: convert[string](data["downloadlink"]),
 	}
 
 	if err != nil {
@@ -356,7 +355,6 @@ func (db Mongo) GetAllGames() ([]models.Game, error) {
 
 	return games, nil
 }
-
 
 func (db Mongo) GetAllDownloads() ([]models.Download, error) {
 	downloads := make([]models.Download, 0)
@@ -420,7 +418,7 @@ func (db *Mongo) Connect() error {
 		return err
 	}
 	db.client = client
-	// if database and collection does not exist it will create one 
+	// if database and collection does not exist it will create one
 	database := client.Database("usu-gdsf")
 	db.database = database
 	db.games = database.Collection("games")
