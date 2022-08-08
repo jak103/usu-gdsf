@@ -1,43 +1,48 @@
 <template>
-		<div id="form-container">
+		<v-card color="primary" id="form-container">
+			<v-card-title>
+				<span>Add Game</span>
+			</v-card-title>
 
-			<div id="form-item">
+			<v-card id="form-item">
 				<label for="gameName"> Game Title </label>
 				<input id="gameName" type="text" v-model="gameName">
-			</div>
+			</v-card>
 
 
-			<div id="form-item">
+			<v-card id="form-item">
 				<label for="gameAuthor"> Author(s) </label>
 				<input id="gameAuthor" type="text" v-model="gameAuthor">
-			</div>
+			</v-card>
 
 			<!-- Game Description -->
-			<div id="form-item">
+			<v-card id="form-item">
 				<label for="gameDesc"> Description </label>
 				<textarea type="text" id="gameDesc" v-model="gameDesc"> </textarea>
-			</div>
+			</v-card>
 
-			<div id="form-item">
+			<v-card id="form-item">
 				<label> Game Files: </label>
 				<input type="text" v-model="gameFile">
-			</div>
+			</v-card>
 
-			<div id="image-upload">
+			<v-card id="form-item">
 			<!-- Image Upload -->
-				<form enctype="multipart/form-data">
-						<div>
-							<input type="file" name="image">
-							<p> 
-								Drag your file(s) here to begin
-								<br> or click to browse 
-							</p>
+					<div id="image-upload">
+          <label for="gameImage"> Thumbnail: </label>
+					<input id="gameImage" type="file" @change="onFileChange" />
+					 </div>
+          <div id="imageBox">
+    				<img v-if="url" :src="url" />
+ 					</div>
+			</v-card> 
+			<!-- End Image Upload -->
 
-								<v-img width="200" :src="image"></v-img>
-					</div>
-				</form>
-			</div> 
-	</div>
+			<!-- Submission Button-->
+			<div id="form-item">
+				<v-btn color="secondary" @click="submitGame">Submit</v-btn>
+			</div>
+	</v-card>
 </template>
 
 <script>
@@ -50,7 +55,9 @@ export default {
 		gameDesc: '',
 		gameAuthor: '',
 		gameFile: '',
+		gameImage: '',
 		image:'',
+		url: null,
 	}),
 
 	//submit
@@ -66,20 +73,10 @@ export default {
 			this.authorName = '';
 			this.authorEmail = '';
 		},
-		createImage(file) {
-			const reader = new FileReader();
-
-			reader.onload = e => {
-				this.imageUrl = e.target.result;
-			};
-			reader.readAsDataURL(file);
-  	},
-		onFileChange(file) {
-			if (!file) {
-				return;
-			}
-			this.createImage(file);
-		},
+		onFileChange(e) {
+      const file = e.target.files[0];
+      this.url = URL.createObjectURL(file);
+    },
 	}
 
 }
@@ -103,14 +100,15 @@ export default {
 		height: 100%;
 		display: flex;
 		justify-content: flex-end;
+		flex-wrap: wrap;
 		padding: 10px;
 		border-radius: 5px;
-		border: 1px solid rgb(49, 49, 49);
 		margin: 10px;
 	}
 
 	#form-item label {
 		flex: 1;
+    font-family: Arial, Helvetica, sans-serif;
 	}
 
 	#form-item textarea {
@@ -119,29 +117,39 @@ export default {
 		height: 100%;
 		padding: 2px;
 		border: 1px solid rgb(49, 49, 49);
-		flex: 3;
+		flex: 4;
 	}
 
 	#form-item input {
 		box-sizing: border-box;
 		width: 100%;
 		height: 100%;
-		padding: 2px;
+		padding: 4px;
 		border: 1px solid rgb(49, 49, 49);
-		flex: 3;
+		flex: 4;
 	}
 
 	#image-upload {
 		width: 100%;
 		height: 100%;
 		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
+    flex-direction: row;
+		justify-content: end;
+		flex-wrap: wrap;
+	}
+
+  #imageBox {
+    width: 100%;
+    height: 100%;
+    flex: 1;
 		padding: 10px;
-		border-radius: 5px;
-		border: 1px solid rgb(49, 49, 49);
-		margin: 10px;
+		display: flex;
+		justify-content: center;
+  }
+
+	#imageBox img {
+		max-width: 100%;
+		max-height: 300px;
 	}
 
 </style> 
