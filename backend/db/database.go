@@ -23,6 +23,8 @@ type Database interface {
 	RemoveGame(models.Game) error
 	GetGameByID(string) (models.Game, error)
 	GetGamesByTags([]string, bool) ([]models.Game, error)
+	CreateUser(models.User) (models.User, error)
+	// VerifyUserLogin(string, string) (models.User, error)
 	Disconnect() error
 	Connect() error
 	GetGamesByFirstLetter(string)([]models.Game, error)
