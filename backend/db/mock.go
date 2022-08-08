@@ -35,6 +35,16 @@ func (db Mock) RemoveGame(game models.Game) error {
 	return nil
 }
 
+
+func (db Mock) RemoveGameByTag(tag string) error{
+	return nil
+}
+
+func (db Mock) SortGames(field_name string, order int) ([]models.Game, error){
+	return nil, nil
+}
+
+
 // GetGamesByTags search and return all games with given tags
 func (db Mock) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, error) {
 	games := make([]models.Game, 0)

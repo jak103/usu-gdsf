@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"math"
 
 	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
@@ -47,6 +48,54 @@ func (db Mongo) RemoveGame(game models.Game) error {
 	}
 
 	return nil
+}
+
+func (db Mongo) RemoveGameByTag( tag string) error{
+	gc := db.database.Collection("games")
+	_, err := gc.DeleteMany(context.Background(), bson.M{"tags": tag})
+	if err != nil {
+		log.WithError(err).Error("error on removing collections with given tag")
+		return err
+	}
+	return nil
+}
+
+func (db Mongo ) SortGames(field_name string, order int) ([]models.Game, error){
+	order1 := float64(order)
+	if math.Abs(order1) != 1{
+		log.Error("sorting order is not correct")
+		err1:= errors.New("sorting order is not among -1 and 1")
+		return nil, err1
+	}
+	gc := db.database.Collection("games")
+	options := options.Find()
+	options.SetSort(bson.D{{field_name, order}})
+	options.SetLimit(10);
+	cursor, err := gc.Find(context.Background(), bson.D{}, options)
+	// it does not need to close the cursor in this case but just for sanity
+	if err != nil {
+		log.WithError(err).Error("couldn't complete the sorting query")
+	}
+	defer cursor.Close(context.Background())
+
+	results := make([]models.Game, 0)
+	for cursor.Next(context.Background()) {
+		// create a value into which the single document can be decoded
+		var gameObject models.Game
+		err := cursor.Decode(&gameObject)
+		if err != nil {
+			log.WithError(err).Error("couldn't decode the cursor")
+			return nil, err
+		}
+		results = append(results, gameObject)
+
+	}
+
+	if err := cursor.Err(); err != nil {
+		log.WithError(err).Error("last error on reading cursor")	
+		return nil, err
+	}
+	return results, nil
 }
 
 // GetGamesByTag search and return all games with given tag
@@ -371,6 +420,7 @@ func (db *Mongo) Connect() error {
 		return err
 	}
 	db.client = client
+	// if database and collection does not exist it will create one 
 	database := client.Database("usu-gdsf")
 	db.database = database
 	db.games = database.Collection("games")
