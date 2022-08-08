@@ -103,7 +103,7 @@
 </template>
 
 <script setup>
-import Game from '../models/Game.js'
+import Game from '../models/game.js'
   defineProps({
     showEdit: Boolean,
     game: {
