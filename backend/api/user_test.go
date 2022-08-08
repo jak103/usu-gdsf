@@ -5,28 +5,23 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/jak103/usu-gdsf/auth"
+	// "github.com/jak103/usu-gdsf/auth"
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
 
 func AssertResponseCode(t *testing.T, method string, path string, expectedCode int) bool {
-	params := auth.TokenParams{
-		Type:      auth.ACCESS_TOKEN,
-		UserId:    42,
-		UserEmail: "tst@example.com",
-	}
-
-	token, _ := auth.GenerateToken(params)
+	e := echo.New()
 
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(method, path, nil)
-	request.AddCookie(&http.Cookie{
-		Name:  "accessToken",
-		Value: token,
-	})
-	GlobalTestServer.echo.ServeHTTP(recorder, request)
+	c := e.NewContext(request, recorder)
 
-	return expectedCode == recorder.Code
+	if assert.NoError(t, getAllGames(c)) {
+		return expectedCode == recorder.Code
+	} else {
+		return false
+	}
 }
 
 func TestUserRoute(t *testing.T) {
@@ -39,4 +34,22 @@ func TestRegisterRoute(t *testing.T) {
 
 func TestDownloadsRoute(t *testing.T) {
 	assert.True(t, AssertResponseCode(t, http.MethodGet, "/user/downloads", 200))
+}
+
+func TestPasswordHashing(t *testing.T) {
+	testPassword := "testPassword"
+	mismatch := "mismatch"
+	p := hashParams{
+		memory:      64 * 1024,
+		iterations:  3,
+		parallelism: 2,
+		saltLength:  16,
+		keyLength:   32,
+	}
+
+	encodedHash, _ := generateEncodedPassword(testPassword, p)
+
+	t.Log(encodedHash)
+	assert.True(t, verifyPassword(encodedHash, testPassword))
+	assert.False(t, verifyPassword(encodedHash, mismatch))
 }

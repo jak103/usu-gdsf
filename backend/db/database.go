@@ -25,6 +25,8 @@ type Database interface {
 	GetGameByID(string) (models.Game, error)
 	GetGamesByTags([]string, bool) ([]models.Game, error)
 	SortGames(string, int)([]models.Game, error)
+	CreateUser(models.User) (models.User, error)
+	// VerifyUserLogin(string, string) (models.User, error)
 	Disconnect() error
 	Connect() error
 }

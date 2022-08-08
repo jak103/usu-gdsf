@@ -2,8 +2,9 @@ package api
 
 import (
 	"net/http"
-	"time"
 	"strings"
+	"time"
+
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
@@ -49,12 +50,14 @@ func getGamesWithTags(c echo.Context) error {
 
 	// // fetch games with tags
 	tags := c.QueryParam("tags")
-	tagsArray:= strings.Split(tags, "-")
+	tagsArray := strings.Split(tags, "-")
 	games, err := _db.GetGamesByTags([]string{tagsArray[0], tagsArray[1]}, false)
+
 	if err != nil {
 		log.WithError(err).Error("Database GetGamesByTags error in API getGamesWithTags")
 		return c.JSON(http.StatusInternalServerError, "Database fetch games with tags error")
 	}
+
 	return c.JSON(http.StatusOK, games)
 }
 
@@ -105,6 +108,7 @@ func init() {
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
+
 	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
 
 }

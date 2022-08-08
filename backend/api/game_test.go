@@ -63,24 +63,17 @@ func TestGame(t *testing.T) {
 }
 
 // this will need to be changed eventually. It is looking for response 500 now but when we get the database up it will be 200.
-func TestGetAllGames(t *testing.T) {
-	params := auth.TokenParams{
-		Type:      auth.ACCESS_TOKEN,
-		UserId:    42,
-		UserEmail: "tst@example.com",
-	}
 
-	token, _ := auth.GenerateToken(params)
+func TestGetAllGames(t *testing.T) {
+	e := echo.New()
 
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodGet, "/game", nil)
-	request.Header.Set("accessToken", token)
+	c := e.NewContext(request, recorder)
 
-	GlobalTestServer.echo.ServeHTTP(recorder, request)
-	println("this that")
-	println(recorder.Body)
-	assert.Equal(t, http.StatusOK, recorder.Code)
-	// assert.True(t, AssertResponseCode(t, http.MethodGet, "/games", 500))
+	if assert.NoError(t, getAllGames(c)) {
+		assert.Equal(t, http.StatusOK, recorder.Code)
+	}
 }
 
 func TestGetGamesWithTags(t *testing.T){

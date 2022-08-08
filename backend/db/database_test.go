@@ -59,12 +59,6 @@ func TestDatabase_GameID(t *testing.T) {
 }
 
 func TestDatabase_Tags(t *testing.T) {
-	_db, _ := NewDatabaseFromEnv()
-	
-	//just to make it safe if there is incomplete test condition 
-	_db.RemoveGameByTag("tag0");
-	_db.RemoveGameByTag("tag1");
-	_db.RemoveGameByTag("tag2");
 	//cleanup
 	t.Cleanup(cleanup)
 
@@ -77,15 +71,19 @@ func TestDatabase_Tags(t *testing.T) {
 	res0, _ := _db.GetGamesByTags([]string{"tag0"}, false)
 	res1, _ := _db.GetGamesByTags([]string{"tag1"}, false)
 	res3, _ := _db.GetGamesByTags([]string{"bad tag"}, false)
-
-	// fmt.Printf("%+v", res0)
-	// fmt.Printf("%+v\n", res1)
-	// fmt.Printf("%+v\n", res3)
+	res4, _ := _db.GetGamesByTags([]string{"tag0", "tag1"}, true)
+	res5, _ := _db.GetGamesByTags([]string{"tag0", "tag1", "tag2"}, true)
+	res6, _ := _db.GetGamesByTags([]string{"tag1", "tag2"}, true)
+	res7, _ := _db.GetGamesByTags([]string{"tag0", "tag2"}, false)
 
 	// result size
 	assert.Equal(t, 1, len(res0))
 	assert.Equal(t, 2, len(res1))
 	assert.Equal(t, 0, len(res3))
+	assert.Equal(t, 1, len(res4))
+	assert.Equal(t, 0, len(res5))
+	assert.Equal(t, 1, len(res6))
+	assert.Equal(t, 2, len(res7))
 
 	// result elements
 	assert.Contains(t, res0, game0)
