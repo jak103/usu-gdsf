@@ -6,6 +6,8 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/jak103/usu-gdsf/db"
+	"github.com/jak103/usu-gdsf/models"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -41,15 +43,24 @@ func TestGetAllGames(t *testing.T) {
 }
 
 func TestGameInfoHandler(t *testing.T) {
+	game := models.Game{
+		Name:    "Test Game",
+		Developer:  "John Doe",
+		Version: "1.0",
+	}
+
+	_db, _ := db.NewDatabaseFromEnv()
+	id, _ := _db.AddGame(game)
+
 	var s Server = *NewServer(&sync.WaitGroup{})
 	s.Start()
 
 	recorder := httptest.NewRecorder()
-	request := httptest.NewRequest(http.MethodGet, "/game/1", nil)
+	request := httptest.NewRequest(http.MethodGet, "/game/" + id, nil)
 	s.echo.ServeHTTP(recorder, request)
 
-	t.Log("Hello, World ----------------------------------------")
-	t.Log(recorder.Body)
+	t.Log(game, _db, "Hello, World ----------------------------------------")
+	t.Log(recorder)
 	t.Log("Hello, World ----------------------------------------")
 
 	assert.Equal(t, http.StatusOK, recorder.Code)
