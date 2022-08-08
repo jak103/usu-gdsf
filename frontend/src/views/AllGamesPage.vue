@@ -3,7 +3,9 @@
 		data-test="table"
 		v-if="!dataLoading &&  allGames.length > 0"
 	>
-		<h1 data-test="title" class="ml-10 pb-5">All Games</h1>
+		<div data-test="title" class="ml-10 pb-3 text-h4">
+			All Games
+		</div>
 		<v-table
 			data-test="data-table"
 			height="80vh"

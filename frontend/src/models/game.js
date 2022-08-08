@@ -11,7 +11,7 @@ export default class Game {
         CreationDate = new Date(),
         Version = "1.0.0",
         Downloads = 1234,
-        DownloadLink = ""
+        DownloadLink = "TEST LINK"
     ){
         this.Id = Id;
         this.Name = Name;
