@@ -10,6 +10,7 @@ export default {
     "Sriya Gorrepati",
     "Elijah Peterson",
     "Grant Bruneel",
+    "Quinn Ormond",
     "Jade Blunt"
   ]
 }
