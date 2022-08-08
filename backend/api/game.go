@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
+	"strings"
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
@@ -32,7 +32,6 @@ func gameInfoHandler(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Database find game ID error")
 	}
-
 	return c.JSON(http.StatusOK, game)
 }
 
@@ -43,19 +42,23 @@ func getGamesWithTags(c echo.Context) error {
 		log.WithError(err).Error("Database connection error in API getGamesWithTags")
 		return c.JSON(http.StatusInternalServerError, "Database connection error")
 	}
+	// // grab tags from context
+	// rawTags := c.FormValue(TAGS)
 
-	// grab tags from context
-	rawTags := c.Param("tags")
+	// // split string into array
+	// tags := strings.Split(rawTags, ",")
 
-	// split string into array
-	tags := strings.Split(rawTags, ",")
+	// // fetch games with tags
+	tags := c.QueryParam("tags")
+	tagsArray:= strings.Split(tags, "-")
+	games, err := _db.GetGamesByTags([]string{tagsArray[0], tagsArray[1]}, false)
 
-	// fetch games with tags
-	games, err := _db.GetGamesByTags(tags, false)
 	if err != nil {
 		log.WithError(err).Error("Database GetGamesByTags error in API getGamesWithTags")
 		return c.JSON(http.StatusInternalServerError, "Database fetch games with tags error")
 	}
+
+
 
 	return c.JSON(http.StatusOK, games)
 }
@@ -107,5 +110,8 @@ func init() {
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
-	registerRoute(route{method: http.MethodGet, path: "/games/:tags", handler: getGamesWithTags})
+
+	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
+
+
 }
