@@ -60,12 +60,26 @@
 	/>
 
 	<v-pagination
-		data-test="pagination" 
 		v-model="page"
 		:length="Math.ceil(usersList.length / perPage)">
 	</v-pagination>
 
-	
+	<v-snackbar
+		v-model="snackbar"
+		:timeout=2000
+	>
+		{{ snackbarText }}
+
+		<template v-slot:actions>
+			<v-btn
+				color="pink"
+				variant="text"
+				@click="snackbar = false"
+			>
+				Close
+			</v-btn>
+		</template>
+  </v-snackbar>
 
 	<Footer></Footer>
 	
@@ -83,7 +97,7 @@ export default {
     name: "UsersPage",
     data() {
         return {
-            // Get list of users from database
+            // Replace with users from db
             usersList: [
                 { firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
 								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
@@ -122,6 +136,9 @@ export default {
 						}),
 						page: 1,
 						perPage: 13,
+						snackbar: false,
+						snackbarText: "",
+
         };
     },
     components: { UserForm, Footer },
@@ -169,23 +186,32 @@ export default {
 			handleSaveEdit(user, newPassword) {
 				// Find user and update info
 				// Need to check which items are being updated. New password may be blank.
-				console.log("Saved user edit!")
 				console.log(user)
 				this.showForm = false
+
+				// If successful:
+				this.snackbar = true
+				this.snackbarText = "Successfully updated user account!"
 			},
 
 			handleDeleteUser(user) {
 				// Find user and delete
 				console.log(user)
-				console.log("User deleted")
 				this.showForm = false
+
+				// If successful:
+				this.snackbar = true
+				this.snackbarText = "Successfully deleted user!"
 			},
 
 			handleCreateAdmin(user, newPassword) {
 				// Create new admin user
-				console.log("Admin created")
 				console.log(user)
 				this.showForm = false
+				
+				// If successful:
+				this.snackbar = true
+				this.snackbarText = "Successfully created admin account!"
 			}
 		},
 		

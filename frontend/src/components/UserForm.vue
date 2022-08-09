@@ -173,8 +173,10 @@
             return false
           }
 
-          if (this.newPassword != '' && this.newPassword.length < 12) {
-            return false
+          if (this.newPassword || this.newPassword == "") {
+            if (this.newPassword.length < 12) {
+              return false
+            }
           }
 
           this.errorMsg = ""
