@@ -162,5 +162,5 @@ func TestGetAllGamesReturnsCorrectNumberOfGames(t *testing.T) {
 
 	require.Equal(t, http.StatusOK, recorder.Code)
 
-	assert.Equal(t, 7, len(gameObjectResponse))
+	assert.Equal(t, 10, len(gameObjectResponse))
 }

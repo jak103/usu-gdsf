@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	_ "os"
+	"strings"
 
 	"cloud.google.com/go/firestore"
 	"github.com/jak103/usu-gdsf/config"
@@ -36,11 +37,6 @@ func (db Firestore) RemoveGame(game models.Game) error {
 	}
 
 	return nil
-}
-
-func (db Firestore) GetGamesByFirstLetter(letter string) ([]models.Game, error) {
-
-	return nil, nil
 }
 
 func (db Firestore) RemoveGameByTag(tag string) error {
@@ -84,6 +80,31 @@ func (db Firestore) GetGamesByTags(tags []string, matchAll bool) ([]models.Game,
 		games[i] = game
 	}
 
+	return games, nil
+}
+
+// GetGameByFirstLetter find and return the game with the given First Letter
+func (db Firestore) GetGamesByFirstLetter(letter string) ([]models.Game, error) {
+	games := make([]models.Game, 0)
+	gc := db.client.Collection("games")
+
+	documents := gc.DocumentRefs(context.Background())
+	for {
+		docRef, docRefErr := documents.Next()
+		if docRefErr == iterator.Done {
+			break
+		}
+
+		var game models.Game
+
+		if docSnapshot, _ := docRef.Get(context.Background()); docSnapshot != nil {
+			_ = docSnapshot.DataTo(&game)
+			game.Id = docRef.ID
+		}
+		if strings.EqualFold(game.Name[0:1], letter) {
+			games = append(games, game)
+		}
+	}
 	return games, nil
 }
 

@@ -10,7 +10,7 @@
     <v-list-item
       data-test="listItem1"
       title="Game Dev Store"
-      prepend-avatar="https://gmedia.playstation.com/is/image/SIEPDC/game-library-white-icon-01-en-09nov21?$native--t$"
+      prepend-avatar="../src/assets/UsuGdsfLogo.svg"
     >
       <v-tooltip
         v-if="rail"
