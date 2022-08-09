@@ -18,6 +18,14 @@
     <v-row class="mt-4">
       <h1>Please view our new arrivals to the store!</h1>
     </v-row>
+    <v-row justify="center">
+        <v-btn class="ml-3 mr-12 mb-12 mt-12" color="primary" @click="">Last 3 Months
+        </v-btn>
+        <v-btn class="ma-12" color="secondary" @click="">Last Month
+        </v-btn>
+        <v-btn class="ma-12" color="info" @click="">Last Week
+        </v-btn>
+    </v-row>
   </v-container>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
-    <v-row class="pa-3 pb-3" justify="left">
-        <v-btn color="primary" @click="goBack">BACK
+    <v-row justify="left">
+        <v-btn class="ma-3 mb-6" color="primary" @click="goBack">BACK
         </v-btn>
     </v-row>
 </template>
