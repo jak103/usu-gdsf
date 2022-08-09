@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	_ "os"
+	"strings"
 
 	"cloud.google.com/go/firestore"
 	"github.com/jak103/usu-gdsf/config"
@@ -81,7 +82,6 @@ func (db Firestore) GetGamesByFirstLetter(letter string) ([]models.Game, error) 
 	documents := gc.DocumentRefs(context.Background())
 	for {
 		docRef, docRefErr := documents.Next()
-
 		if docRefErr == iterator.Done {
 			break
 		}
@@ -92,8 +92,9 @@ func (db Firestore) GetGamesByFirstLetter(letter string) ([]models.Game, error) 
 			_ = docSnapshot.DataTo(&game)
 			game.Id = docRef.ID
 		}
-
-		games = append(games, game)
+		if strings.ToLower(game.Name[0:1]) == strings.ToLower(letter) {
+			games = append(games, game)
+		}	
 	}
 
 	return games, nil
