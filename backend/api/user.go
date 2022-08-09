@@ -79,7 +79,14 @@ func register(c echo.Context) error {
 	id, _ := strconv.ParseUint(string(idString), 10, 64)
 
 	//Generate authentication tokens
-	GenerateTokenPair(newUser, id)
+	accessToken, refreshToken := GenerateTokenPair(newUser, id)
+
+	//Create and return login cookie
+	cookieError := createLoginCookie(c, accessToken, refreshToken)
+	if cookieError != nil {
+		log.WithError(err).Error("cookie not set")
+		return err
+	}
 
 	return c.JSON(http.StatusOK, "User registration handler")
 }
@@ -207,6 +214,7 @@ func createLoginCookie(c echo.Context, accessToken, refreshToken string) error {
 	loginCookie.Value = fmt.Sprintf("%s,%s", accessToken, refreshToken)
 	loginCookie.HttpOnly = true
 
+	c.SetCookie(loginCookie)
 	return c.String(http.StatusOK, "wrote a login cookie with access token")
 }
 
