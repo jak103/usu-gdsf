@@ -6,9 +6,11 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/jak103/usu-gdsf/auth"
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
@@ -69,14 +71,19 @@ func register(c echo.Context) error {
 		time.Now(),
 	}
 
-	db.CreateUser(newUser)
+	idString, err := db.CreateUser(newUser)
+	if err != nil {
+		log.WithError(err).Error("Database insertion error")
+		return err
+	}
+	id, _ := strconv.ParseUint(string(idString), 10, 64)
 
 	//Generate authentication tokens
+	GenerateTokenPair(newUser, id)
 
 	return c.JSON(http.StatusOK, "User registration handler")
 }
 
-// https://www.alexedwards.net/blog/how-to-hash-and-verify-passwords-with-argon2-in-go
 func generateEncodedPassword(password string, p hashParams) (encodedHash string, err error) {
 
 	salt, err := generateSalt(p.saltLength)
@@ -174,6 +181,30 @@ func decodeHash(encodedHash string) (p *hashParams, salt, hash []byte, err error
 	p.keyLength = uint32(len(hash))
 
 	return p, salt, hash, nil
+}
+
+func GenerateTokenPair(user models.User, id uint64) (string, string) {
+	accessToken := auth.GenerateToken(auth.TokenParams{
+		Type:      auth.ACCESS_TOKEN,
+		UserId:    id,
+		UserType:  auth.ADMIN_USER,
+		UserEmail: user.Email,
+	})
+
+	refreshToken := auth.GenerateToken(auth.TokenParams{
+		Type:      auth.REFRESH_TOKEN,
+		UserId:    id,
+		UserType:  auth.ADMIN_USER,
+		UserEmail: user.Email,
+	})
+
+	return accessToken, refreshToken
+}
+
+func createLoginCookie(c echo.Context, accessToken, refreshToken string) error {
+	loginCookie := new(http.Cookie)
+	loginCookie.Name = "UserAuth"
+	loginCookie.HttpOnly = true
 }
 
 func downloads(c echo.Context) error {
