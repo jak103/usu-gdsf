@@ -26,6 +26,43 @@ func TestGetGameByID(t *testing.T) {
 	assert.Equal(t, game.ID, id)
 }
 
+func TestGetGamesByTags(t *testing.T) {
+	mock := Mock{}
+	mock.games = make(map[uuid.UUID]models.Game)
+	newGameWithOneTag := models.Game{
+		Title:            "NewGameWithTag",
+		Description:      "Tagged Game",
+		VersionNumber:    "1.0.0",
+		PublishTimestamp: "8/8/2022",
+		Tags:             []string{"tag1"},
+	}
+	newGameWithTwoTags := models.Game{
+		Title:            "NewGameWithTag",
+		Description:      "Tagged Game",
+		VersionNumber:    "1.0.0",
+		PublishTimestamp: "8/8/2022",
+		Tags:             []string{"tag1", "tag2"},
+	}
+	count := 5
+	for i := 0; i < count; i++ {
+		newGameWithOneTag.ID = uuid.New()
+		newGameWithOneTag.UserID = uuid.New()
+		mock.games[newGameWithOneTag.ID] = newGameWithOneTag
+	}
+	count = 3
+	for i := 0; i < count; i++ {
+		newGameWithTwoTags.ID = uuid.New()
+		newGameWithTwoTags.UserID = uuid.New()
+		mock.games[newGameWithTwoTags.ID] = newGameWithTwoTags
+	}
+
+	gamesWithTag1, _ := mock.GetGamesByTags([]string{"tag1"})
+	gamesWithTag2, _ := mock.GetGamesByTags([]string{"tag2"})
+
+	assert.Equal(t, 8, len(gamesWithTag1))
+	assert.Equal(t, 3, len(gamesWithTag2))
+}
+
 func TestGetAllGames(t *testing.T) {
 	mock := Mock{}
 	mock.games = make(map[uuid.UUID]models.Game)
@@ -119,7 +156,6 @@ func TestUpdateGame(t *testing.T) {
 	assert.NotEqual(t, nil, err)
 }
 
-
 func TestGetAllUsers(t *testing.T) {
 	mock := Mock{}
 	mock.users = make(map[uuid.UUID]models.User)
@@ -160,7 +196,7 @@ func TestGetUserByID(t *testing.T) {
 	assert.Equal(t, randUser.ID, id)
 }
 
-func TestGetUserByRole(t *testing.T) {
+func TestGetUsersByRole(t *testing.T) {
 	mock := Mock{}
 	mock.users = make(map[uuid.UUID]models.User)
 	user := models.User{

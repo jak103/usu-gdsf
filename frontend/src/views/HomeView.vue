@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <p> Team 2's Frontend</p>
+  <v-container style="overflow:auto">
+    <h2>Featured Games</h2>
     <v-row class="ma-3">
       <!-- Carousel -->
       <GameCarousel></GameCarousel>
@@ -9,22 +9,8 @@
     <v-divider></v-divider>
 
     <!-- Break out Games by: Semester, Type -->
-    <v-row class="ma-2">
-      <v-col cols="6">
-        <GameList></GameList>
-      </v-col>
-
-      <v-divider vertical></v-divider>
-
-      <v-col cols="6">
-        <GameList></GameList>
-      </v-col>
-    </v-row>
-
-    <v-divider></v-divider>
-
-    <v-row class="ma-2">
-      <GameList></GameList>
+    <v-row class="mt-4">
+      <FilteredGameList></FilteredGameList>
     </v-row>
   </v-container>
 </template>
@@ -33,6 +19,7 @@
 import { defineComponent } from 'vue';
 import GameCarousel from '../components/GameCarousel.vue';
 import GameList from '../components/GameList.vue'
+import FilteredGameList from '../components/FilteredGameList.vue';
 
 
 export default defineComponent({
@@ -40,8 +27,9 @@ export default defineComponent({
 
   components: {
     GameCarousel,
-    GameList
-  },
+    GameList,
+    FilteredGameList
+},
 
   computed: {
 

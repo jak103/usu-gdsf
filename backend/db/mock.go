@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/log"
@@ -26,17 +27,16 @@ func (db *Mock) GetGameByID(id uuid.UUID) (*models.Game, error) {
 }
 
 func (db *Mock) GetGamesByTags(tags []string) ([]models.Game, error) {
-	games := make(map[string]models.Game)
+	games := make(map[uuid.UUID]models.Game)
 
 	for _, game := range db.games {
 		for _, tag := range tags {
 			valid := map[string]bool{}
-			game_tags := make([]string, 0)
-			for _, v := range game_tags {
+			for _, v := range game.Tags {
 				valid[v] = true
 			}
 			if valid[tag] {
-				games[game.ID.String()] = game
+				games[game.ID] = game
 			}
 		}
 	}
@@ -129,16 +129,17 @@ func (db *Mock) GetUserByUserName(userName string) (*models.User, error) {
 }
 
 func (db *Mock) GetUsersByRole(role int64) ([]models.User, error) {
-	typeRole := models.Role(role)
-	user_slice := []models.User{}
-	for _, user := range db.users {
-		if user.Role == typeRole {
-			user_slice = append(user_slice, user)
-		}
-
+	if role != 0 && role != 1 {
+		return nil, errors.New(fmt.Sprintf("User role %v does not exist", role))
 	}
-
-	return user_slice, nil
+	users := make([]models.User, 0)
+	queryRole := models.Role(role)
+	for _, user := range db.users {
+		if user.Role == queryRole {
+			users = append(users, user)
+		}
+	}
+	return users, nil
 }
 
 func (db *Mock) CreateUser(newUser models.User) error {
@@ -175,7 +176,7 @@ func (db *Mock) UpdateUser(updatedUser models.User) error {
 		return errors.New("updatedUser struct has nil ID")
 	}
 
-	if _, exists := db.games[updatedUser.ID]; !exists {
+	if _, exists := db.users[updatedUser.ID]; !exists {
 		log.Error("updatedUser ID does not exist in mock db")
 		return errors.New("updatedUser ID does not exist in mock db")
 	}
