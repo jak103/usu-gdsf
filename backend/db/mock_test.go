@@ -57,8 +57,10 @@ func TestGetGamesByTags(t *testing.T) {
 	}
 
 	gamesWithTag1, _ := mock.GetGamesByTags([]string{"tag1"})
+	gamesWithTag2, _ := mock.GetGamesByTags([]string{"tag2"})
 
 	assert.Equal(t, 8, len(gamesWithTag1))
+	assert.Equal(t, 3, len(gamesWithTag2))
 }
 
 func TestGetAllGames(t *testing.T) {
@@ -194,7 +196,7 @@ func TestGetUserByID(t *testing.T) {
 	assert.Equal(t, randUser.ID, id)
 }
 
-func TestGetUserByRole(t *testing.T) {
+func TestGetUsersByRole(t *testing.T) {
 	mock := Mock{}
 	mock.users = make(map[uuid.UUID]models.User)
 	user := models.User{
