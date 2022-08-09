@@ -135,6 +135,8 @@
 
 <script>
   export default {
+
+    name: "UserForm",
     props: {
         showSelf: Boolean,
         isAdminCreation: Boolean,
@@ -173,6 +175,12 @@
             return false
           }
 
+          if (this.newPassword || this.newPassword == "") {
+            if (this.newPassword.length < 12) {
+              return false
+            }
+          }
+
           this.errorMsg = ""
           return true
         },
@@ -188,7 +196,7 @@
             if (!this.newPassword) {
               this.errorMsg = "Password field cannot be blank"
             } else {
-              this.$emit('createAdmin', this.selectedUser)
+              this.$emit('createAdmin', this.selectedUser, this.newPassword)
             }
           }
 
