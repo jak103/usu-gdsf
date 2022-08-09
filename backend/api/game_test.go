@@ -118,6 +118,7 @@ func TestGetGamesWithTags(t *testing.T) {
 	assert.Equal(t, "tag0", gameObjectResponse[0].Tags[0])
 	assert.Equal(t, "tag1", gameObjectResponse[0].Tags[1])
 	assert.Equal(t, "tag1", gameObjectResponse[1].Tags[0])
+	assert.Equal(t, "tag2", gameObjectResponse[1].Tags[1])
 }
 
 func TestGetAllGamesReturnsCorrectNumberOfGames(t *testing.T) {
