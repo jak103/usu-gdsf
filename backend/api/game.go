@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
+	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
 )
 
@@ -16,7 +17,7 @@ func getGameByID(c echo.Context) error {
 		log.WithError(err).Error("Unable to use database")
 		return err
 	}
-	gameID, _ := uuid.Parse(c.Param("ID"))
+	gameID, _ := uuid.Parse(c.Param("id"))
 
 	if result, err := db.GetGameByID(gameID); err != nil {
 		log.Error("An error occurred while getting game records: %v", err)
@@ -24,7 +25,6 @@ func getGameByID(c echo.Context) error {
 	} else {
 		return c.JSON(http.StatusOK, []interface{}{result})
 	}
-
 }
 
 // for downloaded games, this route allows you to play them
@@ -67,9 +67,25 @@ func getGames(c echo.Context) error {
 }
 
 func newGameHandler(c echo.Context) error {
-	// TODO #5 We should probably actually create a game here
+	db, err := db.NewDatabaseFromEnv()
 
-	return c.JSON(http.StatusOK, "New game handler")
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return err
+	}
+
+	g := *new(models.Game)
+	if err = c.Bind(&g); err != nil {
+		return err
+	}
+	g.SetUUID()
+
+	if err := db.CreateGame(g); err != nil {
+		log.Error("An error occurred while creating user records %v", err)
+		return err
+	} else {
+		return c.JSON(http.StatusOK, "New Game Added")
+	}
 }
 
 func init() {

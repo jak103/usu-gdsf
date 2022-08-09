@@ -8,15 +8,16 @@ type Role int64
 
 const (
 	Admin     Role = 0
-	Publisher Role = 1
+	Publisher      = 1
+	Basic          = 2
 )
 
 type User struct {
 	ID          uuid.UUID
-	Username    string
-	Password    string
-	Displayname string
-	Role        Role
+	Username    string `json:"username" form:"username"`
+	Password    string `json:"password" form:"password"`
+	Displayname string `json:"displayname" form:"displayname"`
+	Role        Role   `json:"role" form:"role"`
 }
 
 func (user *User) SetUUID() {
