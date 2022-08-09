@@ -342,7 +342,7 @@ func DecodeGameBsonData(data bson.M) (models.Game, error) {
 		Id:           data["_id"].(primitive.ObjectID).Hex(),
 		Name:         convert[string](data["name"]),
 		Rating:       float32(convert[float64](data["rating"])),
-		TimesPlayed:  int(convert[int32](data["timesplayed"])),
+		TimesPlayed:  int(convert[int64](data["timesplayed"])),
 		ImagePath:    convert[string](data["imagepath"]),
 		Description:  convert[string](data["description"]),
 		Developer:    convert[string](data["developer"]),
