@@ -35,8 +35,12 @@ test('renders rating componenet', () => {
 
 test('rendering on click for rating component', async () => {
     const wrapper = mount(rating)
+
     await wrapper.find('v-rating').trigger('click')
-    expect(wapper.emitted().click[0][0]).toBe("MouseEvent")
+
+    console.log(wrapper.emitted().click[0][0])
+
+    expect(wrapper.emitted().click[0][0]).toBe("MouseEvent")
     
 })
 
