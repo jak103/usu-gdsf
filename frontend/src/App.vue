@@ -1,15 +1,14 @@
 <template>
-<v-app>
-<v-navigation-drawer
-app
-color="primary"
->
-<NavMenu/>
-</v-navigation-drawer>
+  <v-app>
+    <v-navigation-drawer
+      app
+      color="primary"
+    >
+      <NavMenu/>
+    </v-navigation-drawer>
 
-<!-- Sizes your content based upon application components -->
-<v-main>
-
+  <!-- Sizes your content based upon application components -->
+  <v-main>
 <!-- Provides the application the proper gutter -->
 <v-container fluid>
 <router-view></router-view>
@@ -58,19 +57,19 @@ import HomeView from './views/HomeView.vue'
 import NavMenu from './components/NavMenu.vue'
 
 export default {
-name: 'App',
+  name: 'App',
 
-components: {
-HomeView,
-NavMenu
+  components: {
+    HomeView,
+    NavMenu
 },
 
-data: () => ({
+  data: () => ({
+    
+  }),
 
-}),
+  computed: {
 
-computed: {
-
-}
+  }
 }
 </script>

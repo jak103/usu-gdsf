@@ -85,14 +85,11 @@
 </template>
 
 <script>
-
 export default {
-name: 'AboutView',
+  name: 'AboutView',
 
   data: () => ({
-    show: false,
     moreWords: 'This project was made in part by Team 2. And gamers like you. Thank you'
   })
-
 }
 </script>
