@@ -104,9 +104,11 @@
 		></v-pagination>
 	</div>
 	<Loading data-test="loadbar" v-if="dataLoading" text="Loading Game Data" containerStyle="height: 75vh"/>
+	<Footer></Footer>
 </template>
 
 <script>
+	import Footer from "../components/Footer.vue"
 	import Rating from '../components/Rating.vue';
 	import Loading from '../components/Loading.vue';
 	import axios from "axios";
@@ -114,7 +116,8 @@
 		name: 'AllGamesPage',
 		components: {
 			Rating,
-			Loading
+			Loading,
+			Footer
 		},
 		data() {
 			return {
