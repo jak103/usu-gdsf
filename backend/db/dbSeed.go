@@ -2,6 +2,7 @@ package db
 
 import (
 	"encoding/json"
+
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 )
@@ -122,5 +123,44 @@ const JSON_SEED_DATA = `[
     "Version": "1.x",
     "Tags": ["OpenWorld", "Adventure"],
     "downloads": 12
+  }
+  {
+    "Id": "9",
+    "Name": "Elder Scrolls V: Skyrim",
+    "Rating": 5.0,
+    "TimesPlayed": 420000,
+    "ImagePath": "../../frontend/src/assets/skyrim.png",
+    "Description": "Open World RPG to explore and defeat dragons",
+    "Developer": "Bethesda",
+    "CreationDate": "2011-11-11T01:22:30Z",
+    "Version": "1.x",
+    "Tags": ["RPG", "Adventure"],
+    "downloads": 69000
+  }
+  {
+    "Id": "10",
+    "Name": "Forza Horizon 5",
+    "Rating": 3.8,
+    "TimesPlayed": 12852,
+    "ImagePath": "../../frontend/src/assets/forza.png",
+    "Description": "Open world, on and off road racing game",
+    "Developer": "Playground Games",
+    "CreationDate": "2021-11-05T01:22:30Z",
+    "Version": "1.x",
+    "Tags": ["Racing", "OpenWorld"],
+    "downloads": 5983
+  }
+  {
+    "Id": "11",
+    "Name": "Grand Theft Auto: V",
+    "Rating": 4.4,
+    "TimesPlayed": 1982347,
+    "ImagePath": "../../frontend/src/assets/gtav.png",
+    "Description": "Explore the open world of Los Santos, and do anything you can imagine",
+    "Developer": "Rockstar Games",
+    "CreationDate": "2013-09-17T01:22:30Z",
+    "Version": "1.x",
+    "Tags": ["OpenWorld", "Shooter"],
+    "downloads": 746839
   }
 ]`
