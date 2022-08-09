@@ -29,23 +29,23 @@ func (db *Mock) GetGameByID(id uuid.UUID) (*models.Game, error) {
 func (db *Mock) GetGamesByTags(tags []string) ([]models.Game, error) {
 	games := make(map[uuid.UUID]models.Game)
 
+	queryTags := make(map[string]bool)
+	for _, queryTag := range tags {
+		queryTags[queryTag] = true
+	}
+	// if a game has at least one of the query tags, add to map (map because we don't want duplicates)
 	for _, game := range db.games {
-		for _, tag := range tags {
-			valid := map[string]bool{}
-			game_tags := make([]string, 0)
-			for _, v := range game_tags {
-				valid[v] = true
-			}
-			if valid[tag] {
+		for _, gameTag := range game.Tags {
+			if _, exists := queryTags[gameTag]; exists {
 				games[game.ID] = game
 			}
 		}
 	}
 	game_slice := []models.Game{}
+	// create slice from map
 	for _, game := range games {
 		game_slice = append(game_slice, game)
 	}
-
 	return game_slice, nil
 }
 
