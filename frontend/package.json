@@ -3,7 +3,7 @@
     "serve": "vite preview",
     "build": "vite build",
     "dev": "vite",
-    "test": "jest",
+    "test": "jest --silent",
     "type": "module",
     "test:unit": "vue-cli-service test:unit"
   },
