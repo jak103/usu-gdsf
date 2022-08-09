@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/jak103/usu-gdsf/config"
 	"github.com/jak103/usu-gdsf/log"
@@ -17,21 +18,36 @@ const (
 var connection Database
 
 type Database interface {
+	// Game Methods
 	GetAllGames() ([]models.Game, error)
 	AddGame(models.Game) (string, error)
+	RemoveGameByTag(string) error
 	RemoveGame(models.Game) error
 	GetGameByID(string) (models.Game, error)
-	GetGamesByTag(string) ([]models.Game, error)
-	GetGameID(models.Game) (string, error)
-	Disconnect() error
+	GetGamesByTags([]string, bool) ([]models.Game, error)
+	SortGames(string, int)([]models.Game, error)
+
+	// Download Methods
+	GetAllDownloads() ([]models.Download, error)
+	AddDownload(models.Download) (string, error)
+	GetDownloadByID(string) (models.Download, error)
+
+	// User Methods
+
+	CreateUser(models.User) (models.User, error)
+	// VerifyUserLogin(string, string) (models.User, error)
+	
+  // General DB Methods
+  Disconnect() error
 	Connect() error
+	GetGamesByFirstLetter(string)([]models.Game, error)
 }
 
 func NewDatabaseFromEnv() (Database, error) {
 	if connection == nil {
-		runningEnv := config.RunEnv
+		dbType := strings.ToLower(config.DbType)
 
-		switch runningEnv {
+		switch dbType {
 		case MOCK:
 			connection = &Mock{}
 		case FIRESTORE:
@@ -40,8 +56,8 @@ func NewDatabaseFromEnv() (Database, error) {
 			connection = &Mongo{}
 
 		default:
-			log.Error("Unknown RUN_ENV set %v", runningEnv)
-			return nil, errors.New("unknown RUN_ENV")
+			log.Error("Unknown DB_TYPE %v", dbType)
+			return nil, errors.New("unknown DB_TYPE")
 		}
 
 		err := connection.Connect()

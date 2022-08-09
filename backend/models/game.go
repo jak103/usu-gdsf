@@ -1,12 +1,19 @@
 package models
 
-import "time"
-
+import (
+	"time"
+)
 type Game struct {
-	Name         string
-	Author       string
-	CreationDate time.Time
-	Version      string
-	Tags         []string
-	downloads    uint64
+	Id           string `json:"Id"`
+	Name         string `json:"Name"`
+	Rating       float32 `json:"Rating"`
+	TimesPlayed  int `json:"TimesPlayed"`
+	ImagePath    string `json:"ImagePath"`
+	Description  string `json:"Description"`
+	Developer    string `json:"Developer"`
+	CreationDate time.Time `json:"CreationDate"`
+	Version      string `json:"Version"`
+	Tags         []string `json:"Tags"`
+	Downloads    int64 `json:"Downloads"` // firestore doesn't support uint64
+	DownloadLink string `json:"DownloadLink"`
 }

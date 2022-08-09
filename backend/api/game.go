@@ -1,20 +1,23 @@
 package api
 
 import (
+	"net/http"
+	"strings"
+	"time"
+
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
-	"net/http"
-	"time"
 )
 
 const (
 	// TODO these are placeholder form var names for adding a new game
 	// TODO match these strings with the view's form var names for '/game' POST
-	NAME    = "Name"
-	AUTHOR  = "Author"
-	VERSION = "Version"
+	NAME      = "Name"
+	DEVELOPER = "Developer"
+	VERSION   = "Version"
+	LINK      = "DownloadLink"
 )
 
 func gameInfoHandler(c echo.Context) error {
@@ -30,8 +33,30 @@ func gameInfoHandler(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Database find game ID error")
 	}
-
 	return c.JSON(http.StatusOK, game)
+}
+
+func getGamesWithTags(c echo.Context) error {
+	// connect the db
+	_db, err := db.NewDatabaseFromEnv()
+	if err != nil {
+		log.WithError(err).Error("Database connection error in API getGamesWithTags")
+		return c.JSON(http.StatusInternalServerError, "Database connection error")
+	}
+
+	// grab tags from context
+	rawTags := c.QueryParam("tags")
+	// split string into array
+	tags := strings.Split(rawTags, "-")
+	// fetch games with tags
+	games, err := _db.GetGamesByTags(tags, false)
+
+	if err != nil {
+		log.WithError(err).Error("Database GetGamesByTags error in API getGamesWithTags")
+		return c.JSON(http.StatusInternalServerError, "Database fetch games with tags error")
+	}
+
+	return c.JSON(http.StatusOK, games)
 }
 
 func getAllGames(c echo.Context) error {
@@ -46,7 +71,7 @@ func getAllGames(c echo.Context) error {
 		log.Error("An error occurred while getting game records: %v", err)
 		return err
 	} else {
-		return c.JSON(http.StatusOK, []interface{}{result})
+		return c.JSON(http.StatusOK, result)
 	}
 }
 
@@ -55,9 +80,10 @@ func newGameHandler(c echo.Context) error {
 	// TODO need a security layer in between the form and our new game struct
 	newGame := models.Game{
 		Name:         c.FormValue(NAME),
-		Author:       c.FormValue(AUTHOR),
+		Developer:    c.FormValue(DEVELOPER),
 		CreationDate: time.Now(),
 		Version:      c.FormValue(VERSION),
+		DownloadLink: c.FormValue(LINK),
 	}
 
 	// Add new game to database
@@ -72,9 +98,6 @@ func newGameHandler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Database add game error")
 	}
 
-	// register new route with ID
-	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
-
 	// TODO return successful game add
 	return c.JSON(http.StatusOK, "New game handler")
 }
@@ -83,18 +106,6 @@ func init() {
 	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
-
-	// register routes for all games from the db
-	log.Info("Creating routes for all games in database")
-	_db, getDbErr := db.NewDatabaseFromEnv()
-	if getDbErr != nil {
-		return
-	}
-	games, getGamesErr := _db.GetAllGames()
-	if getGamesErr != nil {
-		return
-	}
-	for range games {
-		registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
-	}
+	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
+	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
 }

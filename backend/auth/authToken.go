@@ -13,27 +13,41 @@ import (
 	"github.com/jak103/usu-gdsf/config"
 )
 
+type UserType int8
+
+const (
+	ADMIN_USER   UserType = iota
+	REGULAR_USER
+)
+
+
 type TokenType int8
 
 const (
-	ACCESS_TOKEN TokenType = iota
+	ACCESS_TOKEN  TokenType = iota
 	REFRESH_TOKEN
+)
+
+const (
+	TOKEN_EXPIRED = "Expired token"
 )
 
 type TokenClaims struct {
 	Type       TokenType
 	Expiration int64    
-	UserId     uint64    
-	UserEmail  string   
+	UserId     uint64
+	UserType   UserType
+	UserEmail  string
 }
 
 type TokenParams struct {
 	Type      TokenType
 	UserId    uint64
+	UserType  UserType
 	UserEmail string
 }
 
-func GenerateToken(params TokenParams) (string, error) {
+func GenerateToken(params TokenParams) string {
 	expiration := time.Now().UnixMilli()
 
 	switch params.Type {
@@ -42,20 +56,21 @@ func GenerateToken(params TokenParams) (string, error) {
 	case REFRESH_TOKEN:
 		expiration += config.RefreshTokenLifetimeDays * 24 * 60 * 60 * 1000
 	default:
-		return "", errors.New("Unrecognized token type")
+		panic("Unrecognized token type")
 	}
 
 	claims := TokenClaims{
-		Type: params.Type,
+		Type:       params.Type,
 		Expiration: expiration,
 		UserId: params.UserId,
+		UserType: params.UserType,
 		UserEmail: params.UserEmail,
 	}
-	
+
 	claimsJson, err := json.Marshal(claims)
 
 	if err != nil {
-		return "", errors.New("Failed to serialize token claims as JSON")
+		panic("Failed to serialize token claims as JSON")
 	}
 
 	mac := hmac.New(sha256.New, []byte(config.TokenHashingKey))
@@ -67,28 +82,28 @@ func GenerateToken(params TokenParams) (string, error) {
 	unencodedToken := string(claimsJson) + "|" + encodedHash
 	encodedToken := base64.RawURLEncoding.EncodeToString([]byte(unencodedToken))
 
-	return encodedToken, nil
+	return encodedToken
 }
 
 func DecodeAndVerifyToken(token string, tokenType TokenType) (*TokenClaims, error) {
 	if len(token) == 0 {
 		return nil, errors.New("Token cannot be empty")
 	}
-	
+
 	currentTimestamp := time.Now().UnixMilli()
 	decodedToken, err := base64.RawURLEncoding.DecodeString(token)
 
 	if err != nil {
 		return nil, errors.New("Invalid token")
 	}
-	
+
 	indexOfDelimeter := bytes.LastIndexByte(decodedToken, byte('|'))
 
 	if indexOfDelimeter < 1 || len(decodedToken) <= indexOfDelimeter {
 		return nil, errors.New("Invalid token format")
 	}
 
-	providedHexHash := decodedToken[indexOfDelimeter + 1:]
+	providedHexHash := decodedToken[indexOfDelimeter+1:]
 	providedClaimsJson := decodedToken[:indexOfDelimeter]
 
 	var claims TokenClaims
@@ -98,7 +113,7 @@ func DecodeAndVerifyToken(token string, tokenType TokenType) (*TokenClaims, erro
 	}
 
 	if claims.Expiration <= currentTimestamp {
-		return nil, errors.New("Expired token")
+		return nil, errors.New(TOKEN_EXPIRED)
 	}
 
 	if claims.Type != tokenType {
@@ -110,7 +125,7 @@ func DecodeAndVerifyToken(token string, tokenType TokenType) (*TokenClaims, erro
 	if err != nil {
 		return nil, errors.New("Invalid signature")
 	}
-	
+
 	mac := hmac.New(sha256.New, []byte(config.TokenHashingKey))
 	mac.Write(providedClaimsJson)
 
