@@ -2,10 +2,8 @@ import {mount} from '@vue/test-utils'
 import AddGame from '@/views/AddGame.vue'
 
 describe('AddGame.vue', () => {
-  let wrapper;
-  beforeEach(() => {
-    wrapper = mount(AddGame);
-  });
+
+  const wrapper = mount(AddGame);
 
   test('renders a form', () => {
     //check if the form is rendered
