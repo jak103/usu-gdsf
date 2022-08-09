@@ -1,17 +1,17 @@
-import {mount} from '@vue/test-utils'
-import NavMenu from '@/components/navMenu.vue'
+import {shallowMount} from '@vue/test-utils'
+import NavMenu from '../../src/components/NavMenu.vue'
 
 // tests by Kailey Bales
 
+
 // test the navigation menu component
 describe('NavMenu.vue', () => {
-  let wrapper;
-  beforeEach(() => {
-    wrapper = mount(NavMenu);
-  });
+
+  const wrapper = shallowMount(NavMenu);
+
   test('renders a navigation menu', () => {
     //check if the navigation menu is rendered
-    expect(wrapper.find('v-list').exists()).toBe(true)
+    expect(wrapper.find('v-list-item').text()).toBe('Home')
   });
   test('renders a navigation menu with links', () => {
     //check if the navigation menu is rendered
