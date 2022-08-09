@@ -46,6 +46,8 @@
 </template>
 
 <script>
+  import axios from 'axios';
+
   export default {
     name: 'GameCard',
 
@@ -59,5 +61,31 @@
     data: () => ({
       show: false,
     }),
+
+    created() {
+      this.testGetGame()
+    },
+
+    methods: {
+      testGetGame: function () {
+        axios.get("http://localhost:8080/game")
+          .then(resp => {
+            let data = [];
+            resp.data[0].forEach(element => {
+              data.push({
+                title: "TEST TITLE",
+                author: "TEST AUTHOR",
+                description: element.description
+              })
+            })
+
+            this.data = data;
+            console.log(this.data);
+          })
+          .catch(err => {
+            console.error(err.data);
+          })
+      }
+    }
   }
 </script>
