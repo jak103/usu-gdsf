@@ -86,3 +86,37 @@ func TestGameModel(t *testing.T) {
 	assert.Equal(t, g2.Downloads, int64(0))
 	assert.Equal(t, g2.DownloadLink, "www.activision.com")
 }
+
+func TestUserModel(t *testing.T) {
+	u1 := User{
+		Email:           "john.doe@gmail.com",
+		PasswordHash:    "dkj37%39rhI83)",
+		FirstName:       "John",
+		LastName:        "Doe",
+		DateOfBirth:     time.Date(1970, time.January, 1, 0, 0, 0, 0, time.Local),
+		JoinedTimestamp: time.Date(2022, time.August, 8, 4, 12, 15, 1, time.Local),
+	}
+
+	// Checks a fully built model
+	assert.Equal(t, u1.Email, "john.doe@gmail.com")
+	assert.Equal(t, u1.PasswordHash, "dkj37%39rhI83)")
+	assert.Equal(t, u1.FirstName, "John")
+	assert.Equal(t, u1.LastName, "Doe")
+	assert.False(t, time.Time.IsZero(u1.DateOfBirth))
+	assert.False(t, time.Time.IsZero(u1.JoinedTimestamp))
+
+	u2 := User{
+		Email:       "jane.doe@gmail.com",
+		FirstName:   "Jane",
+		LastName:    "Doe",
+		DateOfBirth: time.Date(1970, time.January, 1, 0, 0, 0, 0, time.Local),
+	}
+
+	// Checks a partially built model
+	assert.Equal(t, u2.Email, "jane.doe@gmail.com")
+	assert.Equal(t, u2.PasswordHash, "")
+	assert.Equal(t, u2.FirstName, "Jane")
+	assert.Equal(t, u2.LastName, "Doe")
+	assert.False(t, time.Time.IsZero(u2.DateOfBirth))
+	assert.True(t, time.Time.IsZero(u2.JoinedTimestamp))
+}
