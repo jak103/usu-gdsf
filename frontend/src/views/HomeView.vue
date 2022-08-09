@@ -13,7 +13,7 @@
             <p class="text-center font-weight-thin" style="color:white;font-size: 30px">
               Our Most Popular Game
             </p>
-            <p v-if="mostPopularGame.id" class="text-center font-weight-thin" style="color:#FFFFFF;font-size: 15px">
+            <p v-if="!mostPopularGame.id" class="text-center font-weight-thin" style="color:#FFFFFF;font-size: 15px">
               Unable to get the most popular game at this time
             </p>
             <div class="" v-else>
