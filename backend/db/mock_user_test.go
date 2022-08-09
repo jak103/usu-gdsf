@@ -16,14 +16,6 @@ func TestCreateUser(t *testing.T) {
 	mock := Mock{}
 	mock.Connect()
 
-	// type User struct {
-	// 	ID          uuid.UUID
-	// 	Username    string
-	// 	Password    string
-	// 	Displayname string
-	// 	Role        Role
-	// 	}
-
 	user := models.User{Username: "Rohit", Displayname: "Rohit M"}
 	user.SetUUID()
 	mock.CreateUser(user)
