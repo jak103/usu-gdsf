@@ -72,6 +72,22 @@ func newGameHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, "New game handler")
 }
 
+func getHighestRatedGames(c echo.Context) error {
+	db, err := db.NewDatabaseFromEnv()
+
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return err
+	}
+
+	if result, err := db.GetHighestRatedGames(); err != nil {
+		log.Error("An error occurred while getting game records: %v", err)
+		return err
+	} else {
+		return c.JSON(http.StatusOK, []interface{}{result})
+	}
+}
+
 func init() {
 	log.Info("Running game init")
 	//registerRoute(route{method: http.MethodGet, path: "/game", handler: game})
@@ -81,5 +97,6 @@ func init() {
 	registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
 	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGameByID})
 	registerRoute(route{method: http.MethodGet, path: "/game", handler: getGames})
+	registerRoute(route{method: http.MethodPost, path: "/game/highest-rated", handler: getHighestRatedGames})
 	registerRestrictedRoute(route{method: http.MethodPost, path: "/game/add", handler: newGameHandler})
 }
