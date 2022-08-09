@@ -9,6 +9,7 @@ import (
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
+	"github.com/go-playground/validator/v10"
 )
 
 const (
@@ -20,7 +21,10 @@ const (
 	LINK      = "DownloadLink"
 )
 
+var v = validator.New()
+
 func gameInfoHandler(c echo.Context) error {
+	
 	// get id from path
 	id := c.Param("id")
 
@@ -85,6 +89,7 @@ func newGameHandler(c echo.Context) error {
 		Version:      c.FormValue(VERSION),
 		DownloadLink: c.FormValue(LINK),
 	}
+	
 
 	// Add new game to database
 	_db, getDbErr := db.NewDatabaseFromEnv()

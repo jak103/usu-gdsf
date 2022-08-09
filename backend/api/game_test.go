@@ -113,6 +113,5 @@ func TestGetGamesWithTags(t *testing.T) {
 		println(err)
 	}
 	require.Equal(t, http.StatusOK, recorder.Code)
-
 	assert.Equal(t, 2, len(gameObjectResponse))
 }
