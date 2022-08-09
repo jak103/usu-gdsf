@@ -31,8 +31,7 @@ func (db *Mock) GetGamesByTags(tags []string) ([]models.Game, error) {
 	for _, game := range db.games {
 		for _, tag := range tags {
 			valid := map[string]bool{}
-			game_tags := make([]string, 0)
-			for _, v := range game_tags {
+			for _, v := range game.Tags {
 				valid[v] = true
 			}
 			if valid[tag] {
