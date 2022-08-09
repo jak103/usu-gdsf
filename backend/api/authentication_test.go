@@ -14,12 +14,12 @@ import (
 )
 
 func TestGetKey(t *testing.T) {
-	os.Setenv("USUGDSF_AUTH_TOKEN", "fake-HwVJzEu2wTRBK4wNu80C")
+	os.Setenv("USUGDSF_AUTH_TOKEN", "fakeHwVJzEu2wTRBK4wNu80C")
 	defer os.Unsetenv("USUGDSF_AUTH_TOKEN")
 
 	jwtkey := GetKey()
 
-	assert.Equal(t, jwtkey, "fake-HwVJzEu2wTRBK4wNu80C")
+	assert.Equal(t, jwtkey, "fakeHwVJzEu2wTRBK4wNu80C")
 }
 
 func TestVerifyUser(t *testing.T) {
@@ -72,7 +72,7 @@ func TestGenerateTokenAndSetCookie(t *testing.T) {
 }
 
 func TestGenerateToken(t *testing.T) {
-	os.Setenv("USUGDSF_AUTH_TOKEN", "fake-HwVJzEu2wTRBK4wNu80C")
+	os.Setenv("USUGDSF_AUTH_TOKEN", "fakeHwVJzEu2wTRBK4wNu80C")
 	defer os.Unsetenv("USUGDSF_AUTH_TOKEN")
 
 	e := echo.New()
@@ -101,7 +101,7 @@ func TestGenerateToken(t *testing.T) {
 }
 
 func TestSetTokenCookie(t *testing.T) {
-	os.Setenv("USUGDSF_AUTH_TOKEN", "fake-HwVJzEu2wTRBK4wNu80C")
+	os.Setenv("USUGDSF_AUTH_TOKEN", "fakeHwVJzEu2wTRBK4wNu80C")
 	defer os.Unsetenv("USUGDSF_AUTH_TOKEN")
 
 	e := echo.New()

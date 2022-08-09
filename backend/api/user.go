@@ -42,15 +42,23 @@ func GetUserByID(c echo.Context) error {
 func CreateUser(c echo.Context) error {
 	db, err := db.NewDatabaseFromEnv()
 
+	username := c.FormValue("username")
+	displayname := c.FormValue("displayname")
+	password := c.FormValue("password")
+
 	if err != nil {
 		log.WithError(err).Error("Unable to use database")
 		return err
 	}
 
 	u := *new(models.User)
-	if err = c.Bind(&u); err != nil {
-		return err
-	}
+
+	encryptedPassword := SecurePassword(password)
+
+	u.Username = username
+	u.Displayname = displayname
+	u.Password = encryptedPassword
+
 	u.SetUUID()
 
 	if err := db.CreateUser(u); err != nil {
