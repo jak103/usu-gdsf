@@ -24,6 +24,7 @@
 <script>
 export default {
     name: 'AdminAllUsers',
+    
     data: () => ({
         users: [],
         loading: false,
@@ -46,22 +47,23 @@ export default {
                 description: 'Test User 2',
                 timeStamp: 'yesterday'
             }
-        ]
+        ],
+        games: []
     }),
-    asyncComputed: {
-        games: {
-            get() {
-                this.loading = true;
-                return this.$axios.get('/games').then(response => {
-                    this.loading = false;
-                    return response.data;
-                }).catch(error => {
-                    this.loading = false;
-                    return error;
-                });
-                //TODO: check api call once working on backend
+
+    async mounted() {
+        await this.getAllGames();
+    },
+
+    methods: {
+        async getAllGames() {
+            try {
+                //const response = await axios.get('/api/games');
+                this.games = response.data;
+            } catch (error) {
+                console.log(error);
             }
         }
-    },
+    }
 }
 </script> 
