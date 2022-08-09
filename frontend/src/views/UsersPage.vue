@@ -38,10 +38,10 @@
     </thead>
     <tbody>
       <tr
-        v-for="user in users"
+        v-for="user in users.slice(((page - 1) * perPage), ((page - 1) * perPage) + perPage)"
         :key="user.email"
 				style="cursor: pointer"
-				@click="handleClickUser({...user})"
+				@click.stop="handleClickUser({...user})"
       >
         <td>{{ user.firstName }} {{user.lastName}}</td>
         <td>{{ user.email }}</td>
@@ -56,8 +56,14 @@
 		:selectedUser="selectedUser" 
 		@save="handleSaveEdit(selectedUser)"
 		@delete="handleDeleteUser(selectedUser)"
-		@createAdmin="handleCreateAdmin(selectedUser)"	
+		@createAdmin="handleCreateAdmin(selectsedUser)"	
 	/>
+
+	<v-pagination
+		data-test="pagination" 
+		v-model="page"
+		:length="Math.ceil(users.length / perPage)">
+	</v-pagination>
 
 	<Footer></Footer>
 	
@@ -68,6 +74,8 @@
 import UserForm from '../components/UserForm.vue'
 import Footer from '../components/Footer.vue'
 import {ref} from "vue";
+import axios from "axios";
+
 export default {
 
     name: "UsersPage",
@@ -76,6 +84,28 @@ export default {
             // Get list of users from database
             users: [
                 { firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
 								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
 								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
 								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
@@ -108,7 +138,9 @@ export default {
 							lastName: "",
 							email: "",
 							dob: ""
-						})
+						}),
+						page: 1,
+						perPage: 13,
         };
     },
     components: { UserForm, Footer },
@@ -139,21 +171,25 @@ export default {
 				this.showForm = false
 			},
 
-			handleSaveEdit(user) {
+			handleSaveEdit(user, newPassword) {
 				// Find user and update info
-				console.log("Saved!")
+				// Need to check which items are being updated. New password may be blank.
+				console.log("Saved user edit!")
+				console.log(user)
 				this.showForm = false
 			},
 
 			handleDeleteUser(user) {
 				// Find user and delete
+				console.log(user)
 				console.log("User deleted")
 				this.showForm = false
 			},
 
-			handleCreateAdmin(user) {
+			handleCreateAdmin(user, newPassword) {
 				// Create new admin user
 				console.log("Admin created")
+				console.log(user)
 				this.showForm = false
 			}
 		}
