@@ -91,7 +91,7 @@ func TestGetGamesWithTags(t *testing.T) {
 		UserEmail: "tst@example.com",
 	}
 
-	token, _ := auth.GenerateToken(params)
+	token := auth.GenerateToken(params)
 
 	q := make(url.Values)
 	q.Set("tags", "tag0-tag1")
