@@ -20,11 +20,13 @@
 
 
 <script>
+//TODO: errors pop up when trying to import this, I think it's a backend issue?
+// import axios from "axios"; 
 export default {
     name: 'AdminAllUsers',
 
     data: () => ({
-        users: [],
+        // users: [],
         loading: false,
         headers: [
             { text: 'ID', value: 'ID' },
@@ -48,14 +50,21 @@ export default {
         ]
     }),
 
-    asyncComputed: {
-        users: {
-            get() {
-                this.loading = true;
-                return this.$axios.get('/allusers');
-                //TODO: check api call once working on backend
-            }
-        }
+    methods: {
+        async users() {
+            this.loading = true;
+            await axios.get('http://127.0.0.1:8080/allusers')
+                .then(response => {
+                    this.users = response.data[0];
+                    this.loading = false
+                }).catch(error => {
+                    console.log(error.response.data);
+                    this.dataLoading = false
+                });
+        },
     },
+    created() {
+        this.users();
+    }
 }
 </script>
