@@ -204,7 +204,10 @@ func GenerateTokenPair(user models.User, id uint64) (string, string) {
 func createLoginCookie(c echo.Context, accessToken, refreshToken string) error {
 	loginCookie := new(http.Cookie)
 	loginCookie.Name = "UserAuth"
+	loginCookie.Value = fmt.Sprintf("%s,%s", accessToken, refreshToken)
 	loginCookie.HttpOnly = true
+
+	return c.String(http.StatusOK, "wrote a login cookie with access token")
 }
 
 func downloads(c echo.Context) error {
