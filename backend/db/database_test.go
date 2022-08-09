@@ -111,6 +111,7 @@ func TestSortGames(t *testing.T){
 	fmt.Printf("%+v", res)
 }
 
+func TestGetGamesByFirstLetter(t *testing.T){
 	//just to make it safe if there is incomplete test condition 
 	
 	//cleanup
@@ -125,6 +126,7 @@ func TestSortGames(t *testing.T){
 	res, _ := _db.GetGamesByFirstLetter("p");
 	fmt.Printf("%+v", res)
 }
+
 func cleanup() {
 	_db.RemoveGame(game0)
 	_db.RemoveGame(game1)
