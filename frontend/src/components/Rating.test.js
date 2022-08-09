@@ -8,39 +8,22 @@ test('Rating component is visible', () => {
 })
 
 test('renders rating componenet', () => {
-    const wrapper = mount(rating, {
-        propsData: {
-            starBackgroundColor:"#8A8D8F",
-            isClearable:"false",
-            closeDelay:"0",
-            starColor:"#8A8D8F",
-            isDark:"false",
-            isDense:"true",
-            isLight:"false",
-            openDelay:"0",
-            isReadOnly:"false",
-            isRipple:"false",
-            isHalfIncrements:"false",
-            isHover:"false",
-            isSamll:"false",
-            starSize:"64",
-            starValue:"3",
-            isXLarge:"false",
-            isXSmall:"false"
-        }
-      })
+    const wrapper = mount(rating)
+
       const vRating = wrapper.findAll('v-rating')
       expect(vRating.length).toBe(1)
     })
 
-test('rendering on click for rating component', async () => {
-    const wrapper = mount(rating)
+test('rendering starValue of Rating.vue', async () => {
+    const wrapper = mount(rating, {
+        propsData: {
+            starValue:3,
+        }
+      })
 
-    await wrapper.find('v-rating').trigger('click')
+    const ratingValue = wrapper.find('[data-rating-test="rating"]')
 
-    console.log(wrapper.emitted().click[0][0])
-
-    expect(wrapper.emitted().click[0][0]).toBe("MouseEvent")
+    expect(ratingValue.html()).toContain('<span class="pr-1" data-rating-test="rating"> (3) </span>')
     
 })
 
