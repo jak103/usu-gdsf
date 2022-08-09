@@ -8,21 +8,7 @@
     <v-divider></v-divider>
 
     <!-- Break out Games by: Semester, Type -->
-    <v-row class="ma-2">
-      <v-col cols="6">
-        <GameList></GameList>
-      </v-col>
-
-      <v-divider vertical></v-divider>
-
-      <v-col cols="6">
-        <GameList></GameList>
-      </v-col>
-    </v-row>
-
-    <v-divider></v-divider>
-
-    <v-row class="ma-2">
+    <v-row class="mt-4">
       <GameList></GameList>
     </v-row>
   </v-container>

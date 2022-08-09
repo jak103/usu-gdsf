@@ -54,7 +54,28 @@
         <v-divider></v-divider>
 
         <v-card-text>
-         contributors
+        <p>Marshal Taylor <br/>
+        Rohit Mishri <br/>
+        Jacob White <br/>
+        Gordon Fjeldsted <br/>
+        Bridget Staley <br/>
+        Jared Horton <br/>
+        Spencer Robinson <br/>
+        Elise Francis <br/>
+        Brendon Earl <br/>
+        Kailey Bales <br/>
+        Richard Snider <br/>
+        Bryant Saunders <br/>
+        Matthew Shaw <br/>
+        Logan Ballard <br/>
+        Abbey Allen <br/>
+        Rebecca Macias <br/>
+        Adam Thomas <br/>
+        Jenna Cioffi <br/>
+        Brittany Graham <br/>
+        Marshal Taylor <br/>
+        Ian McLachlan</p>
+        <p class="font-italic">**Some contributors missing</p>
         </v-card-text>
       </div>
     </v-expand-transition>
@@ -65,13 +86,13 @@
 
 <script>
 
-
 export default {
 name: 'AboutView',
 
-data: () => ({
-show: false,
-moreWords: 'This will be a page of general text and information about our project'
-})
+  data: () => ({
+    show: false,
+    moreWords: 'This project was made in part by Team 2. And gamers like you. Thank you'
+  })
+
 }
 </script>
