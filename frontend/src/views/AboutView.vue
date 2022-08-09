@@ -22,11 +22,20 @@
       </v-card-text>
       <v-card-text style="display:flex;justify-content: center;">
         <div>
-          <li v-for="name in namesList" :key="name.id">
-            <label>
-              {{ name.firstName }} {{ name.lastName }}
-            </label>
-          </li>
+          <div style="float:left;padding-right: 1em;">
+             <li v-for="name in namesList.firstHalf" :key="name.id">
+              <label>
+                {{ name.firstName }} {{ name.lastName }}
+              </label>
+            </li>
+          </div>
+          <div style="float:right;padding-left: 1em;">
+             <li v-for="name in namesList.secondHalf" :key="name.id">
+              <label>
+                {{ name.firstName }} {{ name.lastName }}
+              </label>
+            </li>
+          </div>
         </div>
       </v-card-text>
     </v-card>
@@ -35,10 +44,9 @@
 </template>
 
 <script>
-import names from './names.js'
-import stringsToObjects from './nameFunctions.js'
+import names from './names.js';
+import stringsToObjects from './nameFunctions.js';
 import Footer from "../components/Footer.vue";
-
 
 export default {
   name: 'AboutView',
@@ -54,7 +62,14 @@ export default {
 
   computed: {
     namesList() {
-      return stringsToObjects(names.names);
+      let list = stringsToObjects(names.names);
+      let index = Math.ceil(list.length / 2);
+      let first = list.splice(0, index);
+      let second = list.splice(-index);
+      return {
+        firstHalf: first,
+        secondHalf: second
+      }
     }
   }
 }
