@@ -151,3 +151,38 @@ func TestBlacklistedRefreshTokens(t *testing.T) {
 	assert.Equal(t, b2.Expiration, int64(320000))
 	assert.True(t, time.Time.IsZero(b2.Timestamp))
 }
+
+func TestUserFavoriteGame(t *testing.T) {
+	f1 := UserFavoriteGame{
+		Id:        uint64(7354480089),
+		UserId:    uint64(2200075),
+		GameId:    uint64(4),
+		Timestamp: time.Date(2022, time.July, 4, 12, 4, 1, 1, time.Local),
+	}
+
+	// Checks a fully built model
+	assert.Equal(t, f1.Id, uint64(7354480089))
+	assert.Equal(t, f1.UserId, uint64(2200075))
+	assert.Equal(t, f1.GameId, uint64(4))
+	assert.False(t, time.Time.IsZero(f1.Timestamp))
+
+	f2 := UserFavoriteGame{
+		Id:     uint64(1234),
+		UserId: uint64(5876940497),
+		GameId: uint64(7),
+	}
+
+	// Checks a partially built model
+	assert.Equal(t, f2.Id, uint64(1234))
+	assert.Equal(t, f2.UserId, uint64(5876940497))
+	assert.Equal(t, f2.GameId, uint64(7))
+	assert.True(t, time.Time.IsZero(f2.Timestamp))
+
+	f3 := UserFavoriteGame{}
+
+	// Checks an empty model
+	assert.Equal(t, f3.Id, uint64(0))
+	assert.Equal(t, f3.UserId, uint64(0))
+	assert.Equal(t, f3.GameId, uint64(0))
+	assert.True(t, time.Time.IsZero(f3.Timestamp))
+}
