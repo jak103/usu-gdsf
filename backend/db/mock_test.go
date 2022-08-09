@@ -196,7 +196,7 @@ func TestGetUserByID(t *testing.T) {
 	assert.Equal(t, randUser.ID, id)
 }
 
-func TestGetUserByRole(t *testing.T) {
+func TestGetUsersByRole(t *testing.T) {
 	mock := Mock{}
 	mock.users = make(map[uuid.UUID]models.User)
 	user := models.User{
@@ -222,9 +222,9 @@ func TestGetUserByRole(t *testing.T) {
 	assert.Equal(t, halfUsers, len(admins))
 	assert.Equal(t, halfUsers, len(publishers))
 	_, err := mock.GetUsersByRole(3)
-	assert.Equal(t, nil, err)
+	assert.NotEqual(t, nil, err)
 	_, err = mock.GetUsersByRole(-1)
-	assert.Equal(t, nil, err)
+	assert.NotEqual(t, nil, err)
 
 }
 
