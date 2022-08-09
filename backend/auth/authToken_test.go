@@ -17,18 +17,16 @@ func TestGenerateTokenDecodeAndValidate(t *testing.T) {
 		UserEmail: "testing@example.com",
 	}
 
-	token, err := GenerateToken(params)
-	assert.Nil(t, err)
-
+	token := GenerateToken(params)
 	claims, _ := DecodeAndVerifyToken(token, params.Type)
- 
+
 	assert.Equal(t, claims.Type, params.Type)
 	assert.Equal(t, claims.UserType, params.UserType)
 	assert.Equal(t, claims.UserId, params.UserId)
 	assert.Equal(t, claims.UserEmail, params.UserEmail)
 
-	expectedExperationTime := time.Now().UnixMilli() + config.AccessTokenLifetimeMins * 60 * 1000
-	assert.True(t, claims.Expiration == expectedExperationTime || claims.Expiration == expectedExperationTime - 1)
+	expectedExperationTime := time.Now().UnixMilli() + config.AccessTokenLifetimeMins*60*1000
+	assert.True(t, claims.Expiration == expectedExperationTime || claims.Expiration == expectedExperationTime-1)
 
 	params = TokenParams{
 		Type: REFRESH_TOKEN,
@@ -36,10 +34,8 @@ func TestGenerateTokenDecodeAndValidate(t *testing.T) {
 		UserType: REGULAR_USER,
 		UserEmail: "te|sting2@example.com|",
 	}
-	
-	token, err = GenerateToken(params)
-	assert.Nil(t, err)
 
+	token = GenerateToken(params)
 	claims, _ = DecodeAndVerifyToken(token, params.Type)
 
 	assert.Equal(t, claims.Type, params.Type)
@@ -47,26 +43,13 @@ func TestGenerateTokenDecodeAndValidate(t *testing.T) {
 	assert.Equal(t, claims.UserId, params.UserId)
 	assert.Equal(t, claims.UserEmail, params.UserEmail)
 
-	expectedExperationTime = time.Now().UnixMilli() + config.RefreshTokenLifetimeDays * 24 * 60 * 60 * 1000
-	assert.True(t, claims.Expiration == expectedExperationTime || claims.Expiration == expectedExperationTime - 1)
+	expectedExperationTime = time.Now().UnixMilli() + config.RefreshTokenLifetimeDays*24*60*60*1000
+	assert.True(t, claims.Expiration == expectedExperationTime || claims.Expiration == expectedExperationTime-1)
 }
 
 func TestEmptyToken(t *testing.T) {
 	claims, err := DecodeAndVerifyToken("", ACCESS_TOKEN)
 	assert.Nil(t, claims)
-	assert.NotNil(t, err)
-}
-
-
-func TestBadTokenType(t *testing.T) {
-	params := TokenParams{
-		Type: 120,
-		UserId: 42,
-		UserType: REGULAR_USER,
-		UserEmail: "testing@example.com",
-	}
-
-	_, err := GenerateToken(params)
 	assert.NotNil(t, err)
 }
 
@@ -78,7 +61,7 @@ func TestInvalidTokenEncoding(t *testing.T) {
 		UserEmail: "testing@example.com",
 	}
 
-	token, _ := GenerateToken(params)
+	token := GenerateToken(params)
 	decodedToken, _ := base64.RawURLEncoding.DecodeString(token)
 
 	claims, err := DecodeAndVerifyToken(string(decodedToken), params.Type)
@@ -125,12 +108,12 @@ func TestExpiredToken(t *testing.T) {
 
 func TestIncorrectTokenType(t *testing.T) {
 	params := TokenParams{
-		Type: ACCESS_TOKEN,
-		UserId: 42,
+		Type:      ACCESS_TOKEN,
+		UserId:    42,
 		UserEmail: "testing@example.com",
 	}
 
-	token, _ := GenerateToken(params)
+	token := GenerateToken(params)
 
 	claims, err := DecodeAndVerifyToken(token, REFRESH_TOKEN)
 	assert.Nil(t, claims)
@@ -150,24 +133,24 @@ func TestInvalidSignature(t *testing.T) {
 	assert.Nil(t, claims)
 	assert.NotNil(t, err)
 }
-	
+
 func TestIncorrectSignature(t *testing.T) {
 	params := TokenParams{
-		Type: ACCESS_TOKEN,
-		UserId: 39,
+		Type:      ACCESS_TOKEN,
+		UserId:    39,
 		UserEmail: "testing@example.com",
 	}
 
-	token, _ := GenerateToken(params)
+	token := GenerateToken(params)
 	decodedToken, _ := base64.RawURLEncoding.DecodeString(token)
 	reencodedToken := base64.RawURLEncoding.EncodeToString([]byte(decodedToken))
 
 	alteredToken := decodedToken
 
-	if alteredToken[len(alteredToken) - 1] != '1' {
-		alteredToken[len(alteredToken) - 1] = '1'
+	if alteredToken[len(alteredToken)-1] != '1' {
+		alteredToken[len(alteredToken)-1] = '1'
 	} else {
-		alteredToken[len(alteredToken) - 1] = '2'
+		alteredToken[len(alteredToken)-1] = '2'
 	}
 
 	encodedAlteredToken := base64.RawURLEncoding.EncodeToString([]byte(alteredToken))
