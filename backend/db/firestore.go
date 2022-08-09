@@ -23,7 +23,7 @@ type Firestore struct {
 // RemoveGame removes the given game from the db
 func (db Firestore) RemoveGame(game models.Game) error {
 	// query
-	
+
 	snapShot, err := db.client.Collection("games").Doc(game.Id).Get(context.Background())
 	if err != nil {
 		log.WithError(err).Error("Firestore query error in RemoveGame")
@@ -39,16 +39,11 @@ func (db Firestore) RemoveGame(game models.Game) error {
 	return nil
 }
 
-func (db Firestore) GetGamesByFirstLetter(letter string ) ([]models.Game, error) {
-
-	return nil,nil
-}
-
-func (db Firestore) RemoveGameByTag(tag string) error{
+func (db Firestore) RemoveGameByTag(tag string) error {
 	return nil
 }
 
-func (db Firestore ) SortGames(field_name string, order int) ([]models.Game, error){
+func (db Firestore) SortGames(field_name string, order int) ([]models.Game, error) {
 	return nil, nil
 }
 
@@ -88,7 +83,7 @@ func (db Firestore) GetGamesByTags(tags []string, matchAll bool) ([]models.Game,
 	return games, nil
 }
 
-//GetGameByFirstLetter find and return the game with the given First Letter
+// GetGameByFirstLetter find and return the game with the given First Letter
 func (db Firestore) GetGamesByFirstLetter(letter string) ([]models.Game, error) {
 	games := make([]models.Game, 0)
 	gc := db.client.Collection("games")
@@ -108,7 +103,7 @@ func (db Firestore) GetGamesByFirstLetter(letter string) ([]models.Game, error) 
 		}
 		if strings.EqualFold(game.Name[0:1], letter) {
 			games = append(games, game)
-		}	
+		}
 	}
 	return games, nil
 }
@@ -140,7 +135,7 @@ func (db Firestore) GetDownloadByID(id string) (models.Download, error) {
 		log.WithError(convErr).Error("Cannot convert firestore snapshot to download struct")
 	}
 	return download, nil
-	
+
 }
 
 // AddGame Add a new game to the remote database. Returns unique game ID
@@ -189,7 +184,6 @@ func (db Firestore) GetAllGames() ([]models.Game, error) {
 	return games, nil
 }
 
-
 func (db Firestore) GetAllDownloads() ([]models.Download, error) {
 	downloads := make([]models.Download, 0)
 	gc := db.client.Collection("downloads")
@@ -208,7 +202,7 @@ func (db Firestore) GetAllDownloads() ([]models.Download, error) {
 			_ = docSnapshot.DataTo(&download)
 			download.Id = docRef.ID
 		}
-		
+
 		downloads = append(downloads, download)
 	}
 
