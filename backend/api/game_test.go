@@ -115,6 +115,8 @@ func TestGetGamesWithTags(t *testing.T) {
 	require.Equal(t, http.StatusOK, recorder.Code)
 
 	assert.Equal(t, 2, len(gameObjectResponse))
+	assert.Equal(t, "tag0", gameObjectResponse[0].Tags[0])
+	assert.Equal(t, "tag1", gameObjectResponse[1].Tags[0])
 }
 
 func TestGetAllGamesReturnsCorrectNumberOfGames(t *testing.T) {
