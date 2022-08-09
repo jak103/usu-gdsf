@@ -120,3 +120,34 @@ func TestUserModel(t *testing.T) {
 	assert.False(t, time.Time.IsZero(u2.DateOfBirth))
 	assert.True(t, time.Time.IsZero(u2.JoinedTimestamp))
 }
+
+func TestBlacklistedRefreshTokens(t *testing.T) {
+	b1 := BlacklistedRefreshToken{
+		Id:         uint64(379585732683),
+		Token:      "ValidToken",
+		UserId:     uint64(8764),
+		Expiration: int64(160000),
+		Timestamp:  time.Date(2022, time.August, 8, 16, 20, 51, 14, time.Local),
+	}
+
+	// Checks a fully built model
+	assert.Equal(t, b1.Id, uint64(379585732683))
+	assert.Equal(t, b1.Token, "ValidToken")
+	assert.Equal(t, b1.UserId, uint64(8764))
+	assert.Equal(t, b1.Expiration, int64(160000))
+	assert.False(t, time.Time.IsZero(b1.Timestamp))
+
+	b2 := BlacklistedRefreshToken{
+		Id:         uint64(123456),
+		Token:      "InvalidToken",
+		UserId:     uint64(7890),
+		Expiration: int64(320000),
+	}
+
+	// Checks a partially built model
+	assert.Equal(t, b2.Id, uint64(123456))
+	assert.Equal(t, b2.Token, "InvalidToken")
+	assert.Equal(t, b2.UserId, uint64(7890))
+	assert.Equal(t, b2.Expiration, int64(320000))
+	assert.True(t, time.Time.IsZero(b2.Timestamp))
+}
