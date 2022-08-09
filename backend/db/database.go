@@ -25,7 +25,7 @@ type Database interface {
 	RemoveGame(models.Game) error
 	GetGameByID(string) (models.Game, error)
 	GetGamesByTags([]string, bool) ([]models.Game, error)
-	SortGames(string, int)([]models.Game, error)
+	SortGames(string, int) ([]models.Game, error)
 
 	// Download Methods
 	GetAllDownloads() ([]models.Download, error)
@@ -34,13 +34,13 @@ type Database interface {
 
 	// User Methods
 
-	CreateUser(models.User) (models.User, error)
+	CreateUser(models.User) (string, error)
 	// VerifyUserLogin(string, string) (models.User, error)
-	
-  // General DB Methods
-  Disconnect() error
+
+	// General DB Methods
+	Disconnect() error
 	Connect() error
-	GetGamesByFirstLetter(string)([]models.Game, error)
+	GetGamesByFirstLetter(string) ([]models.Game, error)
 }
 
 func NewDatabaseFromEnv() (Database, error) {
