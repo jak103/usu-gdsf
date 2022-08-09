@@ -7,8 +7,13 @@
   	>
     <v-text-field
       v-model="username"
-      :counter="10"
       label="Enter Username"
+      required
+    ></v-text-field>
+
+    <v-text-field
+      v-model="displayName"
+      label="Enter Display Name"
       required
     ></v-text-field>
 
@@ -27,6 +32,12 @@
       counter
     ></v-text-field>
 
+    <v-select
+      :items="items"
+      label="Role"
+      solo
+    ></v-select>
+
     <v-btn
       :disabled="!valid"
       color="success"
@@ -41,7 +52,8 @@
 <script>
 export default {
 	name: 'NewAccount',
-  show1: false,
-
+  data: () => ({
+    items: ['Admin', 'Publisher', 'Basic'],
+  })
 }
 </script>
