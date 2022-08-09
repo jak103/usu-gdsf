@@ -4,7 +4,8 @@
     "build": "vite build",
     "dev": "vite",
     "test": "jest",
-    "type": "module"
+    "type": "module",
+    "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
