@@ -1,68 +1,66 @@
 <template>
-<div>
-	<v-row>
-		<v-col>
-			<h1 class="mt-10 ml-13">Site Users</h1>
-		</v-col>
+	<div
+		v-if="!loadingUsers && usersList.length > 0">
+		<v-row>
+			<v-col>
+				<h1 class="mt-10 ml-13">Site Users</h1>
+			</v-col>
 
-		<v-spacer></v-spacer>
+			<v-spacer></v-spacer>
 
-		<v-col class="d-flex align-end flex-column">
-			<v-btn 
-				class="mt-10 mr-13"
-				color="secondary"
-				@click="handleClickAdmin()"
-			>
-				Create Admin
-			</v-btn>
-		</v-col>
-	</v-row>
+			<v-col class="d-flex align-end flex-column">
+				<v-btn 
+					class="mt-10 mr-13"
+					color="secondary"
+					@click="handleClickAdmin()"
+				>
+					Create Admin
+				</v-btn>
+			</v-col>
+		</v-row>
 
-	<v-progress-circular
-		v-if="loadingUsers"
-		style="position: fixed; top: 40%; left: 50%"
-		indeterminate
-		size="64"
-  ></v-progress-circular>
+		<v-table 
+		class="mt-4 mb-4 pl-10 pr-10">
+			<thead>
+				<tr>
+					<th class="text-left">
+						Name
+					</th>
+					<th class="text-left">
+						Email
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					v-for="user in usersList.slice(((page - 1) * perPage), ((page - 1) * perPage) + perPage)"
+					:key="user.email"
+					style="cursor: pointer"
+					@click.stop="handleClickUser({...user})"
+				>
+					<td>{{ user.firstName }} {{user.lastName}}</td>
+					<td>{{ user.email }}</td>
+				</tr>
+			</tbody>
+		</v-table>
 
-  <v-table v-else class="mt-4 mb-4 pl-10 pr-10">
-    <thead>
-      <tr>
-        <th class="text-left">
-          Name
-        </th>
-        <th class="text-left">
-          Email
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        v-for="user in usersList.slice(((page - 1) * perPage), ((page - 1) * perPage) + perPage)"
-        :key="user.email"
-				style="cursor: pointer"
-				@click.stop="handleClickUser({...user})"
-      >
-        <td>{{ user.firstName }} {{user.lastName}}</td>
-        <td>{{ user.email }}</td>
-      </tr>
-    </tbody>
-  </v-table>
+		<UserForm :isAdminCreation=isAdminCreation
+			:showSelf="showForm" 
+			@close="handleClose()" 
+			@leftDialog="resetDefaults()" 
+			:selectedUser="selectedUser" 
+			@save="handleSaveEdit(selectedUser)"
+			@delete="handleDeleteUser(selectedUser)"
+			@createAdmin="handleCreateAdmin(selectsedUser)"	
+		/>
 
-	<UserForm :isAdminCreation=isAdminCreation
-		:showSelf="showForm" 
-		@close="handleClose()" 
-		@leftDialog="resetDefaults()" 
-		:selectedUser="selectedUser" 
-		@save="handleSaveEdit(selectedUser)"
-		@delete="handleDeleteUser(selectedUser)"
-		@createAdmin="handleCreateAdmin(selectsedUser)"	
-	/>
-
-	<v-pagination
-		v-model="page"
-		:length="Math.ceil(usersList.length / perPage)">
-	</v-pagination>
+		<v-pagination
+			v-model="page"
+			:length="Math.ceil(usersList.length / perPage)">
+		</v-pagination>
+	</div>
+		
+	<Loading v-if="loadingUsers" text="Loading Users" containerStyle="height: 75vh"/>
 
 	<v-snackbar
 		v-model="snackbar"
@@ -79,17 +77,15 @@
 				Close
 			</v-btn>
 		</template>
-  </v-snackbar>
-
+	</v-snackbar>
 	<Footer></Footer>
-	
-	</div>
 </template>
 
 <script>
 import UserForm from '../components/UserForm.vue'
 import Footer from '../components/Footer.vue'
 import {ref} from "vue";
+import Loading from '../components/Loading.vue';
 import axios from "axios";
 
 export default {
@@ -100,28 +96,25 @@ export default {
             // Replace with users from db
             usersList: [
                 { firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
 								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },	
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },	
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },	
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },			
             ],
 
             // Set to false when users have loading, default should be true
@@ -141,7 +134,7 @@ export default {
 
         };
     },
-    components: { UserForm, Footer },
+    components: { UserForm, Footer, Loading },
 
 		methods: {
 

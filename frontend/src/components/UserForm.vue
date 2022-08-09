@@ -135,6 +135,8 @@
 
 <script>
   export default {
+
+    name: "UserForm",
     props: {
         showSelf: Boolean,
         isAdminCreation: Boolean,
