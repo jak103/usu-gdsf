@@ -73,6 +73,32 @@ func (db Firestore) GetGamesByTags(tags []string, matchAll bool) ([]models.Game,
 	return games, nil
 }
 
+//GetGameByID find and return the game with the given First Letter
+func (db Firestore) GetGamesByFirstLetter(letter string) ([]models.Game, error) {
+	games := make([]models.Game, 0)
+	gc := db.client.Collection("games")
+
+	documents := gc.DocumentRefs(context.Background())
+	for {
+		docRef, docRefErr := documents.Next()
+
+		if docRefErr == iterator.Done {
+			break
+		}
+
+		var game models.Game
+
+		if docSnapshot, _ := docRef.Get(context.Background()); docSnapshot != nil {
+			_ = docSnapshot.DataTo(&game)
+			game.Id = docRef.ID
+		}
+
+		games = append(games, game)
+	}
+
+	return games, nil
+}
+
 // GetGameByID find and return the game with the given db ID
 func (db Firestore) GetGameByID(id string) (models.Game, error) {
 	snapShot, err := db.client.Collection("games").Doc(id).Get(context.Background())
