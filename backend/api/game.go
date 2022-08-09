@@ -80,12 +80,23 @@ func getHighestRatedGames(c echo.Context) error {
 		return err
 	}
 
-	if result, err := db.GetHighestRatedGames(); err != nil {
-		log.Error("An error occurred while getting game records: %v", err)
-		return err
-	} else {
-		return c.JSON(http.StatusOK, []interface{}{result})
+	if games, err := db.GetAllGames(); err != nil {
+		for _, game := range games {
+			avg := 0.0
+			ratings, err := db.GetRatingsByGame(game.ID)
+			if err != nil {
+				log.WithError(err).Error("Unable to get ratings")
+				return err
+			}
+
+			for _, rating := range ratings {
+				avg += float64(rating.RatingValue)
+			}
+			avg = avg / float64(len(ratings))
+		}
 	}
+
+	return c.JSON(http.StatusOK, "Highest rated games")
 }
 
 func init() {
