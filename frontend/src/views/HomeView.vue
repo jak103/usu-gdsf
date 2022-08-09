@@ -9,12 +9,15 @@
     </v-row>
     <v-row class="ma-3">
       <v-col>
-        <v-card height="300" color=primary>
-            <p v-if="mostPopularGame == null" class="text-center font-weight-thin" style="color:white;font-size: 30px">
+        <v-card height="400" color=primary>
+            <p class="text-center font-weight-thin" style="color:white;font-size: 30px">
               Our Most Popular Game
             </p>
-            <div v-else>
-              <GameCardView :game="mostPopularGame"></GameCardView>
+            <p v-if="mostPopularGame.id" class="text-center font-weight-thin" style="color:#FFFFFF;font-size: 15px">
+              Unable to get the most popular game at this time
+            </p>
+            <div class="" v-else>
+              <GameCardView :game="mostPopularGame" style="margin:20px"></GameCardView>
             </div>
         </v-card>
       </v-col>
@@ -22,7 +25,7 @@
         <GameCarousel></GameCarousel>
       </v-col>
       <v-col>
-        <v-card height="300" color=primary>
+        <v-card height="400" color=primary>
             <p class="text-center font-weight-thin" style="color:#FFFFFF;font-size: 30px">
               Your Favorited Games
             </p>
@@ -94,7 +97,7 @@ export default defineComponent({
     async getMostPupularGame() {
 				this.dataLoading = true;
 				// we may want to configure a base-url for this, because it won't work on production
-				await axios.get('http://127.0.0.1:8080/mostPopularGame')
+				await axios.get('http://127.0.0.1:8080/most_popular')
 					.then(response => {
 						this.allGames = response.data[0];
 						this.dataLoading = false

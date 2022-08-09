@@ -61,7 +61,7 @@ func getGamesWithTags(c echo.Context) error {
 
 func getAllGames(c echo.Context) error {
 	_db, err := db.NewDatabaseFromEnv()
-	log.Info("\n\n in most popular game \n\n")
+	log.Info("\n\n in most all game \n\n")
 
 	if err != nil {
 		log.WithError(err).Error("Unable to use database")
@@ -134,5 +134,5 @@ func init() {
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
 	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
-	registerRoute(route{method: http.MethodGet, path: "/mostPopularGame", handler: getMostPopularGame})
+	registerRoute(route{method: http.MethodGet, path: "/most_popular", handler: getMostPopularGame})
 }
