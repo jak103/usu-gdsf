@@ -7,9 +7,9 @@ import (
 	"net/url"
 	"testing"
 	"time"
-
 	"github.com/labstack/echo/v4"
-
+	
+	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/auth"
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/stretchr/testify/assert"
@@ -17,8 +17,7 @@ import (
 )
 
 var (
-	// _db, _ = db.NewDatabaseFromEnv()
-
+	
 	game0 = models.Game{
 		Name:         "game0",
 		Rating:       3.5,
@@ -46,16 +45,59 @@ var (
 		Downloads:    36,
 		DownloadLink: "dummy1.test",
 	}
+
+	dummyGameCount =0
 )
 
-func TestGame(t *testing.T) {
-	e := echo.New()
-	recorder := httptest.NewRecorder()
-	request := httptest.NewRequest(http.MethodGet, "/game", nil)
-	c := e.NewContext(request, recorder)
+func Test_FindDummyGameCount(t *testing.T){
+		response := db.JSON_SEED_DATA
+		seededGames := []models.Game{}
+		in := []byte(response)
+		err := json.Unmarshal(in, &seededGames)
+		if err != nil{
+			println("could not parse the SEEDED json game collections")
+		}
+		dummyGameCount = len(seededGames)
+}
 
-	if assert.NoError(t, getAllGames(c)) {
+func TestGetGame(t *testing.T) {
+	e := echo.New()
+	t.Cleanup(func() {
+		_db.RemoveGame(game0)
+		_db.RemoveGame(game1)
+	})
+	
+	id0, _ := _db.AddGame(game0)
+	id1, _ := _db.AddGame(game1)
+	game0.Id = id0
+	game1.Id = id1
+
+	params := auth.TokenParams{
+		Type:      auth.ACCESS_TOKEN,
+		UserId:    42,
+		UserEmail: "tst@example.com",
+	}
+	token := auth.GenerateToken(params)
+
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest(http.MethodGet, "/", nil)
+	request.Header.Set("accessToken", token)
+	
+	c := e.NewContext(request, recorder)
+	c.SetPath("/game/:id")
+	c.SetParamNames("id")
+	c.SetParamValues(id0)
+
+	if assert.NoError(t, getGame(c)) {		
+		response := recorder.Body.String()
+		gameObjectResponse := models.Game{}
+		in := []byte(response)
+		err := json.Unmarshal(in, &gameObjectResponse)
+		if err != nil {
+			println(err)
+		}
 		assert.Equal(t, http.StatusOK, recorder.Code)
+		assert.Equal(t, gameObjectResponse.Id, id0)
 	}
 }
 
@@ -66,7 +108,16 @@ func TestGetAllGames(t *testing.T) {
 	c := e.NewContext(request, recorder)
 
 	if assert.NoError(t, getAllGames(c)) {
+		response := recorder.Body.String()
+		gameObjectResponse := []models.Game{}
+		in := []byte(response)
+		err := json.Unmarshal(in, &gameObjectResponse)
+		if err != nil {
+			println(err)
+		}
 		assert.Equal(t, http.StatusOK, recorder.Code)
+		assert.Equal(t, dummyGameCount, len(gameObjectResponse))
+
 	}
 }
 
@@ -113,8 +164,11 @@ func TestGetGamesWithTags(t *testing.T) {
 		println(err)
 	}
 	require.Equal(t, http.StatusOK, recorder.Code)
-
 	assert.Equal(t, 2, len(gameObjectResponse))
+	assert.Equal(t, "tag0", gameObjectResponse[0].Tags[0])
+	assert.Equal(t, "tag1", gameObjectResponse[0].Tags[1])
+	assert.Equal(t, "tag1", gameObjectResponse[1].Tags[0])
+	assert.Equal(t, "tag2", gameObjectResponse[1].Tags[1])
 }
 
 func TestGetAllGamesReturnsCorrectNumberOfGames(t *testing.T) {
@@ -162,5 +216,5 @@ func TestGetAllGamesReturnsCorrectNumberOfGames(t *testing.T) {
 
 	require.Equal(t, http.StatusOK, recorder.Code)
 
-	assert.Equal(t, 10, len(gameObjectResponse))
+	assert.Equal(t, dummyGameCount+2, len(gameObjectResponse))
 }

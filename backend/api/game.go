@@ -9,6 +9,7 @@ import (
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
+	"github.com/go-playground/validator/v10"
 )
 
 const (
@@ -20,16 +21,19 @@ const (
 	LINK      = "DownloadLink"
 )
 
-func gameInfoHandler(c echo.Context) error {
+var v = validator.New()
+
+func getGame(c echo.Context) error {
+	
 	// get id from path
-	id := c.Param("id")
+	_id := c.Param("id")
 
 	// get game from db with id
 	_db, getDbErr := db.NewDatabaseFromEnv()
 	if getDbErr != nil {
 		return c.JSON(http.StatusInternalServerError, "Database connection error")
 	}
-	game, err := _db.GetGameByID(id)
+	game, err := _db.GetGameByID(_id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Database find game ID error")
 	}
@@ -85,6 +89,7 @@ func newGameHandler(c echo.Context) error {
 		Version:      c.FormValue(VERSION),
 		DownloadLink: c.FormValue(LINK),
 	}
+	
 
 	// Add new game to database
 	_db, getDbErr := db.NewDatabaseFromEnv()
@@ -106,6 +111,6 @@ func init() {
 	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
-	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
+	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGame})
 	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
 }
