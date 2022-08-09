@@ -10,12 +10,12 @@
     <v-row class="ma-3">
       <v-col>
         <v-card height="300" color=primary>
-            <p class="text-center font-weight-thin" style="color:white;font-size: 30px">
+            <p v-if="mostPopularGame == null" class="text-center font-weight-thin" style="color:white;font-size: 30px">
               Our Most Popular Game
             </p>
-            <p class="text-center font-weight-thin" style="color:white;font-size: 15px">
-              Game here
-            </p>
+            <div v-else>
+              <GameCardView :game="mostPopularGame"></GameCardView>
+            </div>
         </v-card>
       </v-col>
       <v-col>
@@ -82,16 +82,30 @@ export default defineComponent({
 
   data() {
     return {
-      exampleGame: new Game()
+      exampleGame: new Game(),
+      mostPopularGame: Game
     }
   },
 
   computed: {
-
   },
 
   methods: {
-
-  }
+    async getMostPupularGame() {
+				this.dataLoading = true;
+				// we may want to configure a base-url for this, because it won't work on production
+				await axios.get('http://127.0.0.1:8080/mostPopularGame')
+					.then(response => {
+						this.allGames = response.data[0];
+						this.dataLoading = false
+					}).catch(error => {
+						console.log(error.response.data);
+						this.dataLoading = false
+					});
+			},
+  },
+  created() {
+			this.getMostPupularGame();
+		}
 });
 </script>
