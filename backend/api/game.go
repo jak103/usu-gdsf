@@ -74,6 +74,11 @@ func newGameHandler(c echo.Context) error {
 
 func getHighestRatedGames(c echo.Context) error {
 	db, err := db.NewDatabaseFromEnv()
+	type gameWithRating struct {
+		gameID uuid.UUID
+		rating float32
+	}
+	gamesWithRatings := []gameWithRating{}
 
 	if err != nil {
 		log.WithError(err).Error("Unable to use database")
@@ -93,10 +98,11 @@ func getHighestRatedGames(c echo.Context) error {
 				avg += float64(rating.RatingValue)
 			}
 			avg = avg / float64(len(ratings))
+			gamesWithRatings = append(gamesWithRatings, gameWithRating{gameID: game.ID, rating: float32(avg)})
 		}
 	}
 
-	return c.JSON(http.StatusOK, "Highest rated games")
+	return c.JSON(http.StatusOK, gamesWithRatings)
 }
 
 func init() {
