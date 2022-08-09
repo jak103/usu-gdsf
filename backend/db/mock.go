@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/log"
@@ -129,19 +130,17 @@ func (db *Mock) GetUserByUserName(userName string) (*models.User, error) {
 }
 
 func (db *Mock) GetUsersByRole(role int64) ([]models.User, error) {
-	typeRole := models.Role(role)
-	user_slice := []models.User{}
+	if role != 0 && role != 1 {
+		return nil, errors.New(fmt.Sprintf("User role %v does not exist", role))
+	}
+	users := make([]models.User, 0)
+	queryRole := models.Role(role)
 	for _, user := range db.users {
-		if user.Role == typeRole {
-			user_slice = append(user_slice, user)
+		if user.Role == queryRole {
+			users = append(users, user)
 		}
 	}
-
-	if len(user_slice) == 0 {
-		return nil, errors.New("no users with that role")
-	}
-
-	return user_slice, nil
+	return users, nil
 }
 
 func (db *Mock) CreateUser(newUser models.User) error {
