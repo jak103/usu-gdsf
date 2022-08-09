@@ -8,6 +8,9 @@ export default {
     "Matthew Larsen",
     "Benjamin Winslett",
     "Sriya Gorrepati",
-    "Elijah Peterson"
+    "Elijah Peterson",
+    "Grant Bruneel",
+    "Quinn Ormond",
+    "Jade Blunt"
   ]
 }

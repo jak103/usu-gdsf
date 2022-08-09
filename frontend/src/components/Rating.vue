@@ -1,9 +1,10 @@
 <template>
 		<v-card-actions> 
-			<span class="pr-1">
-				({{ rating }})
+			<span class="pr-1" data-rating-test="rating">
+				({{ rating = starValue }})
 			</span>
 			<v-rating
+        data-test="rating-main"
 				v-model="rating"
         :background-color="starBackgroundColor"
         :clearable="isClearable"
@@ -22,7 +23,6 @@
         :value="starValue"
         :x-large="isXLarge"
         :x-small="isXSmall"
-        density="compact"
 			></v-rating> 
 		</v-card-actions>
 </template>
@@ -52,7 +52,9 @@ export default {
     },
 
     data: () => ({
-        rating: 3,
+      return: {
+        rating: 4
+      }
     }),
 }
 </script>
