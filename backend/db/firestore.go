@@ -92,7 +92,7 @@ func (db Firestore) GetGamesByFirstLetter(letter string) ([]models.Game, error) 
 			_ = docSnapshot.DataTo(&game)
 			game.Id = docRef.ID
 		}
-		if strings.ToLower(game.Name[0:1]) == strings.ToLower(letter) {
+		if strings.EqualFold(game.Name[0:1], letter) {
 			games = append(games, game)
 		}	
 	}
