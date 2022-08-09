@@ -31,6 +31,7 @@ type Database interface {
 	// Users
 	GetAllUsers() ([]models.User, error)
 	GetUserByID(id uuid.UUID) (*models.User, error)
+	GetUserByUserName(userName string) (*models.User, error)
 	GetUsersByRole(role int64) ([]models.User, error)
 	CreateUser(newUser models.User) error
 	DeleteUser(id uuid.UUID) error
@@ -43,7 +44,7 @@ type Database interface {
 	CreateRating(newRating models.GameRating) error
 	DeleteRating(id uuid.UUID) error
 	DeleteRatingsByGame(gameID uuid.UUID) error
-	updateRating(updatedRating models.GameRating) error
+	UpdateRating(updatedRating models.GameRating) error
 
 	Disconnect() error
 	Connect() error
