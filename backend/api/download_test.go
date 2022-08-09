@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/labstack/echo/v4"
 	"github.com/jak103/usu-gdsf/db"
-	"github.com/stretchr/testify/assert"
 	"github.com/jak103/usu-gdsf/models"
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -27,7 +27,7 @@ var (
 		CreationDate: time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC),
 	}
 )
-//this will need to be changed eventually. It is looking for response 500 now but when we get the database up it will be 200.
+
 func TestGetAllDownloads(t *testing.T) {
 	e := echo.New()
 
