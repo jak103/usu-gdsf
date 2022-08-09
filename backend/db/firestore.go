@@ -74,7 +74,7 @@ func (db Firestore) GetGamesByTags(tags []string, matchAll bool) ([]models.Game,
 	return games, nil
 }
 
-//GetGameByID find and return the game with the given First Letter
+//GetGameByFirstLetter find and return the game with the given First Letter
 func (db Firestore) GetGamesByFirstLetter(letter string) ([]models.Game, error) {
 	games := make([]models.Game, 0)
 	gc := db.client.Collection("games")
@@ -96,7 +96,6 @@ func (db Firestore) GetGamesByFirstLetter(letter string) ([]models.Game, error) 
 			games = append(games, game)
 		}	
 	}
-
 	return games, nil
 }
 
