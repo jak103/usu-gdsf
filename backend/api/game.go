@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
+	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
 )
 
@@ -75,7 +76,7 @@ func newGameHandler(c echo.Context) error {
 func getHighestRatedGames(c echo.Context) error {
 	db, err := db.NewDatabaseFromEnv()
 	type gameWithRating struct {
-		gameID uuid.UUID
+		game   models.Game
 		rating float32
 	}
 	gamesWithRatings := []gameWithRating{}
@@ -98,7 +99,7 @@ func getHighestRatedGames(c echo.Context) error {
 				avg += float64(rating.RatingValue)
 			}
 			avg = avg / float64(len(ratings))
-			gamesWithRatings = append(gamesWithRatings, gameWithRating{gameID: game.ID, rating: float32(avg)})
+			gamesWithRatings = append(gamesWithRatings, gameWithRating{game: game, rating: float32(avg)})
 		}
 	}
 
