@@ -19,7 +19,7 @@
 	</v-row>
 
 	<v-progress-circular
-		v-if="loading"
+		v-if="loadingUsers"
 		style="position: fixed; top: 40%; left: 50%"
 		indeterminate
 		size="64"
@@ -38,7 +38,7 @@
     </thead>
     <tbody>
       <tr
-        v-for="user in users.slice(((page - 1) * perPage), ((page - 1) * perPage) + perPage)"
+        v-for="user in usersList.slice(((page - 1) * perPage), ((page - 1) * perPage) + perPage)"
         :key="user.email"
 				style="cursor: pointer"
 				@click.stop="handleClickUser({...user})"
@@ -62,8 +62,10 @@
 	<v-pagination
 		data-test="pagination" 
 		v-model="page"
-		:length="Math.ceil(users.length / perPage)">
+		:length="Math.ceil(usersList.length / perPage)">
 	</v-pagination>
+
+	
 
 	<Footer></Footer>
 	
@@ -82,7 +84,7 @@ export default {
     data() {
         return {
             // Get list of users from database
-            users: [
+            usersList: [
                 { firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
 								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
 								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
@@ -105,32 +107,11 @@ export default {
 								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
 								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
 								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								{ firstName: "Test", lastName: "User", email: "testUser@example.com" },
-								
+								{ firstName: "Test", lastName: "User", email: "testUser@example.com", dob: '2022-08-01' },	
             ],
+
             // Set to false when users have loading, default should be true
-            loading: false,
+            loadingUsers: false,
 						showForm: ref(false),
 						isAdminCreation: ref(false),
 						selectedUser: ref({
@@ -146,6 +127,20 @@ export default {
     components: { UserForm, Footer },
 
 		methods: {
+
+			// We don't have a users endpoint on the server yet
+			async getUsers() {
+				// this.loadingUsers = true;
+				// await axios.get('http://127.0.0.1:8080/users')
+				// 	.then(response => {
+				// 		this.usersList = response.data[0];
+				// 		this.loadingUsers = false
+				// 	}).catch(err => {
+				// 		console.log(err.response.data);
+				// 		this.loadingUsers = false
+				// 	});
+			},
+
 			handleClickUser(user) {
 				this.showForm = true
 				this.selectedUser = user
@@ -192,6 +187,10 @@ export default {
 				console.log(user)
 				this.showForm = false
 			}
+		},
+		
+		created() {
+			this.getUsers()
 		}
 }
 </script>
