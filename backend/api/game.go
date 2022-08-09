@@ -125,10 +125,6 @@ func getHighestRatedGames(c echo.Context) error {
 
 func init() {
 	log.Info("Running game init")
-	//registerRoute(route{method: http.MethodGet, path: "/game", handler: game})
-	//registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
-	//registerRoute(route{method: http.MethodGet, path: "/games", handler: getGames})
-	//registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 	registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
 	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGameByID})
 	registerRoute(route{method: http.MethodGet, path: "/game", handler: getGames})
