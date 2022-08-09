@@ -103,21 +103,28 @@ func newGameHandler(c echo.Context) error {
 }
 
 func updateGameHandler(c echo.Context) error {
-	// db, err := db.NewDatabaseFromEnv()
+	db, err := db.NewDatabaseFromEnv()
 
-	// gameId := c.FormValue("id")
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return err
+	}
 
-	// if err != nil {
-	// 	log.WithError(err).Error("Unable to use database")
-	// 	return err
-	// }
+	updatedGame := models.Game{
+		Name:         c.FormValue(NAME),
+		Developer:    c.FormValue(DEVELOPER),
+		CreationDate: time.Now(),
+		Version:      c.FormValue(VERSION),
+		DownloadLink: c.FormValue(LINK),
+	}
 
-	// if result, err := db.UpdateGame(); err != nil {
-	// 	log.Error("An error occurred while updating the game record: %v", err)
-	// 	return err
-	// } else {
-	// 	return c.JSON(http.StatusOK, []interface{}{result})
-	// }
+	if result, err := db.UpdateGame(updatedGame); err != nil {
+		log.Error("An error occurred while updating the game record: %v", err)
+		return err
+	} else {
+		return c.JSON(http.StatusOK, []interface{}{result})
+	}
+
 	return c.JSON(http.StatusOK, "Update game handler")
 }
 

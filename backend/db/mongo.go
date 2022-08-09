@@ -377,6 +377,11 @@ func (db Mongo) GetAllDownloads() ([]models.Download, error) {
 	return downloads, nil
 }
 
+func (db Mongo) UpdateGame(updatedGame models.Game) (models.Game, error) {
+	// TODO: Finish updateGame
+	return updatedGame, nil
+}
+
 func (db Mongo) CreateUser(newUser models.User) (models.User, error) {
 	// users := db.database.Collection("users")
 

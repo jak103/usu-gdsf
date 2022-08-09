@@ -123,6 +123,11 @@ func (db Mock) GetAllDownloads() ([]models.Download, error) {
 	return downloads, nil
 }
 
+func (db Mock) UpdateGame(updatedGame models.Game) (models.Game, error) {
+	// TODO: Finish updateGame
+	return updatedGame, nil
+}
+
 func (db Mock) CreateUser(newUser models.User) (models.User, error) {
 	// users := db.database.Collection("users")
 

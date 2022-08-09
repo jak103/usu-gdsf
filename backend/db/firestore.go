@@ -184,6 +184,11 @@ func (db Firestore) GetAllDownloads() ([]models.Download, error) {
 	return downloads, nil
 }
 
+func (db Firestore) UpdateGame(updatedGame models.Game) (models.Game, error) {
+	// TODO: Finish updateGame
+	return updatedGame, nil
+}
+
 func (db Firestore) CreateUser(newUser models.User) (models.User, error) {
 	// users := db.database.Collection("users")
 
