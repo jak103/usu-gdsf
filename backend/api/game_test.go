@@ -9,6 +9,7 @@ import (
 	"time"
 	"github.com/labstack/echo/v4"
 	
+	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/auth"
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/stretchr/testify/assert"
@@ -44,7 +45,20 @@ var (
 		Downloads:    36,
 		DownloadLink: "dummy1.test",
 	}
+
+	dummyGameCount =0
 )
+
+func Test_FindDummyGameCount(t *testing.T){
+		response := db.JSON_SEED_DATA
+		seededGames := []models.Game{}
+		in := []byte(response)
+		err := json.Unmarshal(in, &seededGames)
+		if err != nil{
+			println("could not parse the SEEDED json game collections")
+		}
+		dummyGameCount = len(seededGames)
+}
 
 func TestGetGame(t *testing.T) {
 	e := echo.New()
@@ -94,7 +108,16 @@ func TestGetAllGames(t *testing.T) {
 	c := e.NewContext(request, recorder)
 
 	if assert.NoError(t, getAllGames(c)) {
+		response := recorder.Body.String()
+		gameObjectResponse := []models.Game{}
+		in := []byte(response)
+		err := json.Unmarshal(in, &gameObjectResponse)
+		if err != nil {
+			println(err)
+		}
 		assert.Equal(t, http.StatusOK, recorder.Code)
+		assert.Equal(t, dummyGameCount, len(gameObjectResponse))
+
 	}
 }
 
@@ -189,5 +212,5 @@ func TestGetAllGamesReturnsCorrectNumberOfGames(t *testing.T) {
 
 	require.Equal(t, http.StatusOK, recorder.Code)
 
-	assert.Equal(t, 10, len(gameObjectResponse))
+	assert.Equal(t, dummyGameCount+2, len(gameObjectResponse))
 }
