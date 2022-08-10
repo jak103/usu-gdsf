@@ -36,7 +36,7 @@
 			</tbody>
 		</v-table>
 
-	<NewGame :showCreate=showCreate @cancel="closeForm()" :game = "selectedGame" @save="handleCreateSave(game)"/>
+	<NewGame :showCreate=showCreate @cancel="closeForm()" :game="selectedGame" @save="handleCreateSave(game)"/>
 	<EditGame :showEdit="showEdit" @cancel="closeForm()" :game="selectedGame" @save="handleEditSave(game)"/>
 
 	</div>
@@ -48,8 +48,9 @@
 import NewGame from '../components/NewGame.vue'
 import EditGame from '../components/EditGame.vue'
 import Footer from "../components/Footer.vue"
-import axios from 'axios'
-import {ref} from "vue"
+import * as GamesServices from '../services/gamesServices'
+import Game from '../models/game'
+
 export default {
 	name: 'GameManagementPage',
     components: {
@@ -61,27 +62,27 @@ export default {
 		
 		return {
 			games: [],
-			showCreate: ref(false),
-			showEdit: ref(false),
-			selectedGame: ref({
+			showCreate: false,
+			showEdit: false,
+			selectedGame: {
 				name: " ",
 				developer: " ",
 				version: " ",
 				description: " ",
 				imagePath: " ",
 				downloadLink: " "
-			}),
+			},
 			error: ''
 		}
 	},
 
 	methods: {
 		async getGames() {
-			await axios.get('http://127.0.0.1:8080/games')
+			await GamesServices.getAllGames()
 				.then(response => {
-					this.games = response.data[0]
+					this.games = response?.data;
 				}).catch(error => {
-					console.log(error.response.data)
+					console.log(error)
 				});
 		},
 		handleCreateGame() {

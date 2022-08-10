@@ -8,6 +8,9 @@
           <v-col class="text-center" v-for="link of links">
             <a :href="link.link" class="text-primary"> {{ link.name }}</a>
           </v-col>
+          <v-col>
+             <v-img src="../src/assets/UtahStateLogoBlue.jpeg" width="75" />
+          </v-col>
         </v-row>
     </v-container>
 </template>

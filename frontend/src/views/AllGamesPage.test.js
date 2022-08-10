@@ -1,5 +1,5 @@
 import { mount, flushPromises  } from '@vue/test-utils'
-import axios from 'axios'
+import * as gamesServices from '../services/gamesServices'
 import AllGamesPage from './AllGamesPage.vue'
 
 // Object to contain component.
@@ -63,6 +63,20 @@ test("renders load bar on load", async () => {
     expect(wrapper.find('[data-test="loadbar"]').exists()).toBeTruthy()
 })
 
+test("renders no data on empty data", async () => {
+    await wrapper.setData({
+        dataLoading: false,
+        allGames: []
+    });
+
+    expect(wrapper.find('[data-test="title"]').exists()).not.toBeTruthy()
+    expect(wrapper.find('[data-test="data-table"]').exists()).not.toBeTruthy()
+    expect(wrapper.find('[data-test="pagination"]').exists()).not.toBeTruthy()
+    expect(wrapper.find('[data-test="loadbar"]').exists()).not.toBeTruthy()
+
+    expect(wrapper.find('[data-test="noData"]').exists()).toBeTruthy()
+})
+
 test("converts date to string", () => {
     const testDate = new Date()
     const results = wrapper.vm.getDateString(testDate)
@@ -72,20 +86,21 @@ test("converts date to string", () => {
 
 test("routes to game page", () => {
     const testId = "TESTID"
+    const testName = "TestName"
 
-    wrapper.vm.handleClickGame(testId)
+    wrapper.vm.handleClickGame(testId, testName)
 
     expect(mockRouter.push).toHaveBeenCalledTimes(1)
-    expect(mockRouter.push).toHaveBeenCalledWith(`/games/info/${testId}`)
+    expect(mockRouter.push).toHaveBeenCalledWith(`/games/info/${testName}/${testId}`)
 })
 
 test("hits backend to get games list", async () => {
     const gameName = "Test Game"
-    jest.spyOn(axios, 'get').mockResolvedValue({ data: [[{ Name: gameName }]] })
+    jest.spyOn(gamesServices, 'getAllGames').mockResolvedValue({ data: [{ Name: gameName }] })
 
     wrapper.vm.getGames()
 
-    expect(axios.get).toHaveBeenCalledTimes(1)
+    expect(gamesServices.getAllGames).toHaveBeenCalledTimes(1)
 
     await flushPromises()
 

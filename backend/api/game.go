@@ -9,6 +9,7 @@ import (
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
+	"github.com/go-playground/validator/v10"
 )
 
 const (
@@ -20,16 +21,19 @@ const (
 	LINK      = "DownloadLink"
 )
 
-func gameInfoHandler(c echo.Context) error {
+var v = validator.New()
+
+func getGame(c echo.Context) error {
+	
 	// get id from path
-	id := c.Param("id")
+	_id := c.Param("id")
 
 	// get game from db with id
 	_db, getDbErr := db.NewDatabaseFromEnv()
 	if getDbErr != nil {
 		return c.JSON(http.StatusInternalServerError, "Database connection error")
 	}
-	game, err := _db.GetGameByID(id)
+	game, err := _db.GetGameByID(_id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Database find game ID error")
 	}
@@ -61,7 +65,6 @@ func getGamesWithTags(c echo.Context) error {
 
 func getAllGames(c echo.Context) error {
 	_db, err := db.NewDatabaseFromEnv()
-
 	if err != nil {
 		log.WithError(err).Error("Unable to use database")
 		return err
@@ -75,6 +78,50 @@ func getAllGames(c echo.Context) error {
 	}
 }
 
+func getAllTags(c echo.Context) error {
+	_db, err := db.NewDatabaseFromEnv()
+
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return err
+	}
+
+	if result, err := _db.GetAllGames(); err != nil {
+		log.Error("An error occurred while getting game records: %v", err)
+		return err
+	} else {
+		// Loop through the games and grab all the tags, make the list unique
+		tags := make([]string, 0)
+		for i := range result {
+			tags = append(tags, result[i].Tags...)
+		}
+		return c.JSON(http.StatusOK, tags)
+	}
+}
+
+func getMostPopularGame(c echo.Context) error {
+	_db, err := db.NewDatabaseFromEnv()
+
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return err
+	}
+
+	if result, err := _db.GetAllGames(); err != nil {
+		log.Error("An error occurred while getting game records: %v", err)
+		return err
+	} else {
+		var mostPopularGame models.Game
+		// Keeps previous game if there is a tie, could add a tie breaker logic
+		for i := range result {
+			if mostPopularGame.TimesPlayed < result[i].TimesPlayed {
+				mostPopularGame = result[i]
+			}
+		}
+		return c.JSON(http.StatusOK, mostPopularGame)
+	}
+}
+
 func newGameHandler(c echo.Context) error {
 	// create new game model
 	// TODO need a security layer in between the form and our new game struct
@@ -85,6 +132,7 @@ func newGameHandler(c echo.Context) error {
 		Version:      c.FormValue(VERSION),
 		DownloadLink: c.FormValue(LINK),
 	}
+	
 
 	// Add new game to database
 	_db, getDbErr := db.NewDatabaseFromEnv()
@@ -106,6 +154,8 @@ func init() {
 	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
-	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
+	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGame})
 	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
+	registerRoute(route{method: http.MethodGet, path: "/games/tags", handler: getAllTags})
+	registerRoute(route{method: http.MethodGet, path: "/most_popular", handler: getMostPopularGame})
 }
