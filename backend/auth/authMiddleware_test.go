@@ -74,3 +74,22 @@ func TestMiddlewareNoToken(t *testing.T) {
 }
 
 
+//Provide access token cookie that is INVALID
+
+func TestMiddlewareWitheinvalidToken(t *testing.T) {
+        e := echo.New()
+        rec := httptest.NewRecorder()
+        req := httptest.NewRequest(http.MethodGet, "/_testStub", nil)
+        c := e.NewContext(req, rec)
+
+        
+
+        req.Header.Set("Cookie", ACCESS_TOKEN_COOKIE_KEY + "=hello world")
+        stubRequest := RequireAuthorization(handlerStub, false)
+
+        assert.Error(t, stubRequest(c))
+//         if assert.NOError(t, stubRequest(c)) {
+//                 respBody := rec.Body.String()
+//                 assert.Equal(t, respBody, HANDLER_STUB_SUCCESS)
+//         }
+ }
