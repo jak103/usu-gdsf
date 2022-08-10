@@ -61,8 +61,6 @@ func getGamesWithTags(c echo.Context) error {
 
 func getAllGames(c echo.Context) error {
 	_db, err := db.NewDatabaseFromEnv()
-	log.Info("\n\n in most all game \n\n")
-
 	if err != nil {
 		log.WithError(err).Error("Unable to use database")
 		return err
@@ -78,7 +76,6 @@ func getAllGames(c echo.Context) error {
 
 func getMostPopularGame(c echo.Context) error {
 	_db, err := db.NewDatabaseFromEnv()
-	log.Info("\n\n in most popular game \n\n")
 	if err != nil {
 		log.WithError(err).Error("Unable to use database")
 		return err
@@ -89,14 +86,12 @@ func getMostPopularGame(c echo.Context) error {
 		return err
 	} else {
 		var mostPopularGame models.Game
-
 		// Keeps previous game if there is a tie, could add a tie breaker logic
 		for i := range result {
 			if mostPopularGame.TimesPlayed < result[i].TimesPlayed {
 				mostPopularGame = result[i]
 			}
 		}
-
 		return c.JSON(http.StatusOK, mostPopularGame)
 	}
 }

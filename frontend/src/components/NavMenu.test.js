@@ -9,6 +9,4 @@ test('renders Nav Menu', () => {
 
 test('Checks Nav Menu Items', () => {
   const wrapper = mount(menu)
-  console.log("\n\n\n\n\n", wrapper, "\n\n\n\n\n")
-  //expect(title.text()).toBe("Game Dev Store")
 })
