@@ -13,9 +13,17 @@
             <p class="text-center font-weight-thin" style="color:white;font-size: 30px">
               Our Most Popular Game
             </p>
-            <p class="text-center font-weight-thin" style="color:white;font-size: 15px">
-              Game here
+            <p v-if="!mostPopularGame" class="text-center font-weight-thin" style="color:#FFFFFF;font-size: 15px">
+              Unable to get the most popular game at this time
             </p>
+            <div v-else class="" @click.stop="handleClickGame(mostPopularGame.Id)">
+             <v-img v-if="mostPopularGame.ImagePath"
+							height="150"
+							:src=mostPopularGame.ImagePath
+						  ></v-img>
+              <h2 style="text-align: center">{{mostPopularGame["Name"]}}</h2>
+              <p style="text-align: center"> Made by: {{mostPopularGame["Developer"]}}  |  Times Played: {{mostPopularGame["TimesPlayed"]}}</p>
+            </div>
         </v-card>
       </v-col>
       <v-col>
@@ -68,7 +76,7 @@ import Game from '../models/game.js'
 import GameList from '../components/GameList.vue';
 import GameCardView from '../components/GameCardView.vue';
 import Footer from "../components/Footer.vue";
-
+import axios from "axios";
 
 export default defineComponent({
   name: 'HomeView',
@@ -82,16 +90,34 @@ export default defineComponent({
 
   data() {
     return {
-      exampleGame: new Game()
+      exampleGame: new Game(),
+      mostPopularGame: {},
     }
   },
 
   computed: {
-
   },
 
   methods: {
-
-  }
+    async getMostPupularGame() {
+				this.dataLoading = true;
+				// we may want to configure a base-url for this, because it won't work on production
+				await axios.get('http://127.0.0.1:8080/most_popular')
+					.then(response => {
+						this.mostPopularGame = response.data;
+            console.log(this.mostPopularGame, response.data);
+						this.dataLoading = false
+					}).catch(error => {
+						console.log(error.response.data);
+						this.dataLoading = false
+					});
+			},
+      handleClickGame(id) {
+				this.$router.push("/games/info/" + id)
+			},
+  },
+  created() {
+			this.getMostPupularGame();
+		}
 });
 </script>

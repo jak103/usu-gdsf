@@ -61,7 +61,6 @@ func getGamesWithTags(c echo.Context) error {
 
 func getAllGames(c echo.Context) error {
 	_db, err := db.NewDatabaseFromEnv()
-
 	if err != nil {
 		log.WithError(err).Error("Unable to use database")
 		return err
@@ -72,6 +71,28 @@ func getAllGames(c echo.Context) error {
 		return err
 	} else {
 		return c.JSON(http.StatusOK, result)
+	}
+}
+
+func getMostPopularGame(c echo.Context) error {
+	_db, err := db.NewDatabaseFromEnv()
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return err
+	}
+
+	if result, err := _db.GetAllGames(); err != nil {
+		log.Error("An error occurred while getting game records: %v", err)
+		return err
+	} else {
+		var mostPopularGame models.Game
+		// Keeps previous game if there is a tie, could add a tie breaker logic
+		for i := range result {
+			if mostPopularGame.TimesPlayed < result[i].TimesPlayed {
+				mostPopularGame = result[i]
+			}
+		}
+		return c.JSON(http.StatusOK, mostPopularGame)
 	}
 }
 
@@ -108,4 +129,5 @@ func init() {
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
 	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
+	registerRoute(route{method: http.MethodGet, path: "/most_popular", handler: getMostPopularGame})
 }
