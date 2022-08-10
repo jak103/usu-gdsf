@@ -110,9 +110,8 @@ func TestSortGames(t *testing.T){
 	res, _ := _db.SortGames("_id", 1);
 	fmt.Printf("%+v", res)
 }
-func TestGetGamesByFirstLetter(t *testing.T){
-	// _db, _ := NewDatabaseFromEnv()
 
+func TestGetGamesByFirstLetter(t *testing.T){
 	//just to make it safe if there is incomplete test condition 
 	
 	//cleanup
@@ -127,6 +126,7 @@ func TestGetGamesByFirstLetter(t *testing.T){
 	res, _ := _db.GetGamesByFirstLetter("p");
 	fmt.Printf("%+v", res)
 }
+
 func cleanup() {
 	_db.RemoveGame(game0)
 	_db.RemoveGame(game1)
