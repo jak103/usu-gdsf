@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"testing"
 	"time"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/jak103/usu-gdsf/auth"
 	"github.com/jak103/usu-gdsf/models"
@@ -218,4 +219,35 @@ func TestGetAllGamesReturnsCorrectNumberOfGames(t *testing.T) {
 	require.Equal(t, http.StatusOK, recorder.Code)
 
 	assert.Equal(t, dummyGameCount+2, len(gameObjectResponse))
+}
+
+func TestSortGames(t *testing.T){
+	e := echo.New()
+	params := auth.TokenParams{
+		Type:      auth.ACCESS_TOKEN,
+		UserId:    42,
+		UserEmail: "tst@example.com",
+	}
+
+	token := auth.GenerateToken(params)
+
+	q := make(url.Values)
+	q.Set("srt", "_id-ASC")
+
+	req := httptest.NewRequest("http.MethodGet", "/games/sort?"+q.Encode(), nil)
+	req.Header.Set("accessToken", token)
+	recorder := httptest.NewRecorder()
+	c := e.NewContext(req, recorder)
+
+	assert.NoError(t, sortAllGame(c))
+	response := recorder.Body.String()
+	gameObjectResponse := []models.Game{}
+
+	in := []byte(response)
+	err := json.Unmarshal(in, &gameObjectResponse)
+	if err != nil {
+		fmt.Printf("%+v", err)
+	}
+	assert.LessOrEqual(t, 8, len(gameObjectResponse))
+	assert.Greater(t, len(gameObjectResponse), 0)
 }
