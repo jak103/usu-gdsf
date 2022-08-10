@@ -8,11 +8,11 @@
     ></v-img>
 
     <v-card-title>
-      {{title}}
+      {{ title }}
     </v-card-title>
 
     <v-card-subtitle>
-      {{author}}
+      {{ author }}
     </v-card-subtitle>
 
     <v-card-actions>
@@ -47,7 +47,7 @@
         <v-divider></v-divider>
 
         <v-card-text>
-            {{description}}
+          {{ description }}
         </v-card-text>
       </div>
     </v-expand-transition>
@@ -55,10 +55,10 @@
 </template>
 
 <script>
-  import axios from 'axios';
+import axios from "axios";
 
-  export default {
-    name: 'GameCard',
+export default {
+  name: 'GameCard',
 
     props: {
         title: String,
@@ -67,26 +67,11 @@
         image: String,
     },
 
-    data: () => ({
-      show: false,
-      image: "",
-      notDownloading: true
-    }),
+  data: () => ({
+    show: false,
+  }),
 
-    mounted() {
-      axios.get("http://localhost:8080/game/download?downloadType=screenshots&bucket=breakout")
-        .then(res => {
-          res.data[0].forEach(element => {
-            this.image = element.ObjectData
-            return;
-          })
-        })
-    },
-
-    methods: {
-      sleep: function(ms) {
-        return new Promise(r => setTimeout(r, ms))
-      },
+  methods: {
 
       downloadGame: async function () {
         if (this.notDownloading) {

@@ -1,9 +1,9 @@
 <template>
-	<div>
+	<v-container>
 		<v-row class="mt-4">
 			<GameList></GameList>
 		</v-row>
-	</div>
+	</v-container>
 </template>
 
 <script>
