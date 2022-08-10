@@ -34,6 +34,19 @@ export default {
     username: null,
     password: null,
   }),
+
+  methods: {
+    async save() {
+      await this.$axios.post({
+        url: '/register',
+        data: {
+          username: this.username,
+          password: this.password
+        }
+      })
+    }
+
+  }
 };
 </script>
 

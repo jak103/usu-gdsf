@@ -1,6 +1,10 @@
 <template>
-<div v-for = "item in [0,1,2,3,4,5,6,7]">
-  <GameCard :title="'Game Title'" :author="'Game Author'" :description="'Game Description'" image="https://cdn.cloudflare.steamstatic.com/steam/apps/489830/capsule_616x353.jpg?t=1650909796" />
+<div v-for = "item in gameInfo" :key="item.id"
+>
+  <GameCard 
+  :title="item.title" 
+  :author="Game Author" 
+  :description="item.description" />
   </div>
 </template>
 
@@ -11,10 +15,18 @@
 
     data: () => ({
       show: false,
+      gameInfo: []
     }),
 
     components: {
       GameCard,
     },
+
+    methods: {
+     getData() {
+      let res =  this.$axios.get('/game')
+    }
+
+  }
   }
 </script>
