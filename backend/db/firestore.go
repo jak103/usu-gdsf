@@ -10,15 +10,17 @@ import (
 	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
+	"go.uber.org/multierr"
 	"google.golang.org/api/iterator"
 )
 
 var _ Database = (*Firestore)(nil)
 
 type Firestore struct {
-	client *firestore.Client
-	games  *firestore.CollectionRef
-	users  *firestore.CollectionRef
+	client  *firestore.Client
+	games   *firestore.CollectionRef
+	users   *firestore.CollectionRef
+	ratings *firestore.CollectionRef
 }
 
 func (db Firestore) GetGameByID(id uuid.UUID) (*models.Game, error) {
@@ -226,31 +228,124 @@ func (db *Firestore) UpdateUser(updatedUser models.User) error {
 
 // Ratings
 func (db *Firestore) GetRatingByID(id uuid.UUID) (*models.GameRating, error) {
-	panic("not implemented") // TODO: Implement
+	ratingDoc := db.ratings.Doc(id.String())
+	snapshot, err := ratingDoc.Get(context.Background())
+
+	if err != nil {
+		return nil, err
+	}
+
+	if snapshot == nil {
+		return nil, fmt.Errorf("%s: rating not found", id)
+	}
+
+	var rating models.GameRating
+	if err = snapshot.DataTo(&rating); err != nil {
+		return nil, err
+	}
+
+	return &rating, nil
 }
 
 func (db *Firestore) GetRatingsByGame(gameID uuid.UUID) ([]models.GameRating, error) {
-	panic("not implemented") // TODO: Implement
+	ratings := make([]models.GameRating, 0)
+	ratingsCollection := db.ratings
+
+	docs := ratingsCollection.Where("gameid", "==", gameID.String()).Documents(context.Background())
+
+	for {
+		docRef, docRefErr := docs.Next()
+
+		if docRefErr == iterator.Done {
+			break
+		}
+
+		var rating models.GameRating
+		docRef.DataTo(&rating)
+
+		ratings = append(ratings, rating)
+	}
+
+	return ratings, nil
 }
 
 func (db *Firestore) GetRatingsByUser(userID uuid.UUID) ([]models.GameRating, error) {
-	panic("not implemented") // TODO: Implement
+	ratings := make([]models.GameRating, 0)
+	ratingsCollection := db.ratings
+
+	docs := ratingsCollection.Where("userid", "==", userID.String()).Documents(context.Background())
+
+	for {
+		docRef, docRefErr := docs.Next()
+
+		if docRefErr == iterator.Done {
+			break
+		}
+
+		var rating models.GameRating
+		docRef.DataTo(&rating)
+
+		ratings = append(ratings, rating)
+	}
+
+	return ratings, nil
 }
 
 func (db *Firestore) CreateRating(newRating models.GameRating) error {
-	panic("not implemented") // TODO: Implement
+	// NOTE: this assumes that the ID is already set in the new object
+	_, err := db.ratings.Doc(newRating.ID.String()).Set(context.Background(), newRating)
+	if err != nil {
+		log.WithError(err).Error("failed to add a rating to firestore")
+	}
+	return err
 }
 
 func (db *Firestore) DeleteRating(id uuid.UUID) error {
-	panic("not implemented") // TODO: Implement
+	ratingDoc := db.ratings.Doc(id.String())
+	_, err := ratingDoc.Delete(context.Background())
+
+	return err
 }
 
 func (db *Firestore) DeleteRatingsByGame(gameID uuid.UUID) error {
-	panic("not implemented") // TODO: Implement
+	ratingsCollection := db.ratings
+
+	docs := ratingsCollection.Where("gameid", "==", gameID.String()).Documents(context.Background())
+
+	var finalErr error = nil
+	for {
+		docRef, docRefErr := docs.Next()
+		if docRefErr == iterator.Done {
+			break
+		}
+		_, err := docRef.Ref.Delete(context.Background())
+		if err != nil {
+			if finalErr == nil {
+				finalErr = err
+			} else {
+				finalErr = multierr.Append(finalErr, err)
+			}
+		}
+	}
+
+	return finalErr
 }
 
 func (db *Firestore) UpdateRating(updatedRating models.GameRating) error {
-	panic("not implemented") // TODO: Implement
+	var finalErr error = nil
+	_, getErr := db.ratings.Doc(updatedRating.ID.String()).Get(context.Background())
+	if getErr == nil {
+		_, err := db.ratings.Doc(updatedRating.ID.String()).Set(context.Background(), updatedRating)
+		if err != nil {
+			log.WithError(err).Error("failed to update a rating in firestore")
+			finalErr = err
+		}
+	} else {
+		log.WithError(getErr).Error("Tried to update a rating that doesn't exist")
+		finalErr = getErr
+	}
+
+	return finalErr
 }
 
 // Disconnect disconnects from the remote database
@@ -279,6 +374,9 @@ func (db *Firestore) Connect() error {
 
 	// Etablish Database Collection object
 	db.client = client
+	db.games = client.Collection(GAMES)
+	db.users = client.Collection(USERS)
+	db.ratings = client.Collection(RATINGS)
 
 	return nil
 }
