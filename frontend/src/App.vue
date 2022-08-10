@@ -1,14 +1,14 @@
 <template>
-  <v-app>
-    <v-navigation-drawer
-      app
-      color="primary"
-    >
-      <NavMenu/>
-    </v-navigation-drawer>
+<v-app>
+  <v-navigation-drawer
+    app
+    color="primary"
+  >
+    <NavMenu/>
+  </v-navigation-drawer>
 
-  <!-- Sizes your content based upon application components -->
-  <v-main>
+<!-- Sizes your content based upon application components -->
+<v-main>
 <!-- Provides the application the proper gutter -->
 <v-container fluid>
 <router-view></router-view>
@@ -24,28 +24,28 @@ no-gutters
 >
 
 <v-btn
-  color="white"
-  text
-  rounded
-  class="my-2"
+color="white"
+text
+rounded
+class="my-2"
 >
-      <router-link to="/">Home</router-link>
-      </v-btn>
+    <router-link to="/">Home</router-link>
+    </v-btn>
 
 <v-btn
-  color="white"
-  text
-  rounded
-  class="my-2"
+color="white"
+text
+rounded
+class="my-2"
 >
-      <router-link to="/about">About Us</router-link>
-      </v-btn>
+    <router-link to="/about">About Us</router-link>
+    </v-btn>
 
 <v-col
-  class="primary lighten-2 text-center black--text"
-  cols="12"
+class="primary lighten-2 text-center black--text"
+cols="12"
 >
-  {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
+{{ new Date().getFullYear() }} — <strong>Vuetify</strong>
 </v-col>
 </v-row>
 </v-footer>
@@ -57,19 +57,19 @@ import HomeView from './views/HomeView.vue'
 import NavMenu from './components/NavMenu.vue'
 
 export default {
-  name: 'App',
+name: 'App',
 
-  components: {
-    HomeView,
-    NavMenu
+components: {
+  HomeView,
+  NavMenu
 },
 
-  data: () => ({
-    
-  }),
+data: () => ({
 
-  computed: {
+}),
 
-  }
+computed: {
+
+}
 }
 </script>
