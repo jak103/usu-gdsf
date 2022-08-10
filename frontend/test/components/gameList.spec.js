@@ -1,4 +1,3 @@
-
 import { shallowMount } from '@vue/test-utils'
 import GameList from "../../src/components/GameList.vue"
 
