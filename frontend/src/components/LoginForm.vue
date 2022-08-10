@@ -20,7 +20,7 @@
       </v-form>
     </v-card-text>
     <v-card-actions>
-      <v-btn class="bg-teal" elevation="7"> Login </v-btn>
+      <v-btn to="/admin" class="bg-teal" elevation="7"> Login </v-btn>
     </v-card-actions>
   </v-card>
 </template>
