@@ -29,13 +29,28 @@ func user(c echo.Context) error {
 }
 
 func logout(c echo.Context) error {
+    invalidatedAccessCookie := http.Cookie{
+        Name: auth.ACCESS_TOKEN_COOKIE_KEY,
+        Value: "",
+        Secure: true,
+        HttpOnly: true,
+        Expires: time.Unix(0, 0),
+    }
 
-	u := http.Cookie{
-		Value: fmt.Sprintf("%s%s", auth.ACCESS_TOKEN_COOKIE_KEY, auth.REFRESH_TOKEN_COOKIE_KEY)}
-	u.Expires = time.Unix(0, 0)
-	c.SetCookie(&u)
-	return c.JSON(http.StatusOK, "Old Cookie Deleted. Logged Out!\n")
-	// TODO: Blacklist refresh token by adding it to the database
+    invalidatedRefreshCookie := http.Cookie{
+        Name: auth.REFRESH_TOKEN_COOKIE_KEY,
+        Value: "",
+        Secure: true,
+        HttpOnly: true,
+        Expires: time.Unix(0, 0),
+    }
+
+    c.SetCookie(&invalidatedAccessCookie)
+    c.SetCookie(&invalidatedRefreshCookie)
+
+    // TODO: Blacklist refresh token by adding it to the database
+
+    return c.String(http.StatusOK, "")
 }
 
 func register(c echo.Context) error {
