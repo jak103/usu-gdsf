@@ -5,11 +5,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
-	"github.com/go-playground/validator/v10"
 )
 
 const (
@@ -24,7 +24,7 @@ const (
 var v = validator.New()
 
 func getGame(c echo.Context) error {
-	
+
 	// get id from path
 	_id := c.Param("id")
 
@@ -66,13 +66,13 @@ func getGamesWithTags(c echo.Context) error {
 func getAllGames(c echo.Context) error {
 	_db, err := db.NewDatabaseFromEnv()
 	if err != nil {
-		log.WithError(err).Error("Unable to use database")
-		return err
+		return c.JSON(http.StatusInternalServerError, "Database connection error")
+
 	}
 
 	if result, err := _db.GetAllGames(); err != nil {
-		log.Error("An error occurred while getting game records: %v", err)
-		return err
+		return c.JSON(http.StatusInternalServerError, "error in GetAllGameS API")
+
 	} else {
 		return c.JSON(http.StatusOK, result)
 	}
@@ -122,6 +122,65 @@ func getMostPopularGame(c echo.Context) error {
 	}
 }
 
+func sortAllGame(c echo.Context) error {
+
+	_db, err := db.NewDatabaseFromEnv()
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Database connection error")
+	}
+
+	// srt=name-desc
+	sortConfig := c.QueryParam("srt")
+	sortConfigArray := strings.Split(sortConfig, "-")
+
+	if len(sortConfigArray) != 2 {
+		return c.JSON(http.StatusInternalServerError, "not enough parameter to address sorting job")
+	}
+
+	if (sortConfigArray[1] == "ASC") || (sortConfigArray[1] == "asc") || (sortConfigArray[1] == "DSC") || (sortConfigArray[1] == "dsc") {
+		order := 1
+
+		if sortConfigArray[1] == "asc" || sortConfigArray[1] != "ASC" {
+			order = -1
+		}
+
+		games, err := _db.SortGames(sortConfigArray[0], order)
+
+		if err != nil {
+			log.WithError(err).Error("Sort data error in API SortGame")
+			return c.JSON(http.StatusInternalServerError, "couldn't get sorted data because of server error")
+		}
+
+		return c.JSON(http.StatusOK, games)
+
+	}
+
+	return c.JSON(http.StatusInternalServerError, "not a valid order of sorting")
+
+}
+
+func getGamesWithFirstLetter(c echo.Context) error {
+	// connect the db
+	_db, err := db.NewDatabaseFromEnv()
+	if err != nil {
+		log.WithError(err).Error("Database connection error in API getGamesWithFirstLetter")
+		return c.JSON(http.StatusInternalServerError, "Database connection error")
+	}
+
+	// grab tags from context
+	letter := c.QueryParam("ltr")
+	// split string into array    // fetch games with tags
+	games, err := _db.GetGamesByFirstLetter(letter)
+
+	if err != nil {
+		log.WithError(err).Error("Database function GetGamesByFirstLetter error")
+		return c.JSON(http.StatusInternalServerError, "Database fetch games with first letter error")
+	}
+
+	return c.JSON(http.StatusOK, games)
+}
+
 func newGameHandler(c echo.Context) error {
 	// create new game model
 	// TODO need a security layer in between the form and our new game struct
@@ -132,7 +191,6 @@ func newGameHandler(c echo.Context) error {
 		Version:      c.FormValue(VERSION),
 		DownloadLink: c.FormValue(LINK),
 	}
-	
 
 	// Add new game to database
 	_db, getDbErr := db.NewDatabaseFromEnv()
@@ -150,12 +208,40 @@ func newGameHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, "New game handler")
 }
 
+func updateGameHandler(c echo.Context) error {
+	db, err := db.NewDatabaseFromEnv()
+
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return err
+	}
+
+	_id := c.Param("id")
+
+	newGameInfo := models.Game{
+		Name:         c.Param("name"),
+		Developer:    c.Param("developer"),
+		Version:      c.Param("version"),
+		DownloadLink: c.Param("link"),
+	}
+
+	if result, err := db.UpdateGame(newGameInfo, _id); err != nil {
+		log.Error("An error occurred while updating the game record: %v", err)
+		return err
+	} else {
+		return c.JSON(http.StatusOK, []interface{}{result})
+	}
+}
+
 func init() {
 	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
+	registerRoute(route{method: http.MethodPut, path: "/game/:id/update", handler: updateGameHandler})
 	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGame})
 	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
+	registerRoute(route{method: http.MethodGet, path: "/games/sort", handler: sortAllGame})
+	registerRoute(route{method: http.MethodGet, path: "/games/firstLetter", handler: getGamesWithFirstLetter})
 	registerRoute(route{method: http.MethodGet, path: "/games/tags", handler: getAllTags})
 	registerRoute(route{method: http.MethodGet, path: "/most_popular", handler: getMostPopularGame})
 }

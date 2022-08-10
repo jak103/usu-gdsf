@@ -4,28 +4,9 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 
-	"github.com/jak103/usu-gdsf/db"
-	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
-)
-
-var (
-	_db, _ = db.NewDatabaseFromEnv()
-
-	download0 = models.Download{
-		UserId:       "000",
-		GameId:       "62dadce12fcdb47399118408",
-		CreationDate: time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC),
-	}
-
-	download1 = models.Download{
-		UserId:       "001",
-		GameId:       "62dadce12fcdb47399118408",
-		CreationDate: time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC),
-	}
 )
 
 func TestGetAllDownloads(t *testing.T) {

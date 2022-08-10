@@ -9,4 +9,5 @@ type User struct {
 	LastName        string
 	DateOfBirth     time.Time
 	JoinedTimestamp time.Time
+	Role            string
 }
