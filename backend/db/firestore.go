@@ -210,17 +210,16 @@ func (db Firestore) GetAllDownloads() ([]models.Download, error) {
 }
 
 func (db Firestore) UpdateGame(newGameInfo models.Game, id string) (models.Game, error) {
-	// TODO: Finish updateGame
-	// EXAMPLE
-	// client.Collection("cities").Doc("DC").Update(ctx, []firestore.Update{
-	//     {
-	//             Path:  "capital",
-	//             Value: true,
-	//     },
-	// if err != nil {
-	//     // Handle any errors in an appropriate way, such as returning them.
-	//     log.Printf("An error has occurred: %s", err)
-	// }
+	_, err := db.client.Collection("games").Doc(id).Set(context.Background(), map[string]interface{}{
+		"Name":         newGameInfo.Name,
+		"Developer":    newGameInfo.Developer,
+		"Version":      newGameInfo.Version,
+		"DownloadLink": newGameInfo.DownloadLink,
+	}, firestore.MergeAll)
+	if err != nil {
+		log.WithError(err).Error("Failed to update game in firestore db")
+		return newGameInfo, err
+	}
 	return newGameInfo, nil
 }
 

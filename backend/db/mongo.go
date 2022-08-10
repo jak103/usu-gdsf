@@ -403,7 +403,22 @@ func (db Mongo) GetAllDownloads() ([]models.Download, error) {
 }
 
 func (db Mongo) UpdateGame(newGameInfo models.Game, id string) (models.Game, error) {
-	// TODO: Finish updateGame
+	_, err := db.database.Collection("games").UpdateOne(
+		context.Background(),
+		bson.M{"_id": id},
+		bson.D{
+			{"$set", bson.D{
+				{"Name", newGameInfo.Name},
+				{"Developer", newGameInfo.Developer},
+				{"Version", newGameInfo.Version},
+				{"DownloadLink", newGameInfo.DownloadLink},
+			}},
+		},
+	)
+	if err != nil {
+		log.WithError(err)
+		return newGameInfo, err
+	}
 	return newGameInfo, nil
 }
 
