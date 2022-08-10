@@ -1,5 +1,5 @@
 <template>
-<h2>Create New User</h2>
+  <h2>Create New User</h2>
 	<v-form
     ref="form"
     v-model="valid"
@@ -56,6 +56,7 @@ import router from '../router'
 
 export default {
 	name: 'NewAccount',
+
   data: () => ({
     items: ['Admin', 'Publisher', 'Basic'],
     username: '',
@@ -79,6 +80,7 @@ export default {
     ],
     userRole: 'Basic'
   }),
+
   methods: {
     createUser() {
       // TODO save this to the model
