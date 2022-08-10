@@ -6,10 +6,7 @@
 			{{ rating }}
 			<v-img width="200" :src="image"></v-img>
 			<router-link :to="{ name: 'info', params: { id: '2' }}">To another game</router-link>
-	<!-- Title -->
-	<!-- Ratings -->
-	<!-- Overview: Image -->
-	<!-- Download game -->
+
 		</v-card>
 	</v-container>
 </template>
