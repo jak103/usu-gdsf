@@ -70,6 +70,9 @@ func (s *Server) setupRoutes() {
 		case http.MethodPost:
 			s.echo.POST(route.path, handler)
 
+		case http.MethodPut:
+			s.echo.PUT(route.path, handler)
+
 		default:
 			log.Error("Failed to register unknown method: %v", route.method)
 		}

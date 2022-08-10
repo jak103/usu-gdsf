@@ -35,15 +35,13 @@ func (db Mock) RemoveGame(game models.Game) error {
 	return nil
 }
 
-
-func (db Mock) RemoveGameByTag(tag string) error{
+func (db Mock) RemoveGameByTag(tag string) error {
 	return nil
 }
 
-func (db Mock) SortGames(field_name string, order int) ([]models.Game, error){
+func (db Mock) SortGames(field_name string, order int) ([]models.Game, error) {
 	return nil, nil
 }
-
 
 // GetGamesByTags search and return all games with given tags
 func (db Mock) GetGamesByTags(tags []string, matchAll bool) ([]models.Game, error) {
@@ -82,9 +80,9 @@ func containsTag(a []string, el string) bool {
 	return false
 }
 
-func (db Mock) GetGamesByFirstLetter(letter string ) ([]models.Game, error) {
+func (db Mock) GetGamesByFirstLetter(letter string) ([]models.Game, error) {
 
-	return nil,nil
+	return nil, nil
 }
 
 func (db Mock) GetGameByID(id string) (models.Game, error) {
@@ -117,7 +115,6 @@ func (db Mock) GetAllGames() ([]models.Game, error) {
 	return games, nil
 }
 
-
 func (db Mock) GetAllDownloads() ([]models.Download, error) {
 	downloads := make([]models.Download, 0)
 
@@ -126,6 +123,15 @@ func (db Mock) GetAllDownloads() ([]models.Download, error) {
 	}
 
 	return downloads, nil
+}
+
+func (db Mock) UpdateGame(newGameInfo models.Game, id string) (models.Game, error) {
+	game := db.games[id]
+	game.Name = newGameInfo.Name
+	game.Developer = newGameInfo.Developer
+	game.Version = newGameInfo.Version
+	game.DownloadLink = newGameInfo.DownloadLink
+	return game, nil
 }
 
 func (db Mock) CreateUser(newUser models.User) (models.User, error) {
