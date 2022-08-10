@@ -26,24 +26,23 @@ func TestVerifyUser(t *testing.T) {
 	// os.Setenv("DB_TYPE", "mock")
 	// defer os.Unsetenv("DB_TYPE")
 
+	// os.Setenv("USUGDSF_AUTH_TOKEN", "fakeHwVJzEu2wTRBK4wNu80C")
+	// defer os.Unsetenv("USUGDSF_AUTH_TOKEN")
+
 	// f := make(url.Values)
-	// f.Set("username", "Billy1234")
-	// f.Set("password", "Bobby4321")
+	// f.Set("username", "Default")
+	// f.Set("password", "default")
 
 	// e := echo.New()
-	// r := e.Router()
-
-	// r.Add(http.MethodGet, "/:foo", func(echo.Context) error { return nil })
 
 	// req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(f.Encode()))
 	// req.Header.Add(echo.HeaderContentType, echo.MIMEApplicationForm)
 
 	// c := e.NewContext(req, nil)
 
-	// This test will fail until the GetUserByUserName function is implemented
-	// user, _ := VerifyUser(c)
+	// validUser, _ := VerifyUser(c)
 
-	// assert.NotNil(t, user)
+	// assert.NotNil(t, validUser)
 }
 
 func TestGenerateTokenAndSetCookie(t *testing.T) {

@@ -193,7 +193,7 @@ func (db *Firestore) CreateUser(newUser models.User) error {
 		return nil
 	}
 
-	fmt.Println(exists.Next())
+	fmt.Println(exists.GetAll())
 
 	log.Error("newUser ID already exists in firestore_emu db")
 	return errors.New("newUser already exists in firestore_emu db")

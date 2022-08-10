@@ -126,7 +126,20 @@ func (db *Mock) GetUserByID(id uuid.UUID) (*models.User, error) {
 }
 
 func (db *Mock) GetUserByUserName(userName string) (*models.User, error) {
-	panic("not implemented") // TODO: Implement
+	if userName == "" {
+		log.Error("username is not valid")
+		return nil, errors.New("username is not valid")
+	}
+
+	userQuery := make([]models.User, 0)
+
+	for _, user := range db.users {
+		if user.Username == userName {
+			userQuery = append(userQuery, user)
+		}
+	}
+
+	return &userQuery[0], nil
 }
 
 func (db *Mock) GetUsersByRole(role int64) ([]models.User, error) {

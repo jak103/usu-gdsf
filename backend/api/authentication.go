@@ -105,6 +105,7 @@ func SecurePassword(password string) string {
 		panic(err)
 	}
 
+	// security key needs to be 24 bits
 	iv := []byte{25, 44, 66, 78, 54, 19, 87, 07, 24, 63, 35, 05, 68, 72, 93, 22}
 
 	plainPassword := []byte(password)
