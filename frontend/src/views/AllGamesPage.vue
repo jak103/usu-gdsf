@@ -108,6 +108,7 @@
 			:length="Math.ceil(allGames.length / perPage)"
 		></v-pagination>
 	</div>
+
 	<Loading data-test="loadbar" v-if="dataLoading" text="Game Data" containerStyle="height: 75vh"/>
 	<NoData data-test="noData" v-if="!dataLoading && (!allGames || allGames?.length === 0)" text="All Games" containerStyle="height: 75vh"/>
 	<Footer />

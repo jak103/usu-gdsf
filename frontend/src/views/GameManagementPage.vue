@@ -40,12 +40,14 @@
 	<EditGame :showEdit="showEdit" @cancel="closeForm()" :game="selectedGame" @save="handleEditSave(game)"/>
 
 	</div>
+	<Footer></Footer>
 </template>
 
 <!-- when connected with database remove the selectedGame data and use id to call specified game. -->
 <script>
 import NewGame from '../components/NewGame.vue'
 import EditGame from '../components/EditGame.vue'
+import Footer from "../components/Footer.vue"
 import * as GamesServices from '../services/gamesServices'
 import Game from '../models/game'
 
@@ -53,7 +55,8 @@ export default {
 	name: 'GameManagementPage',
     components: {
 		NewGame,
-		EditGame
+		EditGame,
+		Footer,
 	},
 	data() {
 		
