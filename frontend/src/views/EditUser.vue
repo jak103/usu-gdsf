@@ -68,5 +68,17 @@
         //Post user changes to database here
       },
     },
+
+    watch: {
+      '$route.params': {
+        handler: function(params) {
+          this.username = params.username
+          this.email = params.email
+          this.name = params.name
+        },
+        deep: true,
+        immediate: true
+      }
+    }
   }
 </script>

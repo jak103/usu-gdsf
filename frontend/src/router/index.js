@@ -28,6 +28,16 @@ const router = createRouter({
       component: () => import('../views/AdminPage.vue')
     },
     {
+      path: '/newAccount',
+      name: 'newAccount',
+      component: () => import('../views/NewAccountView.vue')
+    },
+    {
+      path: '/editUser',
+      name: 'editUser',
+      component: () => import('../views/EditUser.vue')
+    },
+    {
       path: '/admin/all-users',
       name: 'all-users',
       component: () => import('../views/AdminAllUsers.vue')
@@ -41,6 +51,11 @@ const router = createRouter({
       path: '/game/add',
       name: 'addGame',
       component: () => import('../views/AddGame.vue')
+    },
+    {
+      path: '/arrivals',
+      name: 'arrivals',
+      component: () => import('../views/NewArrival.vue')
     },
     {
       path: '/allGames',
