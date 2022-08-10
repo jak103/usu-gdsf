@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	
+
 	"github.com/jak103/usu-gdsf/log"
 )
 
@@ -20,23 +20,25 @@ var FirestoreProjectId string
 var TokenHashingKey string
 var AccessTokenLifetimeMins int64
 var RefreshTokenLifetimeDays int64
+var GoogleCloudStorageToken string
 
 func init() {
 	log.Info("Running configuration init")
-	
+
 	envFileMap := mapVariablesFromEnvFile()
-	
+
 	DbType = strings.ToLower(getEnvVarString("DB_TYPE", envFileMap))
-	
+
 	if DbType == "mongo" {
 		MongoUri = getEnvVarString("MONGO_URI", envFileMap)
 	} else if DbType == "firestore" {
 		FirestoreProjectId = getEnvVarString("FIRESTORE_PROJECT_ID", envFileMap)
 	}
-	
+
 	TokenHashingKey = getEnvVarString("TOKEN_HASHING_KEY", envFileMap)
 	AccessTokenLifetimeMins = getEnvVarInt64("ACCESS_TOKEN_LIFETIME_MINS", envFileMap)
 	RefreshTokenLifetimeDays = getEnvVarInt64("REFRESH_TOKEN_LIFETIME_DAYS", envFileMap)
+	GoogleCloudStorageToken = getEnvVarString("GOOGLE_CLOUD_STORAGE_OAUTH2_TOKEN", envFileMap)
 }
 
 func mapVariablesFromEnvFile() map[string]string {
@@ -63,7 +65,7 @@ func mapVariablesFromEnvFile() map[string]string {
 		if len(line) == 0 || line[0:1] == "#" {
 			continue
 		}
-		
+
 		commentSplit := strings.SplitN(line, "#", 2)
 		keyValString := commentSplit[0]
 
