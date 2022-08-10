@@ -1,15 +1,11 @@
 import { shallowMount } from '@vue/test-utils'
-import EditUser from "../../src/views/editUser.vue"
+import EditUser from "../../src/views/EditUser.vue"
 
 
-describe('Form Submit Working', () => {
-    test('trigger', async () => {
+describe('Edit user', () => {
+    test('text field exists', async () => {
         const wrapper = shallowMount(EditUser)
 
-        // trigger the element
-        await wrapper.find('v-btn').trigger('click')
-      
-        // assert some action has been performed, like an emitted event.
-        expect(wrapper.emitted()).toHaveProperty('submit')
+        expect(wrapper.find('v-text-field').exists()).toBe(true)
       })
 })
