@@ -18,7 +18,6 @@
     </div>
 </template>
 
-
 <script>
 //TODO: errors pop up when trying to import this, I think it's a backend issue?
 import axios from "axios";
