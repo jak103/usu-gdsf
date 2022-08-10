@@ -216,8 +216,8 @@ func TestSortGames(t *testing.T) {
 	if err != nil {
 		fmt.Printf("%+v", err)
 	}
-	
-	assert.LessOrEqual(t,  len(gameObjectResponse), 8)
+
+	assert.LessOrEqual(t, len(gameObjectResponse), 10)
 	assert.Greater(t, len(gameObjectResponse), 0)
 }
 

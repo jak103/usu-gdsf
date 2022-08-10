@@ -93,3 +93,25 @@ func TestMiddlewareWitheinvalidToken(t *testing.T) {
 //                 assert.Equal(t, respBody, HANDLER_STUB_SUCCESS)
 //         }
  }
+
+ // Provide a token for a REGULAR_USER and pass `true` in for `requireAdmin `
+
+ func TestMiddlewareAdminToken(t *testing.T) {
+        e := echo.New()
+        rec := httptest.NewRecorder()
+        req := httptest.NewRequest(http.MethodGet, "/_testStub", nil)
+        c := e.NewContext(req, rec)
+
+        params := TokenParams{
+                Type: ACCESS_TOKEN,
+                UserId: 39,
+                UserType: REGULAR_USER,
+                UserEmail: "testing@example.com",
+        }
+
+        req.Header.Set("Cookie", ACCESS_TOKEN_COOKIE_KEY + "=" + GenerateToken(params))
+        stubRequest := RequireAuthorization(handlerStub, true)
+
+        assert.Error(t, stubRequest(c))
+
+}
