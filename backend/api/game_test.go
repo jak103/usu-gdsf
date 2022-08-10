@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strings"
 	"testing"
 	"time"
 
@@ -45,7 +46,9 @@ var (
 		DownloadLink: "dummy1.test",
 	}
 
+
 	dummyGameCount = 8
+
 )
 
 // this code is to dynamically find number of seeded data from JSON but it is not able to
@@ -252,8 +255,10 @@ func TestSortGames(t *testing.T) {
 	assert.Greater(t, len(gameObjectResponse), 0)
 }
 
+
 func TestGameByFirstLetter(t *testing.T) {
 	e := echo.New()
+
 	params := auth.TokenParams{
 		Type:      auth.ACCESS_TOKEN,
 		UserId:    42,
@@ -261,6 +266,7 @@ func TestGameByFirstLetter(t *testing.T) {
 	}
 
 	token := auth.GenerateToken(params)
+
 
 	q := make(url.Values)
 	q.Set("ltr", "a")
@@ -274,12 +280,14 @@ func TestGameByFirstLetter(t *testing.T) {
 	response := recorder.Body.String()
 	gameObjectResponse := []models.Game{}
 
+
 	in := []byte(response)
 	err := json.Unmarshal(in, &gameObjectResponse)
 	if err != nil {
 		fmt.Printf("%+v", err)
 	}
-	fmt.Printf("%+v", gameObjectResponse)
-	// assert.LessOrEqual(t, 8, len(gameObjectResponse))
-	// assert.Greater(t, len(gameObjectResponse), 0)
+
+	assert.LessOrEqual(t, 8, len(gameObjectResponse))
+	assert.Greater(t, len(gameObjectResponse), 0)
+
 }

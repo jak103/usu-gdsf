@@ -402,6 +402,26 @@ func (db Mongo) GetAllDownloads() ([]models.Download, error) {
 	return downloads, nil
 }
 
+func (db Mongo) UpdateGame(newGameInfo models.Game, id string) (models.Game, error) {
+	_, err := db.database.Collection("games").UpdateOne(
+		context.Background(),
+		bson.M{"_id": id},
+		bson.D{
+			{"$set", bson.D{
+				{"Name", newGameInfo.Name},
+				{"Developer", newGameInfo.Developer},
+				{"Version", newGameInfo.Version},
+				{"DownloadLink", newGameInfo.DownloadLink},
+			}},
+		},
+	)
+	if err != nil {
+		log.WithError(err)
+		return newGameInfo, err
+	}
+	return newGameInfo, nil
+}
+
 func (db Mongo) CreateUser(newUser models.User) (models.User, error) {
 	// users := db.database.Collection("users")
 

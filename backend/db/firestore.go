@@ -209,6 +209,20 @@ func (db Firestore) GetAllDownloads() ([]models.Download, error) {
 	return downloads, nil
 }
 
+func (db Firestore) UpdateGame(newGameInfo models.Game, id string) (models.Game, error) {
+	_, err := db.client.Collection("games").Doc(id).Set(context.Background(), map[string]interface{}{
+		"Name":         newGameInfo.Name,
+		"Developer":    newGameInfo.Developer,
+		"Version":      newGameInfo.Version,
+		"DownloadLink": newGameInfo.DownloadLink,
+	}, firestore.MergeAll)
+	if err != nil {
+		log.WithError(err).Error("Failed to update game in firestore db")
+		return newGameInfo, err
+	}
+	return newGameInfo, nil
+}
+
 func (db Firestore) CreateUser(newUser models.User) (models.User, error) {
 	// users := db.database.Collection("users")
 

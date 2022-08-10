@@ -138,6 +138,7 @@ func getGamesWithFirstLetter(c echo.Context) error {
 	return c.JSON(http.StatusOK, games)
 }
 
+
 func newGameHandler(c echo.Context) error {
 	// create new game model
 	// TODO need a security layer in between the form and our new game struct
@@ -165,12 +166,40 @@ func newGameHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, "New game handler")
 }
 
+func updateGameHandler(c echo.Context) error {
+	db, err := db.NewDatabaseFromEnv()
+
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return err
+	}
+
+	_id := c.Param("id")
+
+	newGameInfo := models.Game{
+		Name:         c.Param("name"),
+		Developer:    c.Param("developer"),
+		Version:      c.Param("version"),
+		DownloadLink: c.Param("link"),
+	}
+
+	if result, err := db.UpdateGame(newGameInfo, _id); err != nil {
+		log.Error("An error occurred while updating the game record: %v", err)
+		return err
+	} else {
+		return c.JSON(http.StatusOK, []interface{}{result})
+	}
+}
+
 func init() {
 	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
+	registerRoute(route{method: http.MethodPut, path: "/game/:id/update", handler: updateGameHandler})
 	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGame})
 	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
 	registerRoute(route{method: http.MethodGet, path: "/games/sort", handler: sortAllGame})
+
 	registerRoute(route{method: http.MethodGet, path: "/games/firstLetter", handler: getGamesWithFirstLetter})
+
 }
