@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/log"
@@ -28,23 +29,23 @@ func (db *Mock) GetGameByID(id uuid.UUID) (*models.Game, error) {
 func (db *Mock) GetGamesByTags(tags []string) ([]models.Game, error) {
 	games := make(map[uuid.UUID]models.Game)
 
+	queryTags := make(map[string]bool)
+	for _, queryTag := range tags {
+		queryTags[queryTag] = true
+	}
+	// if a game has at least one of the query tags, add to map (map because we don't want duplicates)
 	for _, game := range db.games {
-		for _, tag := range tags {
-			valid := map[string]bool{}
-			game_tags := make([]string, 0)
-			for _, v := range game_tags {
-				valid[v] = true
-			}
-			if valid[tag] {
+		for _, gameTag := range game.Tags {
+			if _, exists := queryTags[gameTag]; exists {
 				games[game.ID] = game
 			}
 		}
 	}
 	game_slice := []models.Game{}
+	// create slice from map
 	for _, game := range games {
 		game_slice = append(game_slice, game)
 	}
-
 	return game_slice, nil
 }
 
@@ -129,19 +130,17 @@ func (db *Mock) GetUserByUserName(userName string) (*models.User, error) {
 }
 
 func (db *Mock) GetUsersByRole(role int64) ([]models.User, error) {
-	typeRole := models.Role(role)
-	user_slice := []models.User{}
+	if role != 0 && role != 1 {
+		return nil, errors.New(fmt.Sprintf("User role %v does not exist", role))
+	}
+	users := make([]models.User, 0)
+	queryRole := models.Role(role)
 	for _, user := range db.users {
-		if user.Role == typeRole {
-			user_slice = append(user_slice, user)
+		if user.Role == queryRole {
+			users = append(users, user)
 		}
 	}
-
-	if len(user_slice) == 0 {
-		return nil, errors.New("no users with that role")
-	}
-
-	return user_slice, nil
+	return users, nil
 }
 
 func (db *Mock) CreateUser(newUser models.User) error {

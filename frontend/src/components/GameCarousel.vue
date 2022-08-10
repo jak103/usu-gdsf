@@ -4,8 +4,9 @@
       <v-carousel-item v-for="color in colors" :key="color">
         <v-sheet :color="color" height="100%" tile>
           <v-row class="fill-height" align="center" justify="center">
-            <div class="text-h2">
+            <div data-test="test" class="text-h2">
               {{ color }}
+              <!-- color -->
             </div>
           </v-row>
         </v-sheet>
@@ -19,7 +20,7 @@ export default {
   name: 'GameCarousel',
 
   data: () => ({
-    colors: ['primary','secondary','info','warning','white','teal', 'watermelon'],
+    colors: ['primary', 'secondary', 'info', 'warning', 'white', 'teal', 'watermelon'],
     cycleTime: 4000,
   }),
 }
