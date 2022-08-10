@@ -6,15 +6,15 @@
 
     <v-card-text>
       <v-form v-model="isValid">
-        <v-text-field 
-            label="username" 
-            v-model="username" 
+        <v-text-field
+            label="username"
+            v-model="username"
             required >
         </v-text-field>
-        <v-text-field 
-            label="password" 
-            v-model="password" 
-            type="password" 
+        <v-text-field
+            label="password"
+            v-model="password"
+            type="password"
             required >
         </v-text-field>
       </v-form>

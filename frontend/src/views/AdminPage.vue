@@ -1,14 +1,15 @@
 <template>
-	<div>
-		<!-- File uploads: FormData -->
-		<h1>This is where you login. Thanks for stopping by.</h1>
-		<v-btn to="/admin/all-users" color="secondary">All Users</v-btn>
-	</div>
+	<v-tabs-item v-model="tab">
+    <v-tab-item>
+      <LoginForm></LoginForm>
+    </v-tab-item>
+  </v-tabs-item>
 </template>
 
 <script>
+import LoginForm from '../components/LoginForm.vue';
 export default {
-	name: 'AdminPage',
-
+    name: "AdminPage",
+    components: { LoginForm }
 }
 </script>
