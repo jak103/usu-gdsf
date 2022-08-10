@@ -17,6 +17,6 @@ type Game struct {
 	Tags          []string  `json:"Tags"`
 	Downloads     int64     `json:"Downloads"` // firestore doesn't support uint64
 	DownloadLink  string    `json:"DownloadLink"`
-	reviewIds     []string  `json:"reviewIds"`
-	averageReview float64   `json:"averageReview"`
+	ReviewIds     []string  `json:"reviewIds"`
+	AverageReview float64   `json:"averageReview"`
 }

@@ -124,7 +124,7 @@ const JSON_SEED_DATA = `[
     "Version": "1.x",
     "Tags": ["OpenWorld", "Adventure"],
     "downloads": 12
-  }
+  },
   {
     "Id": "9",
     "Name": "Elder Scrolls V: Skyrim",
@@ -137,7 +137,7 @@ const JSON_SEED_DATA = `[
     "Version": "1.x",
     "Tags": ["RPG", "Adventure"],
     "downloads": 69000
-  }
+  },
   {
     "Id": "10",
     "Name": "Forza Horizon 5",
@@ -150,7 +150,7 @@ const JSON_SEED_DATA = `[
     "Version": "1.x",
     "Tags": ["Racing", "OpenWorld"],
     "downloads": 5983
-  }
+  },
   {
     "Id": "11",
     "Name": "Grand Theft Auto: V",
