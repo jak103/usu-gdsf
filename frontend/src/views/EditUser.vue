@@ -8,7 +8,6 @@
     >
       <v-text-field
         v-model="name"
-        :counter="10"
         :rules="nameRules"
         label="Name"
         required
@@ -54,12 +53,11 @@
         v => !!v || 'E-mail is required',
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
       ],
+      username: '',
       usernameRules: [
         v => !!v || 'Username is required',
         v => !/\s/g.test(v) || 'Username cannot contain spaces',
       ],
-      select: null,
-      checkbox: false,
     }),
 
     methods: {
@@ -68,17 +66,5 @@
         //Post user changes to database here
       },
     },
-
-    watch: {
-      '$route.params': {
-        handler: function(params) {
-          this.username = params.username
-          this.email = params.email
-          this.name = params.name
-        },
-        deep: true,
-        immediate: true
-      }
-    }
   }
 </script>
