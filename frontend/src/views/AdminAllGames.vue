@@ -32,9 +32,9 @@ export default {
       { text: 'ID', value: 'ID' },
       { text: 'Title', value: 'title' },
       { text: 'Description', value: 'description' },
-      { text: 'UserId', value: 'userid' },
-      { text: 'VersionNumber', value: 'version' },
-      { text: 'PublishTimestamp', value: 'timestamp' },
+      { text: 'User Id', value: 'userid' },
+      { text: 'Version Number', value: 'version' },
+      { text: 'Publish Timestamp', value: 'timestamp' },
       { text: 'Tags', value: 'tags' },
     ],
     testGames: [
