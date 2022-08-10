@@ -1,3 +1,4 @@
+// Test for expired token
 package auth
 
 import (
@@ -18,6 +19,26 @@ func handlerStub(ctx echo.Context) error {
 }
 
 
+func TestMiddlewareWithexpiredToken(t *testing.T) {
+        e := echo.New()
+        rec := httptest.NewRecorder()
+        req := httptest.NewRequest(http.MethodGet, "/_testStub", nil)
+        c := e.NewContext(req, rec)
+
+        
+
+        req.Header.Set("Cookie", ACCESS_TOKEN_COOKIE_KEY + "=eyJUeXBlIjowLCJFeHBpcmF0aW9uIjoxNjU5NDAyNTI5OTg1LCJVc2VySWQiOjQyLCJVc2VyVHlwZSI6MSwiVXNlckVtYWlsIjoidGVzdGluZ0BleGFtcGxlLmNvbSJ9fGE5N2QwMjViYzhkNzc2YjQwZjkyNmExNTBkMzg3OWEyY2Q5YTNmZTVkYTA1YTIyM2VlMDRmMDZlNGQxODFkZGI")
+        stubRequest := RequireAuthorization(handlerStub, false)
+
+        assert.Error(t, stubRequest(c))
+//         if assert.NOError(t, stubRequest(c)) {
+//                 respBody := rec.Body.String()
+//                 assert.Equal(t, respBody, HANDLER_STUB_SUCCESS)
+//         }
+ }
+
+
+// Provide access token cookie that is valid and not expired
 func TestMiddlewareWithValidToken(t *testing.T) {
         e := echo.New()
         rec := httptest.NewRecorder()
@@ -38,6 +59,18 @@ func TestMiddlewareWithValidToken(t *testing.T) {
                 respBody := rec.Body.String()
                 assert.Equal(t, respBody, HANDLER_STUB_SUCCESS)
         }
+}
+
+//Test to not provide an access token
+
+func TestMiddlewareNoToken(t *testing.T) {
+        e := echo.New()
+        rec := httptest.NewRecorder()
+        req := httptest.NewRequest(http.MethodGet, "/_testStub", nil)
+        c := e.NewContext(req, rec)
+
+        stubRequest := RequireAuthorization(handlerStub, false)
+        assert.Error(t, stubRequest(c))
 }
 
 
