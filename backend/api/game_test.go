@@ -2,21 +2,21 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"testing"
 	"time"
-	"fmt"
-	"github.com/labstack/echo/v4"
+
 	"github.com/jak103/usu-gdsf/auth"
 	"github.com/jak103/usu-gdsf/models"
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 var (
-	
 	game0 = models.Game{
 		Name:         "game0",
 		Rating:       3.5,
@@ -45,12 +45,12 @@ var (
 		DownloadLink: "dummy1.test",
 	}
 
-	dummyGameCount =8
+	dummyGameCount = 8
 )
 
 // this code is to dynamically find number of seeded data from JSON but it is not able to
-// read JSON into the struct which i believe is discrepency between collection struct and 
-// game model . I am not removing it now to do it other time after making data is same in all side 
+// read JSON into the struct which i believe is discrepency between collection struct and
+// game model . I am not removing it now to do it other time after making data is same in all side
 // func Test_FindDummyGameCount(t *testing.T){
 // 		_response := db.JSON_SEED_DATA
 // 		seededGames := [] models.Game{}
@@ -68,7 +68,7 @@ func TestGetGame(t *testing.T) {
 		_db.RemoveGame(game0)
 		_db.RemoveGame(game1)
 	})
-	
+
 	id0, _ := _db.AddGame(game0)
 	id1, _ := _db.AddGame(game1)
 	game0.Id = id0
@@ -84,13 +84,13 @@ func TestGetGame(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodGet, "/", nil)
 	request.Header.Set("accessToken", token)
-	
+
 	c := e.NewContext(request, recorder)
 	c.SetPath("/game/:id")
 	c.SetParamNames("id")
 	c.SetParamValues(id0)
 
-	if assert.NoError(t, getGame(c)) {		
+	if assert.NoError(t, getGame(c)) {
 		response := recorder.Body.String()
 		gameObjectResponse := models.Game{}
 		in := []byte(response)
@@ -221,7 +221,7 @@ func TestGetAllGamesReturnsCorrectNumberOfGames(t *testing.T) {
 	assert.Equal(t, dummyGameCount+2, len(gameObjectResponse))
 }
 
-func TestSortGames(t *testing.T){
+func TestSortGames(t *testing.T) {
 	e := echo.New()
 	params := auth.TokenParams{
 		Type:      auth.ACCESS_TOKEN,
@@ -250,4 +250,36 @@ func TestSortGames(t *testing.T){
 	}
 	assert.LessOrEqual(t, 8, len(gameObjectResponse))
 	assert.Greater(t, len(gameObjectResponse), 0)
+}
+
+func TestGameByFirstLetter(t *testing.T) {
+	e := echo.New()
+	params := auth.TokenParams{
+		Type:      auth.ACCESS_TOKEN,
+		UserId:    42,
+		UserEmail: "tst@example.com",
+	}
+
+	token := auth.GenerateToken(params)
+
+	q := make(url.Values)
+	q.Set("ltr", "_id-ASC")
+
+	req := httptest.NewRequest("http.MethodGet", "/games/getByFirstLetter?"+q.Encode(), nil)
+	req.Header.Set("accessToken", token)
+	recorder := httptest.NewRecorder()
+	c := e.NewContext(req, recorder)
+
+	assert.NoError(t, getGamesWithFirstLetter(c))
+	response := recorder.Body.String()
+	gameObjectResponse := []models.Game{}
+
+	in := []byte(response)
+	err := json.Unmarshal(in, &gameObjectResponse)
+	if err != nil {
+		fmt.Printf("%+v", err)
+	}
+	fmt.Printf("%+v", gameObjectResponse)
+	// assert.LessOrEqual(t, 8, len(gameObjectResponse))
+	// assert.Greater(t, len(gameObjectResponse), 0)
 }
