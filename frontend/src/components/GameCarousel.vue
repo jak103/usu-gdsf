@@ -25,7 +25,7 @@ export default {
   name: 'GameCarousel',
 
   data: () => ({
-    colors: ['primary','secondary','info','warning','white','teal', 'watermelon'],
+    colors: ['primary', 'secondary', 'info', 'warning', 'white', 'teal', 'watermelon'],
     cycleTime: 4000,
     gameData: []
   }),
