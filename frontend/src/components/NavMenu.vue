@@ -15,7 +15,7 @@
       <!-- Game List: add route that goes to all games page-->
       <v-list-item to="/games"> Game List </v-list-item>
     </v-list>
-    <v-btn to="/admin" color="secondary">Login</v-btn>
+    <v-btn to="/login" color="secondary">Login</v-btn>
     <!-- To Do: add buttons for roles (anything that a default user wouldn't see, like admin/author navigation buttons)-->
   </div>
 </template>
