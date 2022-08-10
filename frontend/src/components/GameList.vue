@@ -1,10 +1,11 @@
 <template>
-<div v-for = "item in gameInfo" :key="item.id"
->
+<div v-for = "item in gameInfo">
   <GameCard 
-    :title="item.title" 
-    :author="item.author" 
-    :description="item.description" />
+    :title="'title'" 
+    :author="'author'" 
+    :description="'game description'" 
+    image="https://cdn.cloudflare.steamstatic.com/steam/apps/489830/capsule_616x353.jpg?t=1650909796"/>
+
   </div>
 </template>
 
@@ -17,12 +18,12 @@
         title: String,
         author: String,
         description: String,
-        image: String,
+
     },
 
     data: () => ({
       show: false,
-      gameInfo: []
+      gameInfo: [1,2,3,4,5,6,7,8]
     }),
 
     components: {
@@ -30,10 +31,9 @@
     },
 
     methods: {
-     getData() {
-      let res =  this.$axios.get('/game')
+      getData() {
+        let res =  this.$axios.get('/game')
+      }
     }
-
-  }
   }
 </script>
