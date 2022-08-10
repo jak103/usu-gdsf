@@ -213,6 +213,7 @@ func createLoginCookie(c echo.Context, accessToken, refreshToken string) error {
 	loginCookie.Name = "UserAuth"
 	loginCookie.Value = fmt.Sprintf("%s,%s", accessToken, refreshToken)
 	loginCookie.HttpOnly = true
+	loginCookie.Secure = true
 
 	c.SetCookie(loginCookie)
 	return c.String(http.StatusOK, "wrote a login cookie with access token")
