@@ -126,8 +126,12 @@ func (db Mock) GetAllDownloads() ([]models.Download, error) {
 }
 
 func (db Mock) UpdateGame(newGameInfo models.Game, id string) (models.Game, error) {
-	// TODO: Finish updateGame
-	return newGameInfo, nil
+	game := db.games[id]
+	game.Name = newGameInfo.Name
+	game.Developer = newGameInfo.Developer
+	game.Version = newGameInfo.Version
+	game.DownloadLink = newGameInfo.DownloadLink
+	return game, nil
 }
 
 func (db Mock) CreateUser(newUser models.User) (models.User, error) {

@@ -278,7 +278,4 @@ func TestUpdateGame(t *testing.T) {
 	}
 
 	require.Equal(t, http.StatusOK, recorder.Code)
-	assert.Equal(t, gameObjectResponse.Id, id0)
-	// assert.Equal(t, gameObjectResponse.name, requestParams)
-	// assert.Equal(t, gameObjectResponse.Id, id0)
 }
