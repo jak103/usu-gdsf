@@ -26,6 +26,7 @@ type Database interface {
 	GetGameByID(string) (models.Game, error)
 	GetGamesByTags([]string, bool) ([]models.Game, error)
 	SortGames(string, int) ([]models.Game, error)
+	UpdateGame(models.Game, string) (models.Game, error)
 
 	// Download Methods
 	GetAllDownloads() ([]models.Download, error)

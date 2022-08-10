@@ -126,6 +126,15 @@ func (db Mock) GetAllDownloads() ([]models.Download, error) {
 	return downloads, nil
 }
 
+func (db Mock) UpdateGame(newGameInfo models.Game, id string) (models.Game, error) {
+	game := db.games[id]
+	game.Name = newGameInfo.Name
+	game.Developer = newGameInfo.Developer
+	game.Version = newGameInfo.Version
+	game.DownloadLink = newGameInfo.DownloadLink
+	return game, nil
+}
+
 func (db Mock) CreateUser(newUser models.User) (string, error) {
 	var id = strconv.Itoa(len(db.users) + 1)
 	db.users[id] = newUser

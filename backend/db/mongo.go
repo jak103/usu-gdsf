@@ -402,6 +402,26 @@ func (db Mongo) GetAllDownloads() ([]models.Download, error) {
 	return downloads, nil
 }
 
+func (db Mongo) UpdateGame(newGameInfo models.Game, id string) (models.Game, error) {
+	_, err := db.database.Collection("games").UpdateOne(
+		context.Background(),
+		bson.M{"_id": id},
+		bson.D{
+			{"$set", bson.D{
+				{"Name", newGameInfo.Name},
+				{"Developer", newGameInfo.Developer},
+				{"Version", newGameInfo.Version},
+				{"DownloadLink", newGameInfo.DownloadLink},
+			}},
+		},
+	)
+	if err != nil {
+		log.WithError(err)
+		return newGameInfo, err
+	}
+	return newGameInfo, nil
+}
+
 func (db Mongo) CreateUser(newUser models.User) (string, error) {
 	newUserDoc, err := db.database.Collection("users").InsertOne(context.Background(), newUser)
 	if err != nil {
@@ -466,6 +486,94 @@ func (db *Mongo) Connect() error {
 		} else {
 			log.Debug("Inserted multiple documents: ", insertManyResult.InsertedIDs)
 		}
+	}
+
+	return nil
+}
+
+// add a new review and recalculate its average
+func (db Mongo) AddReview(review models.Review) (string, error) {
+	insertResult, err := db.database.Collection("reviews").InsertOne(context.Background(), review)
+	if err != nil {
+		log.WithError(err).Error("Failed to add review to Mongo db")
+	}
+
+	// recalculate the average review score
+	game, err := db.GetGameByID(review.GameId)
+	game.ReviewIds = append(game.ReviewIds, review.Id)
+
+	totalScore := game.AverageReview * (float64((len(game.ReviewIds) - 1)))
+	game.AverageReview = ((totalScore + review.Score) / float64(len(game.ReviewIds)))
+	return insertResult.InsertedID.(primitive.ObjectID).Hex(), nil
+}
+
+func (db Mongo) GetReviewByID(id string) (models.Review, error) {
+	// convert hex id to object ID
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.WithError(err).Error("Invalid id in Mongo ID search")
+	}
+
+	// find review with object ID
+	result := db.database.Collection("reviews").FindOne(context.Background(), bson.M{"_id": objID})
+
+	// decode into bson
+	data := bson.M{}
+	err = result.Decode(&data)
+	if err != nil {
+		log.WithError(err).Error("Cannot decode record in Mongo GetReviewByID")
+		return models.Review{}, err
+	}
+
+	// decode bson into review
+	review, _ := DecodeBsonReviewData(data)
+	return review, nil
+}
+
+func DecodeBsonReviewData(data bson.M) (models.Review, error) {
+	// decode tags array
+	var tags []string
+	if data["tags"] != nil {
+		primTags := data["tags"].(primitive.A)
+		tags = make([]string, len(primTags))
+		for i, v := range primTags {
+			tags[i] = v.(string)
+		}
+	}
+
+	// load review model
+	review := models.Review{
+		Id:     data["_id"].(primitive.ObjectID).Hex(),
+		GameId: data["GameId"].(string),
+		UserId: data["UserId"].(uint64),
+		Score:  data["Score"].(float64),
+		Text:   data["Text"].(string),
+	}
+
+	return review, nil
+}
+
+// RemoveReview removes the given Review from the db
+func (db Mongo) RemoveReview(review models.Review) error {
+	primitiveObjectId, err := primitive.ObjectIDFromHex(review.Id)
+	if err != nil {
+		log.WithError(err).Error("error on getting primitive object id from hex string")
+		return err
+	}
+
+	gc := db.database.Collection("reviews")
+	res, err := gc.DeleteOne(context.Background(), bson.M{
+		"_id": primitiveObjectId,
+	})
+
+	if err != nil {
+		log.WithError(err).Error("Mongo RemoveReview deletion error")
+		return err
+	}
+
+	if res.DeletedCount > 1 {
+		log.Error("Mongo RemoveReview deleted more than one record")
+		return errors.New("mongo deleted more than one record")
 	}
 
 	return nil

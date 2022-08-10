@@ -31,7 +31,8 @@ const JSON_SEED_DATA = `[
     "CreationDate": "2022-08-09T01:22:30Z",
     "Version": "1.x",
     "Tags": ["Sandbox", "Adventure"],
-    "downloads": 160000000
+    "downloads": 160000000,
+
   },
   {
     "Id": "2",
@@ -123,7 +124,7 @@ const JSON_SEED_DATA = `[
     "Version": "1.x",
     "Tags": ["OpenWorld", "Adventure"],
     "downloads": 12
-  }
+  },
   {
     "Id": "9",
     "Name": "Elder Scrolls V: Skyrim",
@@ -136,7 +137,7 @@ const JSON_SEED_DATA = `[
     "Version": "1.x",
     "Tags": ["RPG", "Adventure"],
     "downloads": 69000
-  }
+  },
   {
     "Id": "10",
     "Name": "Forza Horizon 5",
@@ -149,7 +150,7 @@ const JSON_SEED_DATA = `[
     "Version": "1.x",
     "Tags": ["Racing", "OpenWorld"],
     "downloads": 5983
-  }
+  },
   {
     "Id": "11",
     "Name": "Grand Theft Auto: V",
