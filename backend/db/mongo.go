@@ -536,3 +536,29 @@ func DecodeBsonReviewData(data bson.M) (models.Review, error) {
 
 	return review, nil
 }
+
+// RemoveReview removes the given Review from the db
+func (db Mongo) RemoveReview(review models.Review) error {
+	primitiveObjectId, err := primitive.ObjectIDFromHex(review.Id)
+	if err != nil {
+		log.WithError(err).Error("error on getting primitive object id from hex string")
+		return err
+	}
+
+	gc := db.database.Collection("reviews")
+	res, err := gc.DeleteOne(context.Background(), bson.M{
+		"_id": primitiveObjectId,
+	})
+
+	if err != nil {
+		log.WithError(err).Error("Mongo RemoveReview deletion error")
+		return err
+	}
+
+	if res.DeletedCount > 1 {
+		log.Error("Mongo RemoveReview deleted more than one record")
+		return errors.New("mongo deleted more than one record")
+	}
+
+	return nil
+}
