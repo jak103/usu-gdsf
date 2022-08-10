@@ -28,6 +28,31 @@ func user(c echo.Context) error {
 	return c.JSON(http.StatusOK, "User get handler")
 }
 
+func logout(c echo.Context) error {
+    invalidatedAccessCookie := http.Cookie{
+        Name: auth.ACCESS_TOKEN_COOKIE_KEY,
+        Value: "",
+        Secure: true,
+        HttpOnly: true,
+        Expires: time.Unix(0, 0),
+    }
+
+    invalidatedRefreshCookie := http.Cookie{
+        Name: auth.REFRESH_TOKEN_COOKIE_KEY,
+        Value: "",
+        Secure: true,
+        HttpOnly: true,
+        Expires: time.Unix(0, 0),
+    }
+
+    c.SetCookie(&invalidatedAccessCookie)
+    c.SetCookie(&invalidatedRefreshCookie)
+
+    // TODO: Blacklist refresh token by adding it to the database
+
+    return c.String(http.StatusOK, "")
+}
+
 func register(c echo.Context) error {
 	// User registration screen
 	db, err := db.NewDatabaseFromEnv()
@@ -108,7 +133,7 @@ func generateSalt(n uint32) ([]byte, error) {
 	return b, nil
 }
 
-//Added this function in case the I need to change how birthday sanitation is done
+// Added this function in case the I need to change how birthday sanitation is done
 func sanitizeBirthdayInput(input string) (time.Time, error) {
 	birthday, err := time.Parse(time.RFC3339, input)
 	if err != nil {
@@ -186,6 +211,7 @@ func init() {
 
 	registerRoute(route{method: http.MethodGet, path: "/user", handler: user})
 	registerRoute(route{method: http.MethodGet, path: "/user/register", handler: register})
+	registerRoute(route{method: http.MethodGet, path: "/user/logout", handler: logout})
 	registerRoute(route{
 		method:      http.MethodGet,
 		path:        "user/downloads",
