@@ -10,15 +10,17 @@
                 class="text-subtitle-1 text-center"
                 cols="12"
             >
-                Loading {{ text }}
+                Oops! There was no data for: {{ text }}
             </v-col>
-            <v-col cols="6" data-test="progress-wrapper">
-                <v-progress-linear
-                    color="primary"
-                    indeterminate
-                    rounded
-                    height="6"
-                ></v-progress-linear>
+            <v-col cols="1">
+                <v-btn
+                    data-test="home-button"
+                    color="secondary"
+                    @click.stop="goHome()"
+                    prepend-icon="mdi-home"
+                >
+                    Go Home
+                </v-btn>
             </v-col>
         </v-row>
     </v-container>
@@ -26,10 +28,15 @@
 
 <script>
     export default {
-        name: 'Loading',
+        name: 'NoData',
         props: {
             text:String,
             containerStyle:String
+        },
+        methods: {
+            goHome() {
+                this.$router.push("/")
+            }
         }
     }
 </script>

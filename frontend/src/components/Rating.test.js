@@ -20,11 +20,17 @@ test('rendering starValue of Rating.vue', async () => {
             starValue:3,
         }
       })
-
     const ratingValue = wrapper.find('[data-rating-test="rating"]')
 
     expect(ratingValue.html()).toContain('<span class="pr-1" data-rating-test="rating"> (3) </span>')
-    
+})
+
+test('rendering on click for rating component', async () => {
+    const wrapper = mount(rating)
+
+    await wrapper.find('v-rating').trigger('click')
+
+    expect(wrapper.emitted().click[0].length).toBe(1)
 })
 
 

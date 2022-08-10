@@ -86,7 +86,6 @@ import UserForm from '../components/UserForm.vue'
 import Footer from '../components/Footer.vue'
 import {ref} from "vue";
 import Loading from '../components/Loading.vue';
-import axios from "axios";
 
 export default {
 
