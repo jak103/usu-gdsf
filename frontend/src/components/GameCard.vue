@@ -11,13 +11,8 @@
     </v-card-subtitle>
 
     <v-card-actions>
-      <v-btn color="secondary" text>
+      <v-btn color="secondary" text @click="show = !show">
         Description
-      </v-btn>
-
-      <v-spacer></v-spacer>
-
-      <v-btn icon @click="show = !show">
         <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
       </v-btn>
     </v-card-actions>
@@ -51,30 +46,8 @@ export default {
     show: false,
   }),
 
-  created() {
-    this.testGetGame()
-  },
-
   methods: {
-    testGetGame: function () {
-      axios.get("http://localhost:8080/game")
-        .then(resp => {
-          let data = [];
-          resp.data[0].forEach(element => {
-            data.push({
-              title: "TEST TITLE",
-              author: "TEST AUTHOR",
-              description: element.description
-            })
-          })
 
-          this.data = data;
-          console.log(this.data);
-        })
-        .catch(err => {
-          console.error(err.data);
-        })
-    }
   }
 }
 </script>
