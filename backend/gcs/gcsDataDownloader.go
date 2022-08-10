@@ -10,7 +10,6 @@ import (
 )
 
 type GcsDataDownloader struct {
-	projectID string
 }
 
 func (download GcsDataDownloader) DownloadData(bucket, object string) ([]byte, error) {
@@ -40,8 +39,7 @@ func (download GcsDataDownloader) DownloadData(bucket, object string) ([]byte, e
 	}
 }
 
-func NewGcsDataDownloader(projectID string) *GcsDataDownloader {
+func NewGcsDataDownloader() *GcsDataDownloader {
 	return &GcsDataDownloader{
-		projectID: projectID,
 	}
 }

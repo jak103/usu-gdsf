@@ -36,37 +36,31 @@ export default {
               title: 'Cat Attack', 
               description: 'Craig the cat embarks on an adventure', 
               author: 'Craig',
-              image: 'https://cdn.theatlantic.com/media/mt/science/cat_caviar.jpg'
             },
             { 
               title: 'Big Blue Game',
               description: 'This game is big. This game is blue. This game is fun.', 
               author: 'Big Blue',
-              image: 'https://st2.depositphotos.com/2927537/7025/i/950/depositphotos_70253417-stock-photo-funny-monkey-with-a-red.jpg'
             },
                         { 
               title: 'Cat Attack', 
               description: 'Craig the cat embarks on an adventure', 
               author: 'Craig',
-              image: 'https://cdn.theatlantic.com/media/mt/science/cat_caviar.jpg'
             },
             { 
               title: 'Big Blue Game',
               description: 'This game is big. This game is blue. This game is fun.', 
               author: 'Big Blue',
-              image: 'https://st2.depositphotos.com/2927537/7025/i/950/depositphotos_70253417-stock-photo-funny-monkey-with-a-red.jpg'
             },
                         { 
               title: 'Cat Attack', 
               description: 'Craig the cat embarks on an adventure', 
               author: 'Craig',
-              image: 'https://cdn.theatlantic.com/media/mt/science/cat_caviar.jpg'
             },
             { 
               title: 'Big Blue Game',
               description: 'This game is big. This game is blue. This game is fun.', 
               author: 'Big Blue',
-              image: 'https://st2.depositphotos.com/2927537/7025/i/950/depositphotos_70253417-stock-photo-funny-monkey-with-a-red.jpg'
             }
           ];
         },

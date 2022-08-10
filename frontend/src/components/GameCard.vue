@@ -3,8 +3,8 @@
     class="mx-4 my-4"
     max-width="600px"
   >
-    <v-img
-      :src="image"
+    <v-img 
+      :src="'data:image/png;base64,'+ this.image"
     ></v-img>
 
     <v-card-title>
@@ -16,6 +16,15 @@
     </v-card-subtitle>
 
     <v-card-actions>
+      <v-btn
+        :disabled="!notDownloading"
+        color="secondary"
+        text
+        @click="downloadGame"
+      >Download</v-btn>
+
+      <v-spacer></v-spacer>
+
       <v-btn
         color="secondary"
         text
@@ -60,32 +69,43 @@
 
     data: () => ({
       show: false,
+      image: "",
+      notDownloading: true
     }),
 
-    created() {
-      this.testGetGame()
+    mounted() {
+      axios.get("http://localhost:8080/game/download?downloadType=screenshots&bucket=test-the-breakout-game")
+        .then(res => {
+          res.data[0].forEach(element => {
+            this.image = element.ObjectData
+            return;
+          })
+        })
     },
 
     methods: {
-      testGetGame: function () {
-        axios.get("http://localhost:8080/game")
-          .then(resp => {
-            let data = [];
-            resp.data[0].forEach(element => {
-              data.push({
-                title: "TEST TITLE",
-                author: "TEST AUTHOR",
-                description: element.description
-              })
-            })
+      sleep: function(ms) {
+        return new Promise(r => setTimeout(r, ms))
+      },
 
-            this.data = data;
-            console.log(this.data);
-          })
-          .catch(err => {
-            console.error(err.data);
-          })
-      }
+      downloadGame: async function () {
+        if (this.notDownloading) {
+          this.notDownloading = false
+          await axios.get("http://localhost:8080/game/download?downloadType=game&bucket=test-the-breakout-game", { responseType: "blob" })
+            .then(res => {
+              const blob = new Blob([res.data])
+              const link = document.createElement("a")
+              link.href = URL.createObjectURL(blob)
+              link.download = "test-the-breakout-game.zip"
+              link.click()
+              URL.revokeObjectURL(link.href)
+            })
+            .catch(err => {
+              console.error(err);
+            })
+        }
+        this.notDownloading = true;
+      },
     }
   }
 </script>

@@ -51,6 +51,9 @@ func TestGetAvgGameRatings(t *testing.T) {
 	})
 
 	gamesWithRatings, err := getAvgGameRatings()
+	if err != nil {
+		assert.Fail(t, "An error occurred while fetching the average of the game ratings")
+	}
 
 	avg := 0.0
 	for _, game := range gamesWithRatings {
