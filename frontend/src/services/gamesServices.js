@@ -18,7 +18,11 @@ export function getGameInfo(id) {
 }
 
 export function getAllTags() {
-    return axios.get(`${root}/games/tags`)
+    return axios.get(`${root}/games/tags`);
+}
+
+export function getMostPopularGame() {
+    return axios.get(`${root}/most_popular`);
 }
 
 // POST

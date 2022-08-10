@@ -13,9 +13,17 @@
             <p class="text-center font-weight-thin" style="color:white;font-size: 30px">
               Our Most Popular Game
             </p>
-            <p class="text-center font-weight-thin" style="color:white;font-size: 15px">
-              Game here
+            <p v-if="!mostPopularGame" class="text-center font-weight-thin" style="color:#FFFFFF;font-size: 15px">
+              Unable to get the most popular game at this time
             </p>
+            <div v-else class="" @click.stop="handleClickGame(mostPopularGame.Id)">
+             <v-img v-if="mostPopularGame.ImagePath"
+							height="150"
+							:src=mostPopularGame.ImagePath
+						  ></v-img>
+              <h2 style="text-align: center">{{mostPopularGame["Name"]}}</h2>
+              <p style="text-align: center"> Made by: {{mostPopularGame["Developer"]}}  |  Times Played: {{mostPopularGame["TimesPlayed"]}}</p>
+            </div>
         </v-card>
       </v-col>
       <v-col>
@@ -34,7 +42,7 @@
     </v-row>
 
     <v-row v-for="genre in genres" class="mt-4">
-      <v-sheet v-if="getGenreGames(genre).length > 0">
+      <v-sheet v-if="sortedGames[genre].length > 0">
         <v-row>
           <div :data-test="`${genre}-title`" class="ml-10 pb-3 text-h5">{{ genre }}</div>
         </v-row>
@@ -77,7 +85,8 @@ export default defineComponent({
     return {
       genres: [],
       sortedGames: {},
-      dataLoading: false
+      dataLoading: false,
+      mostPopularGame: {},
     }
   },
 
@@ -92,9 +101,6 @@ export default defineComponent({
         else
             return objs.indexOf(item) >= 0 ? false : objs.push(item);
       });
-    },
-    getGenreGames(genre){
-      return this.sortedGames[genre] ? this.sortedGames[genre] : []
     },
     async getGenres(){
       this.dataLoading = true;
@@ -116,11 +122,23 @@ export default defineComponent({
           console.log(error);
           this.dataLoading = false
         })
-    }
+    },
+    async getMostPupularGame() {
+				this.dataLoading = true;
+				await GamesServices.getMostPopularGame()
+					.then(response => {
+						this.mostPopularGame = response.data;
+						this.dataLoading = false
+					}).catch(error => {
+						console.log(error.response.data);
+						this.dataLoading = false
+					});
+			},
   },
 
   created() {
     this.getGenres();
+    this.getMostPupularGame();
   }
 });
 </script>
