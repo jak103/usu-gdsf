@@ -1,7 +1,0 @@
-# This file gets read by the GitHub workflow when it runs its tests
-
-DB_TYPE=mock
-TOKEN_HASHING_KEY='unsafe-76Dri!TI#v1O#Zh!IrzS%8FJZtCNmxqMo'
-ACCESS_TOKEN_LIFETIME_MINS=5
-REFRESH_TOKEN_LIFETIME_DAYS=15
-GOOGLE_CLOUD_STORAGE_OAUTH2_TOKEN='fake-token'
