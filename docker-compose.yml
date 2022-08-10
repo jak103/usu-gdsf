@@ -28,7 +28,7 @@ services:
       - DB_TYPE=mock
       - RUN_ENV=mock
       - MONGO_URI=mongodb://gdsf:gdsf@db:27017
-      - USUGDSF_AUTH_TOKEN=triangle
+      - USUGDSF_AUTH_TOKEN=fakeHwVJzEu2wTRBK4wNu80C
     command: gin --appPort 8080 -i run .
 
   db:

@@ -1,6 +1,9 @@
 package api
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
+	"encoding/base64"
 	"net/http"
 	"os"
 	"time"
@@ -38,7 +41,7 @@ func VerifyUser(c echo.Context) (*models.User, error) {
 	user, _ := db.GetUserByUserName(username)
 
 	if user != nil {
-		if user.Password == password {
+		if user.Password == SecurePassword(password) {
 			return user, nil
 		}
 	}
@@ -92,4 +95,25 @@ func SetTokenCookie(name, token string, expiration time.Time, c echo.Context) {
 
 	log.Info("Cookie generated")
 	c.SetCookie(cookie)
+}
+
+func SecurePassword(password string) string {
+	block, err := aes.NewCipher([]byte(GetKey()))
+
+	if err != nil {
+		log.Error("Unable to secure password")
+		panic(err)
+	}
+
+	// security key needs to be 24 bits
+	iv := []byte{25, 44, 66, 78, 54, 19, 87, 07, 24, 63, 35, 05, 68, 72, 93, 22}
+
+	plainPassword := []byte(password)
+	cfb := cipher.NewCFBEncrypter(block, iv)
+
+	cipherText := make([]byte, len(plainPassword))
+
+	cfb.XORKeyStream(cipherText, plainPassword)
+
+	return base64.StdEncoding.EncodeToString(cipherText)
 }

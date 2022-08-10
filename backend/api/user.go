@@ -47,10 +47,18 @@ func CreateUser(c echo.Context) error {
 		return err
 	}
 
+	username := c.FormValue("username")
+	displayname := c.FormValue("displayname")
+	password := c.FormValue("password")
+	
 	u := *new(models.User)
-	if err = c.Bind(&u); err != nil {
-		return err
-	}
+
+	encryptedPassword := SecurePassword(password)
+
+	u.Username = username
+	u.Displayname = displayname
+	u.Password = encryptedPassword
+
 	u.SetUUID()
 
 	if err := db.CreateUser(u); err != nil {

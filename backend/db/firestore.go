@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"reflect"
@@ -187,7 +188,7 @@ func (db *Firestore) GetUserByID(id uuid.UUID) (*models.User, error) {
 	return &user, nil
 }
 
-//Username is not currently unique
+// Username is not currently unique
 func (db *Firestore) GetUserByUserName(userName string) (*models.User, error) {
 	panic("not implemented") // TODO: Implement
 }
@@ -215,7 +216,23 @@ func (db *Firestore) GetUsersByRole(role int64) ([]models.User, error) {
 }
 
 func (db *Firestore) CreateUser(newUser models.User) error {
-	panic("not implemented") // TODO: Implement
+	if newUser.ID == uuid.Nil {
+		log.Error("newUser struct has nil ID")
+		return errors.New("newUser struct has nil ID")
+	}
+
+	uc := db.client.Collection("users")
+	exists := uc.Where("id", "==", newUser.ID).Documents(context.Background())
+
+	if exists == nil {
+		uc.Doc(newUser.ID.String()).Set(context.Background(), newUser)
+		return nil
+	}
+
+	fmt.Println(exists.GetAll())
+
+	log.Error("newUser ID already exists in firestore_emu db")
+	return errors.New("newUser already exists in firestore_emu db")
 }
 
 func (db *Firestore) DeleteUser(id uuid.UUID) error {
