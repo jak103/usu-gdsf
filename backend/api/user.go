@@ -28,6 +28,15 @@ func user(c echo.Context) error {
 	return c.JSON(http.StatusOK, "User get handler")
 }
 
+func logout(c echo.Context) error {
+	// Setting MaxAge<0 means delete cookie now.
+	u := http.Cookie{
+		Name: "UserAuth"}
+	u.Expires = time.Unix(0, 0)
+	c.SetCookie(&u)
+	return c.JSON(http.StatusOK, "Old Cookie Deleted. Logged Out!\n")
+	// !!!!!!!!!!!Refersh Token STILL needs to be added to the database
+}
 func register(c echo.Context) error {
 	// User registration screen
 	db, err := db.NewDatabaseFromEnv()
@@ -108,7 +117,7 @@ func generateSalt(n uint32) ([]byte, error) {
 	return b, nil
 }
 
-//Added this function in case the I need to change how birthday sanitation is done
+// Added this function in case the I need to change how birthday sanitation is done
 func sanitizeBirthdayInput(input string) (time.Time, error) {
 	birthday, err := time.Parse(time.RFC3339, input)
 	if err != nil {
@@ -186,6 +195,7 @@ func init() {
 
 	registerRoute(route{method: http.MethodGet, path: "/user", handler: user})
 	registerRoute(route{method: http.MethodGet, path: "/user/register", handler: register})
+	registerRoute(route{method: http.MethodGet, path: "/user/logout", handler: logout})
 	registerRoute(route{
 		method:      http.MethodGet,
 		path:        "user/downloads",
