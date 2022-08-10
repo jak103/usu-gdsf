@@ -35,7 +35,7 @@
 
     <v-select
       v-model="userRole"
-      :items="items"
+      :items="role"
       :rules="[v => !!v || 'Role is required']"
       label="Role"
       solo
@@ -58,7 +58,7 @@ export default {
 	name: 'NewAccount',
 
   data: () => ({
-    items: ['Admin', 'Publisher', 'Basic'],
+    role: ['Admin', 'Publisher', 'Basic'],
     username: '',
     usernameRules: [
       value => !!value || 'Required.',
@@ -83,15 +83,14 @@ export default {
 
   methods: {
     createUser() {
-      // TODO save this to the model
-      console.log("USERNAME ", this.username)
-      console.log("DISPLAY NAME ", this.displayName)
-      console.log("USER EMAIL ", this.userEmail)
-      console.log("USER PASSWORD ", this.userPassword)
-      console.log("ROLE ", this.userRole)
-      // navigate to the home page
-      // TODO push params
-      router.push({path: '/'})
+      userData = {
+        username: this.username,
+        password: this.password,
+        displayname: this.displayName,
+        role: this.role.indexOf(this.role)
+      }
+      this.$axios.post('/register', userData)
+      router.push({name: 'editUser', params: {username: this.username, email: this.userEmail, name: this.displayName}})
     }
   }
 }

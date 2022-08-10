@@ -19,6 +19,9 @@
         </v-text-field>
       </v-form>
     </v-card-text>
+    <router-link :to="{ name: 'newAccount', params: { type: 'admin' }}">
+			Need an account? Create one here
+		</router-link>
     <v-card-actions>
       <v-btn class="bg-teal" elevation="7"> Login </v-btn>
     </v-card-actions>

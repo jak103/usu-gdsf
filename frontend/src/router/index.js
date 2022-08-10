@@ -28,9 +28,14 @@ const router = createRouter({
       component: () => import('../views/AdminPage.vue')
     },
     {
-      path: '/newaccount',
-      name: 'newaccount',
+      path: '/newAccount',
+      name: 'newAccount',
       component: () => import('../views/NewAccountView.vue')
+    },
+    {
+      path: '/editUser',
+      name: 'editUser',
+      component: () => import('../views/EditUser.vue')
     },
     {
       path: '/admin/all-users',
