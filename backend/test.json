@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "TEST_PROJECT_ID",
+  "private_key_id": "TEST_PRIVATE_KEY_ID",
+  "private_key": "dummy data",
+  "client_email": "test@test.test",
+  "client_id": "57",
+  "auth_uri": "nothing",
+  "token_uri": "nothing",
+  "auth_provider_x509_cert_url": "nothing",
+  "client_x509_cert_url": "nothing"
+}

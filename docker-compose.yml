@@ -29,6 +29,10 @@ services:
       - RUN_ENV=mock
       - MONGO_URI=mongodb://gdsf:gdsf@db:27017
       - USUGDSF_AUTH_TOKEN=fakeHwVJzEu2wTRBK4wNu80C
+      - STORAGE_EMULATOR_HOST=gcs:4443
+      - GOOGLE_APPLICATION_CREDENTIALS=/test.json
+      - GOOGLE_CLOUD_PROJECT=test-project
+      - IS_DEV=true
     command: gin --appPort 8080 -i run .
 
   db:

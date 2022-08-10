@@ -74,7 +74,7 @@
     }),
 
     mounted() {
-      axios.get("http://localhost:8080/game/download?downloadType=screenshots&bucket=test-the-breakout-game")
+      axios.get("http://localhost:8080/game/download?downloadType=screenshots&bucket=breakout")
         .then(res => {
           res.data[0].forEach(element => {
             this.image = element.ObjectData
@@ -91,7 +91,7 @@
       downloadGame: async function () {
         if (this.notDownloading) {
           this.notDownloading = false
-          await axios.get("http://localhost:8080/game/download?downloadType=game&bucket=test-the-breakout-game", { responseType: "blob" })
+          await axios.get("http://localhost:8080/game/download?downloadType=game&bucket=breakout", { responseType: "blob" })
             .then(res => {
               const blob = new Blob([res.data])
               const link = document.createElement("a")
