@@ -115,7 +115,6 @@
 </template>
 
 <script>
-	import Footer from "../components/Footer.vue"
 	import Rating from '../components/Rating.vue';
 	import Loading from '../components/Loading.vue';
 	import Footer from '../components/Footer.vue';
