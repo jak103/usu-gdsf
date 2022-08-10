@@ -5,15 +5,9 @@ name: Node.js CI
 
 on:
   push:
-<<<<<<< HEAD
-    branches: [ "team2-main" ]
-  pull_request:
-    branches: [ "team2-main" ]
-=======
     branches: ["team2-main"]
   pull_request:
     branches: ["team2-main"]
->>>>>>> 33100f73dd97ff6fc511d03efb4a965fb81e4593
 
 jobs:
   build:
@@ -28,18 +22,6 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-<<<<<<< HEAD
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: '**/package-lock.json'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
-=======
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -50,4 +32,3 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
->>>>>>> 33100f73dd97ff6fc511d03efb4a965fb81e4593
