@@ -3,30 +3,47 @@ package gcs
 import (
 	"context"
 	"io/ioutil"
+	"os"
+	"strconv"
 	"time"
 
 	"cloud.google.com/go/storage"
 	"github.com/jak103/usu-gdsf/log"
+	"google.golang.org/api/option"
 )
 
 type GcsDataDownloader struct {
-	projectID string
+	client *storage.Client
 }
 
 func (download GcsDataDownloader) DownloadData(bucket, object string) ([]byte, error) {
 	ctx := context.Background()
-	client, err := storage.NewClient(ctx)
-	if err != nil {
-		log.WithError(err).Error("Unable to connect to GCS")
-		return nil, err
+	if isDev, _ := strconv.ParseBool(os.Getenv("IS_DEV")); isDev {
+		client, err := storage.NewClient(ctx, option.WithEndpoint(os.Getenv("STORAGE_EMULATOR_HOST") + "/storage/v1"))
+		if err != nil {
+			log.WithError(err).Error("Error creating client")
+			return nil, err
+		}
+
+		download.client = client
+	} else {
+		client, err := storage.NewClient(ctx)
+		if err != nil {
+			log.WithError(err).Error("Error creating client")
+			return nil, err
+		}
+
+		download.client = client
 	}
-	defer client.Close()
+
+	defer download.client.Close()
 
 	ctx, cancel := context.WithTimeout(ctx, time.Second * 50)
 	defer cancel()
 
-	rc, err := client.Bucket(bucket).Object(object).NewReader(ctx)
+	rc, err := download.client.Bucket(bucket).Object(object).NewReader(ctx)
 	if err != nil {
+		log.Debug("Object: %v", object)
 		log.WithError(err).Error("Unable to read from Bucket")
 		return nil, err
 	}
@@ -40,8 +57,7 @@ func (download GcsDataDownloader) DownloadData(bucket, object string) ([]byte, e
 	}
 }
 
-func NewGcsDataDownloader(projectID string) *GcsDataDownloader {
+func NewGcsDataDownloader() *GcsDataDownloader {
 	return &GcsDataDownloader{
-		projectID: projectID,
 	}
 }

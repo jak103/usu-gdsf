@@ -5,13 +5,13 @@ import (
 )
 
 type Game struct {
-	ID               uuid.UUID
-	Title            string    `json:"title" form:"title"`
-	Description      string    `json:"description" form:"description"`
-	UserID           uuid.UUID `json:"userid" form:"userid"`
-	VersionNumber    string    `json:"version" form:"version"`
-	PublishTimestamp string    `json:"timestamp" form:"timestamp"`
-	Tags             []string  `json:"tags" form:"tags"`
+	ID               uuid.UUID `                                      firestore:"id,omitempty"`
+	Title            string    `json:"title"       form:"title"       firestore:"title,omitempty"`
+	Description      string    `json:"description" form:"description" firestore:"description,omitempty"`
+	UserID           uuid.UUID `json:"userid"      form:"userid"      firestore:"userid,omitempty"`
+	VersionNumber    string    `json:"version"     form:"version"     firestore:"version,omitempty"`
+	PublishTimestamp string    `json:"timestamp"   form:"timestamp"   firestore:"timestamp,omitempty"`
+	Tags             []string  `json:"tags"        form:"tags"        firestore:"tags,omitempty"`
 }
 
 // todo, create and store unqiue uuids

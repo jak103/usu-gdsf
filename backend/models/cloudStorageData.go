@@ -11,5 +11,9 @@ package models
  */
 type CloudStorageData struct {
 	ObjectName	string
-	ObjectData 	[]byte
+	ObjectData 	string
+}
+
+func(d *CloudStorageData) SetData(data string) {
+	d.ObjectData = data
 }
