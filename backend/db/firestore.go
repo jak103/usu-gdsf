@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"reflect"
 
 	"cloud.google.com/go/firestore"
 	"github.com/google/uuid"
@@ -94,15 +95,48 @@ func (db *Firestore) GetGamesByPublishDate(startRange string, endRange string) (
 }
 
 func (db *Firestore) CreateGame(newGame models.Game) error {
-	panic("not implemented") // TODO: Implement
+	_, err := db.client.Collection("games").Doc(newGame.ID.String()).Set(context.Background(), newGame)
+	if err != nil {
+		log.Error("firestore: could not create game")
+		return err
+	}
+	return nil
 }
 
 func (db *Firestore) DeleteGame(id uuid.UUID) error {
-	panic("not implemented") // TODO: Implement
+	snapshot, err := db.client.Collection("games").Doc(id.String()).Get(context.Background())
+	if err != nil {
+		log.Error("firestore: could not get game snapshot")
+		return err
+	}
+
+	_, err = snapshot.Ref.Delete(context.Background())
+	if err != nil {
+		log.Error("firestore: could not delete game snapshot")
+		return err
+	}
+	return nil
 }
 
 func (db *Firestore) UpdateGame(updatedGame models.Game) error {
-	panic("not implemented") // TODO: Implement
+	snapshot, err := db.client.Collection("games").Doc(updatedGame.ID.String()).Get(context.Background())
+	if err != nil {
+		log.Error("firestore: could not get game snapshot")
+		return err
+	}
+	gameValues := reflect.ValueOf(updatedGame)
+	gameType := gameValues.Type()
+	for i := 0; i < gameValues.NumField(); i++ {
+		_, err = snapshot.Ref.Update(context.Background(), []firestore.Update{{
+			Path:  gameType.Field(i).Name,
+			Value: gameValues.Field(i).Interface(),
+		}})
+		if err != nil {
+			log.Error(fmt.Sprintf("firestore: could not update game field: %v", gameType.Field(i).Name))
+			return err
+		}
+	}
+	return nil
 }
 
 // Users
