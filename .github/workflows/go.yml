@@ -22,7 +22,6 @@ jobs:
       run: cd backend && go build -v .
 
     - name: Test
-
       run: cd backend && go test -v ./...
 
     - name: WriteGoList
