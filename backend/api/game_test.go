@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetAvgGameRatings(t, *testing.T) {
+func TestGetAvgGameRatings(t *testing.T) {
 	db, err := db.NewDatabaseFromEnv()
 	if err != nil {
 		assert.Fail(t, "Unable to use database")
