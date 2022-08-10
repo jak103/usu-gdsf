@@ -60,9 +60,6 @@
       ],
       select: null,
       checkbox: false,
-      name: '',
-      username: '',
-      email: ''
     }),
 
     methods: {
