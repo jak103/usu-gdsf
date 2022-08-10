@@ -24,7 +24,7 @@
 import { defineComponent } from 'vue';
 
 
-export default defineComponent({
+export default{
   name: 'NavMenu',
 
 //just keeping these values here until we know we don't need them :)
@@ -34,5 +34,5 @@ export default defineComponent({
     
   }),
   
-});
+};
 </script>

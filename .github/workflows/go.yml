@@ -22,9 +22,12 @@ jobs:
       run: cd backend && go build -v .
 
     - name: Test
+<<<<<<< HEAD
 
       run: cd backend && go test -v .
 
+=======
+>>>>>>> 33100f73dd97ff6fc511d03efb4a965fb81e4593
       run: cd backend && go test -v ./...
 
     - name: WriteGoList
@@ -32,4 +35,7 @@ jobs:
 
     - name: Nancy
       uses: sonatype-nexus-community/nancy-github-action@main
+<<<<<<< HEAD
 
+=======
+>>>>>>> 33100f73dd97ff6fc511d03efb4a965fb81e4593
