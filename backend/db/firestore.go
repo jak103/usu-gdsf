@@ -15,9 +15,10 @@ import (
 var _ Database = (*Firestore)(nil)
 
 type Firestore struct {
-	client *firestore.Client
-	games  *firestore.CollectionRef
-	users  *firestore.CollectionRef
+	client  *firestore.Client
+	games   *firestore.CollectionRef
+	users   *firestore.CollectionRef
+	ratings *firestore.CollectionRef
 }
 
 func (db Firestore) GetGameByID(id uuid.UUID) (*models.Game, error) {
@@ -192,15 +193,67 @@ func (db *Firestore) UpdateUser(updatedUser models.User) error {
 
 // Ratings
 func (db *Firestore) GetRatingByID(id uuid.UUID) (*models.GameRating, error) {
-	panic("not implemented") // TODO: Implement
+	ratingDoc := db.ratings.Doc(id.String())
+	snapshot, err := ratingDoc.Get(context.Background())
+
+	if err != nil {
+		return nil, err
+	}
+
+	if snapshot == nil {
+		return nil, fmt.Errorf("%s: rating not found", id)
+	}
+
+	var rating models.GameRating
+	if err = snapshot.DataTo(&rating); err != nil {
+		return nil, err
+	}
+
+	return &rating, nil
 }
 
 func (db *Firestore) GetRatingsByGame(gameID uuid.UUID) ([]models.GameRating, error) {
-	panic("not implemented") // TODO: Implement
+	ratings := make([]models.GameRating, 0)
+	ratingsCollection := db.ratings
+
+	docs := ratingsCollection.Where("gameid", "==", gameID.String()).Documents(context.Background())
+
+	for {
+		docRef, docRefErr := docs.Next()
+
+		if docRefErr == iterator.Done {
+			break
+		}
+
+		var rating models.GameRating
+		docRef.DataTo(&rating)
+
+		ratings = append(ratings, rating)
+	}
+
+	return ratings, nil
 }
 
 func (db *Firestore) GetRatingsByUser(userID uuid.UUID) ([]models.GameRating, error) {
-	panic("not implemented") // TODO: Implement
+	ratings := make([]models.GameRating, 0)
+	ratingsCollection := db.ratings
+
+	docs := ratingsCollection.Where("userId", "==", userID.String()).Documents(context.Background())
+
+	for {
+		docRef, docRefErr := docs.Next()
+
+		if docRefErr == iterator.Done {
+			break
+		}
+
+		var rating models.GameRating
+		docRef.DataTo(&rating)
+
+		ratings = append(ratings, rating)
+	}
+
+	return ratings, nil
 }
 
 func (db *Firestore) CreateRating(newRating models.GameRating) error {
@@ -208,11 +261,24 @@ func (db *Firestore) CreateRating(newRating models.GameRating) error {
 }
 
 func (db *Firestore) DeleteRating(id uuid.UUID) error {
-	panic("not implemented") // TODO: Implement
+	ratingDoc := db.ratings.Doc(id.String())
+	_, err := ratingDoc.Delete(context.Background())
+
+	return err
 }
 
 func (db *Firestore) DeleteRatingsByGame(gameID uuid.UUID) error {
-	panic("not implemented") // TODO: Implement
+	ratingsCollection := db.ratings
+
+	docs := ratingsCollection.Where("gameid", "==", gameID.String()).Documents(context.Background())
+
+	for {
+		docRef, docRefErr := docs.Next()
+		if docRefErr == iterator.Done {
+			break
+		}
+		_, err := docRef.Ref.Delete((context.Background()))
+	}
 }
 
 func (db *Firestore) UpdateRating(updatedRating models.GameRating) error {
@@ -245,6 +311,9 @@ func (db *Firestore) Connect() error {
 
 	// Etablish Database Collection object
 	db.client = client
+	db.games = client.Collection(GAMES)
+	db.users = client.Collection(USERS)
+	db.ratings = client.Collection(RATINGS)
 
 	return nil
 }

@@ -13,6 +13,9 @@ const (
 	MOCK      = "mock"
 	FIRESTORE = "firestore"
 	MONGO     = "mongo"
+	GAMES     = "games"
+	USERS     = "users"
+	RATINGS   = "ratings"
 )
 
 var connection Database
