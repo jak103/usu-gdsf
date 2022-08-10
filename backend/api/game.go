@@ -26,14 +26,14 @@ var v = validator.New()
 func gameInfoHandler(c echo.Context) error {
 	
 	// get id from path
-	id := c.Param("id")
+	_id := c.Param("id")
 
 	// get game from db with id
 	_db, getDbErr := db.NewDatabaseFromEnv()
 	if getDbErr != nil {
 		return c.JSON(http.StatusInternalServerError, "Database connection error")
 	}
-	game, err := _db.GetGameByID(id)
+	game, err := _db.GetGameByID(_id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Database find game ID error")
 	}
@@ -111,6 +111,6 @@ func init() {
 	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
-	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
+	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: gameInfoHandler})
 	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
 }

@@ -7,8 +7,8 @@ import (
 	"net/url"
 	"testing"
 	"time"
-
 	"github.com/labstack/echo/v4"
+	// "github.com/jak103/usu-gdsf/db"
 
 	"github.com/jak103/usu-gdsf/auth"
 	"github.com/jak103/usu-gdsf/models"
@@ -48,14 +48,44 @@ var (
 	}
 )
 
-func TestGame(t *testing.T) {
+func Test_Get_a_Game(t *testing.T) {
 	e := echo.New()
-	recorder := httptest.NewRecorder()
-	request := httptest.NewRequest(http.MethodGet, "/game", nil)
-	c := e.NewContext(request, recorder)
+	t.Cleanup(func() {
+		_db.RemoveGame(game0)
+		_db.RemoveGame(game1)
+	})
+	
+	id0, _ := _db.AddGame(game0)
+	id1, _ := _db.AddGame(game1)
+	game0.Id = id0
+	game1.Id = id1
 
-	if assert.NoError(t, getAllGames(c)) {
+	params := auth.TokenParams{
+		Type:      auth.ACCESS_TOKEN,
+		UserId:    42,
+		UserEmail: "tst@example.com",
+	}
+	token := auth.GenerateToken(params)
+
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest(http.MethodGet, "/", nil)
+	request.Header.Set("accessToken", token)
+	
+	c := e.NewContext(request, recorder)
+	c.SetPath("/game/:id")
+	c.SetParamNames("id")
+	c.SetParamValues(id0)
+
+	if assert.NoError(t, gameInfoHandler(c)) {		
+		response := recorder.Body.String()
+		gameObjectResponse := models.Game{}
+		in := []byte(response)
+		err := json.Unmarshal(in, &gameObjectResponse)
+		if err != nil {
+			println(err)
+		}
 		assert.Equal(t, http.StatusOK, recorder.Code)
+		assert.Equal(t, gameObjectResponse.Id, id0)
 	}
 }
 

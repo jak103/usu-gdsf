@@ -45,34 +45,34 @@ func TestAddGame(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-func TestGetDownload(t *testing.T) {
-	downloadId, _ := _db.AddDownload(download1)
-	e := echo.New()
+// func TestGetDownload(t *testing.T) {
+// 	downloadId, _ := _db.AddDownload(download1)
+// 	e := echo.New()
 
-	recorder := httptest.NewRecorder()
-	request := httptest.NewRequest(http.MethodGet, "/", nil)
-	c := e.NewContext(request, recorder)
-	c.SetPath("/downloads/:id")
-	c.SetParamNames("id")
-	c.SetParamValues(downloadId)
+// 	recorder := httptest.NewRecorder()
+// 	request := httptest.NewRequest(http.MethodGet, "/", nil)
+// 	c := e.NewContext(request, recorder)
+// 	c.SetPath("/downloads/:id")
+// 	c.SetParamNames("id")
+// 	c.SetParamValues(downloadId)
 
-	if assert.NoError(t, getDownloadByID(c)) {
-		assert.Equal(t, http.StatusOK, recorder.Code)
-	}
+// 	if assert.NoError(t, getDownloadByID(c)) {
+// 		assert.Equal(t, http.StatusOK, recorder.Code)
+// 	}
 
-}
+// }
 
-func TestInvalidGetDownload(t *testing.T) {
-	e := echo.New()
+// func TestInvalidGetDownload(t *testing.T) {
+// 	e := echo.New()
 
-	recorder := httptest.NewRecorder()
-	request := httptest.NewRequest(http.MethodGet, "/", nil)
-	c := e.NewContext(request, recorder)
-	c.SetPath("/downloads/:id")
-	c.SetParamNames("id")
-	c.SetParamValues("00000")
+// 	recorder := httptest.NewRecorder()
+// 	request := httptest.NewRequest(http.MethodGet, "/", nil)
+// 	c := e.NewContext(request, recorder)
+// 	c.SetPath("/downloads/:id")
+// 	c.SetParamNames("id")
+// 	c.SetParamValues("00000")
 
-	if assert.NoError(t, getDownloadByID(c)) {
-		assert.Equal(t, http.StatusInternalServerError, 500)
-	}
-}
+// 	if assert.NoError(t, getDownloadByID(c)) {
+// 		assert.Equal(t, http.StatusInternalServerError, 500)
+// 	}
+// }
