@@ -263,7 +263,7 @@ func TestGameByFirstLetter(t *testing.T) {
 	token := auth.GenerateToken(params)
 
 	q := make(url.Values)
-	q.Set("ltr", "_id-ASC")
+	q.Set("ltr", "a")
 
 	req := httptest.NewRequest("http.MethodGet", "/games/getByFirstLetter?"+q.Encode(), nil)
 	req.Header.Set("accessToken", token)
