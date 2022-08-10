@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
+	"go.uber.org/multierr"
 	"google.golang.org/api/iterator"
 )
 
@@ -238,7 +239,7 @@ func (db *Firestore) GetRatingsByUser(userID uuid.UUID) ([]models.GameRating, er
 	ratings := make([]models.GameRating, 0)
 	ratingsCollection := db.ratings
 
-	docs := ratingsCollection.Where("userId", "==", userID.String()).Documents(context.Background())
+	docs := ratingsCollection.Where("userid", "==", userID.String()).Documents(context.Background())
 
 	for {
 		docRef, docRefErr := docs.Next()
@@ -257,7 +258,12 @@ func (db *Firestore) GetRatingsByUser(userID uuid.UUID) ([]models.GameRating, er
 }
 
 func (db *Firestore) CreateRating(newRating models.GameRating) error {
-	panic("not implemented") // TODO: Implement
+	// NOTE: this assumes that the ID is already set in the new object
+	_, err := db.ratings.Doc(newRating.ID.String()).Set(context.Background(), newRating)
+	if err != nil {
+		log.WithError(err).Error("failed to add a rating to firestore")
+	}
+	return err
 }
 
 func (db *Firestore) DeleteRating(id uuid.UUID) error {
@@ -272,17 +278,40 @@ func (db *Firestore) DeleteRatingsByGame(gameID uuid.UUID) error {
 
 	docs := ratingsCollection.Where("gameid", "==", gameID.String()).Documents(context.Background())
 
+	var finalErr error = nil
 	for {
 		docRef, docRefErr := docs.Next()
 		if docRefErr == iterator.Done {
 			break
 		}
-		_, err := docRef.Ref.Delete((context.Background()))
+		_, err := docRef.Ref.Delete(context.Background())
+		if err != nil {
+			if finalErr == nil {
+				finalErr = err
+			} else {
+				finalErr = multierr.Append(finalErr, err)
+			}
+		}
 	}
+
+	return finalErr
 }
 
 func (db *Firestore) UpdateRating(updatedRating models.GameRating) error {
-	panic("not implemented") // TODO: Implement
+	var finalErr error = nil
+	_, getErr := db.ratings.Doc(updatedRating.ID.String()).Get(context.Background())
+	if getErr == nil {
+		_, err := db.ratings.Doc(updatedRating.ID.String()).Set(context.Background(), updatedRating)
+		if err != nil {
+			log.WithError(err).Error("failed to update a rating in firestore")
+			finalErr = err
+		}
+	} else {
+		log.WithError(getErr).Error("Tried to update a rating that doesn't exist")
+		finalErr = getErr
+	}
+
+	return finalErr
 }
 
 // Disconnect disconnects from the remote database
