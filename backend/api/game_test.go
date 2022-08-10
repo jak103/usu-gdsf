@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/jak103/usu-gdsf/auth"
-	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
@@ -47,28 +46,22 @@ var (
 		DownloadLink: "dummy1.test",
 	}
 
-	dummyGameCount = 0
+	dummyGameCount = 11
 )
 
-func TestGame(t *testing.T) {
-	e := echo.New()
-	recorder := httptest.NewRecorder()
-	request := httptest.NewRequest(http.MethodGet, "/game", nil)
-	e.ServeHTTP(recorder, request)
-	println(recorder.Code)
-	assert.Equal(t, 404, recorder.Code)
-}
-
-func Test_FindDummyGameCount(t *testing.T) {
-	response := db.JSON_SEED_DATA
-	seededGames := []models.Game{}
-	in := []byte(response)
-	err := json.Unmarshal(in, &seededGames)
-	if err != nil {
-		println("could not parse the SEEDED json game collections")
-	}
-	dummyGameCount = len(seededGames)
-}
+// this code is to dynamically find number of seeded data from JSON but it is not able to
+// read JSON into the struct which i believe is discrepency between collection struct and
+// game model . I am not removing it now to do it other time after making data is same in all side
+// func Test_FindDummyGameCount(t *testing.T){
+// 		_response := db.JSON_SEED_DATA
+// 		seededGames := [] models.Game{}
+// 		in := []byte(_response)
+// 		err := json.Unmarshal(in, &seededGames)
+// 		if err != nil{
+// 			fmt. Println(err)
+// 		}
+// 		dummyGameCount = len(seededGames)
+// }
 
 func TestGetGame(t *testing.T) {
 	e := echo.New()
@@ -229,8 +222,38 @@ func TestGetAllGamesReturnsCorrectNumberOfGames(t *testing.T) {
 	assert.Equal(t, dummyGameCount+2, len(gameObjectResponse))
 }
 
+func TestSortGames(t *testing.T) {
+	e := echo.New()
+	params := auth.TokenParams{
+		Type:      auth.ACCESS_TOKEN,
+		UserId:    42,
+		UserEmail: "tst@example.com",
+	}
+
+	token := auth.GenerateToken(params)
+
+	q := make(url.Values)
+	q.Set("srt", "_id-ASC")
+
+	req := httptest.NewRequest("http.MethodGet", "/games/sort?"+q.Encode(), nil)
+	req.Header.Set("accessToken", token)
+	recorder := httptest.NewRecorder()
+	c := e.NewContext(req, recorder)
+
+	assert.NoError(t, sortAllGame(c))
+	response := recorder.Body.String()
+	gameObjectResponse := []models.Game{}
+
+	in := []byte(response)
+	err := json.Unmarshal(in, &gameObjectResponse)
+	if err != nil {
+		fmt.Printf("%+v", err)
+	}
+	assert.LessOrEqual(t, 8, len(gameObjectResponse))
+	assert.Greater(t, len(gameObjectResponse), 0)
+}
+
 func TestUpdateGame(t *testing.T) {
-	//cleanup
 	e := echo.New()
 
 	t.Cleanup(func() {
@@ -274,7 +297,7 @@ func TestUpdateGame(t *testing.T) {
 	in := []byte(response)
 	err := json.Unmarshal(in, &gameObjectResponse)
 	if err != nil {
-		println(err)
+		fmt.Printf("%+v", err)
 	}
 
 	require.Equal(t, http.StatusOK, recorder.Code)
