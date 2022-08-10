@@ -1,54 +1,56 @@
 <template>
-  <h2>Create New User</h2>
-	<v-form
-    ref="form"
-    v-model="valid"
-    lazy-validation
-  	>
-    <v-text-field
-      v-model="username"
-      label="Enter Username"
-      required
-    ></v-text-field>
-
-    <v-text-field
-      v-model="displayName"
-      label="Enter Display Name"
-      required
-    ></v-text-field>
-
-    <v-text-field
-      v-model="userEmail"
-      label="Enter E-mail"
-      :rules="emailRules"
-      required
-    ></v-text-field>
-
-    <v-text-field
-      v-model="userPassword"
-      :type="'password'"
-      :rules="passwordRules"
-      name="input-10-1"
-      label="Enter Password"
-      counter
-    ></v-text-field>
-
-    <v-select
-      v-model="userRole"
-      :items="role"
-      :rules="[v => !!v || 'Role is required']"
-      label="Role"
-      solo
-    ></v-select>
-
-    <v-btn
-      color="success"
-      class="mr-4"
-      v-on:click="createUser"
+  <v-container>
+    <h2>Create New User</h2>
+    <v-form
+      ref="form"
+      v-model="valid"
+      lazy-validation
     >
-      Create User
-    </v-btn>
-  </v-form>
+      <v-text-field
+        v-model="username"
+        label="Enter Username"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="displayName"
+        label="Enter Display Name"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="userEmail"
+        label="Enter E-mail"
+        :rules="emailRules"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="userPassword"
+        :type="'password'"
+        :rules="passwordRules"
+        name="input-10-1"
+        label="Enter Password"
+        counter
+      ></v-text-field>
+
+      <v-select
+        v-model="userRole"
+        :items="role"
+        :rules="[v => !!v || 'Role is required']"
+        label="Role"
+        solo
+      ></v-select>
+
+      <v-btn
+        color="success"
+        class="mr-4"
+        v-on:click="createUser"
+      >
+        Create User
+      </v-btn>
+    </v-form>
+  </v-container>
 </template>
 
 <script>
@@ -83,13 +85,14 @@ export default {
 
   methods: {
     createUser() {
-      userData = {
-        username: this.username,
-        password: this.password,
-        displayname: this.displayName,
-        role: this.role.indexOf(this.role)
-      }
-      this.$axios.post('/register', userData)
+      this.$axios.post('/register', 
+        {
+          username: this.username,
+          password: this.password,
+          displayname: this.displayName,
+          role: this.role.indexOf(this.role)
+        }
+      )
       router.push({name: 'editUser', params: {username: this.username, email: this.userEmail, name: this.displayName}})
     }
   }
