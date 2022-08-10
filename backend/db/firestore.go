@@ -209,7 +209,7 @@ func (db Firestore) GetAllDownloads() ([]models.Download, error) {
 	return downloads, nil
 }
 
-func (db Firestore) UpdateGame(updatedGame models.Game) (models.Game, error) {
+func (db Firestore) UpdateGame(newGameInfo models.Game, id string) (models.Game, error) {
 	// TODO: Finish updateGame
 	// EXAMPLE
 	// client.Collection("cities").Doc("DC").Update(ctx, []firestore.Update{
@@ -217,7 +217,11 @@ func (db Firestore) UpdateGame(updatedGame models.Game) (models.Game, error) {
 	//             Path:  "capital",
 	//             Value: true,
 	//     },
-	return updatedGame, nil
+	// if err != nil {
+	//     // Handle any errors in an appropriate way, such as returning them.
+	//     log.Printf("An error has occurred: %s", err)
+	// }
+	return newGameInfo, nil
 }
 
 func (db Firestore) CreateUser(newUser models.User) (models.User, error) {

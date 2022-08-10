@@ -402,9 +402,9 @@ func (db Mongo) GetAllDownloads() ([]models.Download, error) {
 	return downloads, nil
 }
 
-func (db Mongo) UpdateGame(updatedGame models.Game) (models.Game, error) {
+func (db Mongo) UpdateGame(newGameInfo models.Game, id string) (models.Game, error) {
 	// TODO: Finish updateGame
-	return updatedGame, nil
+	return newGameInfo, nil
 }
 
 func (db Mongo) CreateUser(newUser models.User) (models.User, error) {

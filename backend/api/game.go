@@ -114,15 +114,16 @@ func updateGameHandler(c echo.Context) error {
 		return err
 	}
 
-	updatedGame := models.Game{
-		Name:         c.FormValue(NAME),
-		Developer:    c.FormValue(DEVELOPER),
-		CreationDate: time.Now(),
-		Version:      c.FormValue(VERSION),
-		DownloadLink: c.FormValue(LINK),
+	_id := c.Param("id")
+
+	newGameInfo := models.Game{
+		Name:         c.Param("name"),
+		Developer:    c.Param("developer"),
+		Version:      c.Param("version"),
+		DownloadLink: c.Param("link"),
 	}
 
-	if result, err := db.UpdateGame(updatedGame); err != nil {
+	if result, err := db.UpdateGame(newGameInfo, _id); err != nil {
 		log.Error("An error occurred while updating the game record: %v", err)
 		return err
 	} else {
