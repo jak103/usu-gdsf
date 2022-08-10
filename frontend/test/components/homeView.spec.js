@@ -9,12 +9,12 @@ describe('HomeView Rendering', () => {
     const wrapper = mount(HomeView);
 
 
-    test('renders a form with inputs', () => {
+    test('renders a form with container', () => {
         //check if the form is rendered
         expect(wrapper.find('v-container').exists()).toBe(true)
     }),
 
-    test('renders a form with inputs', () => {
+    test('renders a form with rows', () => {
         //check if the form is rendered
         expect(wrapper.find('v-row').exists()).toBe(true)
       })
