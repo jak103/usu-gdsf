@@ -2,6 +2,7 @@ package api
 
 import (
 	"net/http"
+	"sort"
 
 	"github.com/google/uuid"
 	"github.com/jak103/usu-gdsf/db"
@@ -88,14 +89,60 @@ func newGameHandler(c echo.Context) error {
 	}
 }
 
+type gameWithRating struct {
+	game   models.Game
+	rating float32
+}
+
+func getAvgGameRatings() ([]gameWithRating, error) {
+	db, err := db.NewDatabaseFromEnv()
+	gamesWithRatings := []gameWithRating{}
+
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return nil, err
+	}
+
+	if games, err := db.GetAllGames(); err != nil {
+		for _, game := range games {
+			avg := 0.0
+			ratings, err := db.GetRatingsByGame(game.ID)
+			if err != nil {
+				log.WithError(err).Error("Unable to get ratings")
+				return nil, err
+			}
+
+			for _, rating := range ratings {
+				avg += float64(rating.RatingValue)
+			}
+			avg = avg / float64(len(ratings))
+			gamesWithRatings = append(gamesWithRatings, gameWithRating{game: game, rating: float32(avg)})
+		}
+	}
+
+	return gamesWithRatings, nil
+}
+
+func getHighestRatedGames(c echo.Context) error {
+	gamesWithRatings, err := getAvgGameRatings()
+
+	if err != nil {
+		log.WithError(err).Error("Unable to get games with ratings")
+		return err
+	} else {
+		sort.SliceStable(gamesWithRatings, func(i, j int) bool {
+			return gamesWithRatings[i].rating > gamesWithRatings[j].rating
+		})
+	}
+
+	return c.JSON(http.StatusOK, gamesWithRatings)
+}
+
 func init() {
 	log.Info("Running game init")
-	//registerRoute(route{method: http.MethodGet, path: "/game", handler: game})
-	//registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
-	//registerRoute(route{method: http.MethodGet, path: "/games", handler: getGames})
-	//registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 	registerRoute(route{method: http.MethodGet, path: "/game/download", handler: gameDownload})
 	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGameByID})
 	registerRoute(route{method: http.MethodGet, path: "/game", handler: getGames})
+	registerRoute(route{method: http.MethodPost, path: "/game/highest-rated", handler: getHighestRatedGames})
 	registerRestrictedRoute(route{method: http.MethodPost, path: "/game/add", handler: newGameHandler})
 }
