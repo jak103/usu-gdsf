@@ -25,9 +25,11 @@
 			</v-list-item>
 		</v-card>
 	</v-container>
+	<Footer></Footer>
 </template>
 
 <script>
+import Footer from "../components/Footer.vue"
 export default {
 	name: 'AdminPage',
 	data() {
@@ -50,6 +52,7 @@ export default {
 				}
 			}
 		}
-	}
+	},
+	components: { Footer }
 }
 </script>

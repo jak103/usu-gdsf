@@ -1,68 +1,22 @@
 <template>
-  <v-container v-if="!dataLoading && taggedGames.length > 0">
-    <v-row class="ma-2">
-      <v-col v-for="game in taggedGames.slice(0,5)">
-        <GameCardView :game="game"></GameCardView>
-      </v-col>
+  <v-container v-if="games.length > 0">
+    <v-row>
+      <GameCardView class="ma-2" v-for="game in games" :game="game"></GameCardView>
     </v-row>
   </v-container>
-  <div v-if="!dataLoading && taggedGames.length == 0">
-    Hey backend team, if you want game cards to show up here, tag games with "{{ tag }}" and make sure to add the image URLs
-  </div>
-  <Loading data-test="loadbar" v-if="dataLoading" text="Loading Game Data" containerStyle="height: 75vh"/>
 </template>
 
 <script>
 import GameCardView from '../components/GameCardView.vue'
-import axios from "axios"
-import Loading from '../components/Loading.vue';
 import Game from '../models/game';
-
 
 export default {
   name: 'GameList',
   
-  data: () => ({
-    taggedGames: [],
-    dataLoading: true,
-  }),
-
-  methods: {
-    async getTaggedGames() {
-      this.dataLoading = true
-      await axios.get('http://127.0.0.1:8080/games')
-        .then(response => {
-          this.taggedGames = 
-            response.data[0]
-              .filter(game => game['Tags'] && game['Tags'].includes(this.tag))
-              .map(rawGame => new Game(
-                rawGame['Id'], 
-                rawGame['Name'], 
-                rawGame['Developer'], 
-                rawGame['Rating'],
-                rawGame['TimesPlayed'],
-                rawGame["ImagePath"],
-                rawGame['Description'],
-                rawGame['Tags'],
-                )
-              )
-          this.dataLoading = false
-        }).catch(error => {
-						console.log(error.response.data);
-						this.dataLoading = false
-					});
-    }
-  },
-  
-  props: ["tag"],
+  props: { games: [Game] },
 
   components: {
     GameCardView,
-    Loading,
   },
-
-  created() {
-    this.getTaggedGames()
-  }
 }
 </script>

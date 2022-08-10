@@ -25,9 +25,11 @@
 			</v-row>
 		</v-card>
 	</v-row>
+	<Footer></Footer>
 </template>
 
 <script>
+import Footer from "../components/Footer.vue"
 export default {
 	name: 'AccountPage',
 	data: () => ({
@@ -41,6 +43,9 @@ export default {
 			image:"https://randomuser.me/api/portraits/men/85.jpg" 
 		}
 	
-	})
+	}),
+	components: {
+		Footer
+	}
 }
 </script>
