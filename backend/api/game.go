@@ -138,7 +138,6 @@ func getGamesWithFirstLetter(c echo.Context) error {
 	return c.JSON(http.StatusOK, games)
 }
 
-
 func newGameHandler(c echo.Context) error {
 	// create new game model
 	// TODO need a security layer in between the form and our new game struct

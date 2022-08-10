@@ -8,45 +8,12 @@ import (
 	"net/url"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/jak103/usu-gdsf/auth"
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-)
-
-var (
-	game0 = models.Game{
-		Name:         "game0",
-		Rating:       3.5,
-		TimesPlayed:  1,
-		ImagePath:    "path/0",
-		Description:  "dummy game 0",
-		Developer:    "tester",
-		CreationDate: time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC),
-		Version:      "0.0.0",
-		Tags:         []string{"tag0", "tag1"},
-		Downloads:    35,
-		DownloadLink: "dummy.test",
-	}
-
-	game1 = models.Game{
-		Name:         "game1",
-		Rating:       3.9,
-		TimesPlayed:  2,
-		ImagePath:    "path/1",
-		Description:  "dummy game 1",
-		Developer:    "tester",
-		CreationDate: time.Date(1900, 1, 2, 0, 0, 0, 0, time.UTC),
-		Version:      "0.0.1",
-		Tags:         []string{"tag1", "tag2"},
-		Downloads:    36,
-		DownloadLink: "dummy1.test",
-	}
-
-	dummyGameCount = 11
 )
 
 // this code is to dynamically find number of seeded data from JSON but it is not able to
@@ -335,28 +302,4 @@ func TestUpdateGame(t *testing.T) {
 	}
 
 	require.Equal(t, http.StatusOK, recorder.Code)
-}
-
-func TestGameInfoHandler(t *testing.T) {
-	id, _ := _db.AddGame(game0)
-	defer _db.RemoveGame(game0)
-
-	e := echo.New()
-
-	recorder := httptest.NewRecorder()
-	request := httptest.NewRequest(http.MethodGet, "/info/"+id, nil)
-	c := e.NewContext(request, recorder)
-
-	if assert.NoError(t, gameInfoHandler(c)) {
-		gameObjectResponse := recorder.Body
-
-		t.Log(gameObjectResponse)
-		t.Log("/info/"+id)
-
-		assert.Equal(t, http.StatusOK, recorder.Code)
-		// assert.Equal(t, "game0", gameObjectResponse.Body.Name)
-		// assert.Equal(t, []string{"tag0", "tag1"}, gameObjectResponse.Body.Tags)
-		// assert.Equal(t, 35, gameObjectResponse.Body.Downloads)
-		// assert.Equal(t, "dummy.test", gameObjectResponse.Body.DownloadLink)
-	}
 }
