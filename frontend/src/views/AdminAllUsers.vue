@@ -32,20 +32,6 @@ export default {
             { text: 'Name', value: 'Displayname' },
             { text: 'Role', value: 'Role' }
         ],
-        testUsers: [
-            {
-                ID: 1,
-                Username: 'test',
-                Displayname: 'Test User',
-                Role: 'Admin'
-            },
-            {
-                ID: 2,
-                Username: 'test2',
-                Displayname: 'Test User 2',
-                Role: 'User'
-            }
-        ]
     }),
     asyncComputed: {
         users: function () {
