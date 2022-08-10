@@ -13,8 +13,10 @@ test('renders Empty Game Carousel', () => {
 
 test('renders single URL Game Carousel', () => {
     const wrapper = mount(carousel, {
-      propsData: {
+      data() { 
+        return {
           screenshotUrls: ['https://i.ytimg.com/vi/-Gq2S0AXjNw/mqdefault.jpg']
+        }
       }
     })
     const carouselItems = wrapper.findAll('v-carousel-item')
