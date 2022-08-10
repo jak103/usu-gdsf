@@ -1,22 +1,23 @@
-import { mount, flushPromises  } from '@vue/test-utils'
-import axios from 'axios'
+import { mount  } from '@vue/test-utils'
 import GameManagementPage from './GameManagementPage.vue'
 
 test('Verify close new game leaves empty data in selectGame', () => {
-    const wrapper = mount(GameManagementPage, {
-        propsData: {
-            games: [],
-			showCreate: true,
-			showEdit: ref(false),
-			selectedGame: ref({
-				name: "t",
-				developer: "e",
-				version: "s",
-				description: "t",
-				imagePath: "i",
-				downloadLink: "n"
-			}),
-			error: ''
+    let wrapper = mount(GameManagementPage, {
+        data() {
+            return {
+                games: [],
+                showCreate: true,
+                showEdit: false,
+                selectedGame: {
+                    name: "t",
+                    developer: "e",
+                    version: "s",
+                    description: "t",
+                    imagePath: "i",
+                    downloadLink: "n"
+                },
+                error: ''
+            }
         }, 
 
     })
@@ -24,29 +25,31 @@ test('Verify close new game leaves empty data in selectGame', () => {
     const cancelB = wrapper.find('#cancel')
     cancelB.trigger('click')
 
-    expect(wrapper.props().selectedGame.name).toBe(' ')
-    expect(wrapper.props().selectedGame.developer).toBe(' ')
-    expect(wrapper.props().selectedGame.version).toBe(' ')
-    expect(wrapper.props().selectedGame.description).toBe(' ')
-    expect(wrapper.props().selectedGame.imagePath).toBe(' ')
-    expect(wrapper.props().selectedGame.downloadLink).toBe(' ')
+    expect(wrapper.vm.selectedGame.name).toBe(' ')
+    expect(wrapper.vm.selectedGame.developer).toBe(' ')
+    expect(wrapper.vm.selectedGame.version).toBe(' ')
+    expect(wrapper.vm.selectedGame.description).toBe(' ')
+    expect(wrapper.vm.selectedGame.imagePath).toBe(' ')
+    expect(wrapper.vm.selectedGame.downloadLink).toBe(' ')
 })
 
 test('Verify close leaves empty data in selectGame', () => {
-    const wrapper = mount(GameManagementPage, {
-        propsData: {
-            games: [],
-			showCreate: ref(false),
-			showEdit: true,
-			selectedGame: ref({
-				name: "t",
-				developer: "e",
-				version: "s",
-				description: "t",
-				imagePath: "i",
-				downloadLink: "n"
-			}),
-			error: ''
+    let wrapper = mount(GameManagementPage, {
+        data() {
+            return {
+                games: [],
+                showCreate: false,
+                showEdit: true,
+                selectedGame: {
+                    name: "t",
+                    developer: "e",
+                    version: "s",
+                    description: "t",
+                    imagePath: "i",
+                    downloadLink: "n"
+                },
+                error: ''
+            }
         }, 
 
     })
@@ -54,10 +57,10 @@ test('Verify close leaves empty data in selectGame', () => {
     const cancelB = wrapper.find('#cancel')
     cancelB.trigger('click')
 
-    expect(wrapper.props().selectedGame.name).toBe(' ')
-    expect(wrapper.props().selectedGame.developer).toBe(' ')
-    expect(wrapper.props().selectedGame.version).toBe(' ')
-    expect(wrapper.props().selectedGame.description).toBe(' ')
-    expect(wrapper.props().selectedGame.imagePath).toBe(' ')
-    expect(wrapper.props().selectedGame.downloadLink).toBe(' ')
+    expect(wrapper.vm.selectedGame.name).toBe(' ')
+    expect(wrapper.vm.selectedGame.developer).toBe(' ')
+    expect(wrapper.vm.selectedGame.version).toBe(' ')
+    expect(wrapper.vm.selectedGame.description).toBe(' ')
+    expect(wrapper.vm.selectedGame.imagePath).toBe(' ')
+    expect(wrapper.vm.selectedGame.downloadLink).toBe(' ')
 })

@@ -16,13 +16,13 @@
             <p v-if="!mostPopularGame" class="text-center font-weight-thin" style="color:#FFFFFF;font-size: 15px">
               Unable to get the most popular game at this time
             </p>
-            <div v-else class="" @click.stop="handleClickGame(mostPopularGame.Id)">
+            <div v-else class="" @click.stop="clickGameCard(mostPopularGame.Name, mostPopularGame.Id)">
              <v-img v-if="mostPopularGame.ImagePath"
 							height="150"
 							:src=mostPopularGame.ImagePath
 						  ></v-img>
               <h2 style="text-align: center">{{mostPopularGame["Name"]}}</h2>
-              <p style="text-align: center"> Made by: {{mostPopularGame["Developer"]}}  |  Times Played: {{mostPopularGame["TimesPlayed"]}}</p>
+              <p style="text-align: center">Developed by: {{mostPopularGame["Developer"]}}  |  Times Played: {{mostPopularGame["TimesPlayed"]}}</p>
             </div>
         </v-card>
       </v-col>
@@ -42,7 +42,7 @@
     </v-row>
 
     <v-row v-for="genre in genres" class="mt-4">
-      <v-sheet v-if="sortedGames[genre].length > 0">
+      <v-sheet v-if="sortedGames[genre]?.length > 0">
         <v-row>
           <div :data-test="`${genre}-title`" class="ml-10 pb-3 text-h5">{{ genre }}</div>
         </v-row>
@@ -101,6 +101,9 @@ export default defineComponent({
         else
             return objs.indexOf(item) >= 0 ? false : objs.push(item);
       });
+    },
+    clickGameCard(name, id){
+			this.$router.push(`/games/info/${name}/${id}`)
     },
     async getGenres(){
       this.dataLoading = true;

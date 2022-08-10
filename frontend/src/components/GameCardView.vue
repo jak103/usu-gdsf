@@ -1,8 +1,9 @@
 <template>
-  <v-card width="240" height="375" @click.stop="onClick(game.Id, game.Name)">
+  <v-card width="240" @click.stop="onClick(game.Id, game.Name)">
     <v-img
         height="160"
         :src="game.ImagePath"
+		@error="game.ImagePath = null"
     ></v-img>
 
     <v-card-title>{{ game.Name }}</v-card-title>
@@ -28,10 +29,7 @@ import Game from '../models/game';
 export default {
 	name: 'GameCardView',
 	props: {
-		game: {
-			type: Game,
-			required: true
-		}
+		game: Game
 	},
 	components: {
 		Rating,

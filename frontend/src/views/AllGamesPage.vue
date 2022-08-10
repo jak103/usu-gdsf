@@ -48,6 +48,7 @@
 						<v-img v-if="item.ImagePath"
 							height="50"
 							:src="item.ImagePath"
+							@error="item.ImagePath = null"
 						></v-img>
 						<v-icon v-else color="gray">
 							mdi-gamepad-square

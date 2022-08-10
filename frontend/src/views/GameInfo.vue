@@ -22,6 +22,7 @@
 							width=100%
 							max-height="500"
 							:src="gameData.ImagePath"
+							@error="gameData.ImagePath = null"
 						></v-img>
 					</div>
 					<div v-else>
@@ -187,6 +188,11 @@
 		},
 		created() {
 			this.getGameInfo(this.$route.params.id);
+		},
+		updated() {
+			if (this.gameData.Id !== this.$route.params.id){
+				this.getGameInfo(this.$route.params.id);
+			}
 		}
 	};
 </script>

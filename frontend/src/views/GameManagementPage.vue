@@ -47,7 +47,6 @@
 import NewGame from '../components/NewGame.vue'
 import EditGame from '../components/EditGame.vue'
 import axios from 'axios'
-import {ref} from "vue"
 export default {
 	name: 'GameManagementPage',
     components: {
@@ -58,16 +57,16 @@ export default {
 		
 		return {
 			games: [],
-			showCreate: ref(false),
-			showEdit: ref(false),
-			selectedGame: ref({
+			showCreate: false,
+			showEdit: false,
+			selectedGame: {
 				name: " ",
 				developer: " ",
 				version: " ",
 				description: " ",
 				imagePath: " ",
 				downloadLink: " "
-			}),
+			},
 			error: ''
 		}
 	},
