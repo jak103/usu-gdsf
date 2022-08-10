@@ -7,7 +7,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="user in testUsers" :key="user.ID">
+                <tr v-for="user in users" :key="user.ID">
                     <td>{{ user.ID }}</td>
                     <td>{{ user.Username }}</td>
                     <td>{{ user.Displayname }}</td>
@@ -21,12 +21,12 @@
 
 <script>
 //TODO: errors pop up when trying to import this, I think it's a backend issue?
-// import axios from "axios"; 
+import axios from "axios";
 export default {
     name: 'AdminAllUsers',
 
     data: () => ({
-        // users: [],
+        users: [],
         loading: false,
         headers: [
             { text: 'ID', value: 'ID' },
@@ -49,22 +49,13 @@ export default {
             }
         ]
     }),
-
-    methods: {
-        async users() {
-            this.loading = true;
-            await axios.get('http://127.0.0.1:8080/allusers')
-                .then(response => {
-                    this.users = response.data[0];
-                    this.loading = false
-                }).catch(error => {
-                    console.log(error.response.data);
-                    this.dataLoading = false
-                });
-        },
+    asyncComputed: {
+        users: function () {
+            return axios.get("http://localhost:8080/user")
+                .then(resp => {
+                    this.users = resp.data;
+                })
+        }
     },
-    created() {
-        this.users();
-    }
 }
 </script>
