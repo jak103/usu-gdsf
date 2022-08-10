@@ -31,8 +31,7 @@ const JSON_SEED_DATA = `[
     "CreationDate": "2022-08-09T01:22:30Z",
     "Version": "1.x",
     "Tags": ["Sandbox", "Adventure"],
-    "downloads": 160000000,
-
+    "downloads": 160000000
   },
   {
     "Id": "2",
