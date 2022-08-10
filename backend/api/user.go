@@ -29,14 +29,15 @@ func user(c echo.Context) error {
 }
 
 func logout(c echo.Context) error {
-	// Setting MaxAge<0 means delete cookie now.
+
 	u := http.Cookie{
-		Name: "UserAuth"}
+		Value: fmt.Sprintf("%s%s", auth.ACCESS_TOKEN_COOKIE_KEY, auth.REFRESH_TOKEN_COOKIE_KEY)}
 	u.Expires = time.Unix(0, 0)
 	c.SetCookie(&u)
 	return c.JSON(http.StatusOK, "Old Cookie Deleted. Logged Out!\n")
-	// !!!!!!!!!!!Refersh Token STILL needs to be added to the database
+	// TODO: Blacklist refresh token by adding it to the database
 }
+
 func register(c echo.Context) error {
 	// User registration screen
 	db, err := db.NewDatabaseFromEnv()
