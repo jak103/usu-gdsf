@@ -3,7 +3,7 @@
     <h2>Featured Games</h2>
     <v-row class="ma-3">
       <!-- Carousel -->
-      <GameCarousel></GameCarousel>
+      <GameCarousel tag="Featured"></GameCarousel>
     </v-row>
 
     <v-divider></v-divider>

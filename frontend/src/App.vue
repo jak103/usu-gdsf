@@ -16,7 +16,8 @@
     </v-container>
   </v-main>
 
-  <v-footer color="primary" app
+  <v-footer
+    color="primary"
     paddless
   >
     <v-row

@@ -1,7 +1,7 @@
 <template>
   <v-card width="100%">
     <v-carousel cycle :interval="cycleTime">
-      <v-carousel-item v-for="game in gameData.slice(0,5)" :key="game">
+      <v-carousel-item v-for="game in gameData" :key="game">
         <v-sheet height="100%" tile>
           <v-row class="fill-height" align="center" justify="center">
             <v-col align="center" justify="center">
@@ -24,6 +24,10 @@
 export default {
   name: 'GameCarousel',
 
+  props: {
+    tag: { default: '' }
+  },
+
   data: () => ({
     colors: ['primary', 'secondary', 'info', 'warning', 'white', 'teal', 'watermelon'],
     cycleTime: 4000,
@@ -32,7 +36,11 @@ export default {
 
   async mounted() {
     try{
-      const response = await this.$axios.get('/game');
+      let query = '';
+      if(this.tag) {
+        query = `?tag=${this.tag}`
+      }
+      const response = await this.$axios.get(`/game${query}`);
       this.gameData = response.data[0];
     } catch {
       console.log('Error')
