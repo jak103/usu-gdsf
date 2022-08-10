@@ -8,10 +8,10 @@
             </thead>
             <tbody>
                 <tr v-for="user in users" :key="user.ID">
-                    <td>{{ user.ID }}</td>
-                    <td>{{ user.Username }}</td>
-                    <td>{{ user.Displayname }}</td>
-                    <td>{{ user.Role }}</td>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.displayname }}</td>
+                    <td>{{ user.role }}</td>
                 </tr>
             </tbody>
         </v-table>
@@ -27,11 +27,12 @@ export default {
         users: [],
         loading: false,
         headers: [
-            { text: 'ID', value: 'ID' },
-            { text: 'Username', value: 'Username' },
-            { text: 'Name', value: 'Displayname' },
-            { text: 'Role', value: 'Role' }
+            { text: 'ID', value: 'id' },
+            { text: 'User Name', value: 'username' },
+            { text: 'Name', value: 'displayname' },
+            { text: 'Role', value: 'role' }
         ],
+        users: []
     }),
     asyncComputed: {
         users: function () {
