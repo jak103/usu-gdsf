@@ -2,12 +2,13 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/labstack/echo/v4"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"testing"
 	"time"
+
+	"github.com/labstack/echo/v4"
 
 	"github.com/jak103/usu-gdsf/auth"
 	"github.com/jak103/usu-gdsf/models"
@@ -48,7 +49,7 @@ var (
 )
 
 func TestGame(t *testing.T) {
-	e := echo.New() 
+	e := echo.New()
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodGet, "/game", nil)
 	e.ServeHTTP(recorder, request)
@@ -71,7 +72,7 @@ func TestGetAllGames(t *testing.T) {
 
 func TestGetGamesWithTags(t *testing.T) {
 	//cleanup
-	e := echo.New() 
+	e := echo.New()
 
 	t.Cleanup(func() {
 		_db.RemoveGame(game0)
@@ -114,4 +115,35 @@ func TestGetGamesWithTags(t *testing.T) {
 	require.Equal(t, http.StatusOK, recorder.Code)
 
 	assert.Equal(t, 2, len(gameObjectResponse))
+}
+
+func TestUpdateGame(t *testing.T) {
+	// authParams := auth.TokenParams{
+	// 	Type:      auth.ACCESS_TOKEN,
+	// 	UserId:    42,
+	// 	UserEmail: "tst@example.com",
+	// }
+	// token, _ := auth.GenerateToken(params)
+
+	// // requestParams = `{
+	// // 	"game_id":"Jon Snow",
+	// // 	"email":"jon@labstack.com"
+	// // }`
+
+	// e := echo.New()
+	// request := httptest.NewRequest(http.MethodPut, "/game/1/update", nil) //strings.NewReader(params))
+	// request.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	// request.Header.Set("accessToken", token)
+	// recorder := httptest.NewRecorder()
+	// c := e.NewContext(req, rec)
+	// h := &handler{mockDB}
+
+	// // // req := httptest.NewRequest("http.MethodGet", "/games/tags?"+q.Encode(), nil)
+
+	// // Assertions
+	// if assert.NoError(t, h.createUser(c)) {
+	// 	assert.Equal(t, http.StatusOK, recorder.Code)
+	// 	// assert.Equal(t, userJSON, rec.Body.String())
+	// }
+
 }
