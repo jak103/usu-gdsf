@@ -1,7 +1,7 @@
 <template>
 	<div
 		data-test="table"
-		v-if="!dataLoading &&  allGames.length > 0"
+		v-if="!dataLoading && allGames.length > 0"
 	>
 		<div data-test="title" class="ml-10 pb-3 text-h4">
 			All Games
@@ -43,6 +43,7 @@
 					class="pt-2"
 					:key="item.Id"
 					:id="item.Id"
+					style="cursor: pointer"	
 					@click.stop="handleClickGame(item.Id, item.Name)">
 					<td>
 						<v-img v-if="item.ImagePath"

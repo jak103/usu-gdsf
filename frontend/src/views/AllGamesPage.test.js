@@ -1,5 +1,5 @@
 import { mount, flushPromises  } from '@vue/test-utils'
-import axios from 'axios'
+import * as gamesServices from '../services/gamesServices'
 import AllGamesPage from './AllGamesPage.vue'
 
 // Object to contain component.
@@ -96,11 +96,11 @@ test("routes to game page", () => {
 
 test("hits backend to get games list", async () => {
     const gameName = "Test Game"
-    jest.spyOn(axios, 'get').mockResolvedValue({ data: [[{ Name: gameName }]] })
+    jest.spyOn(gamesServices, 'getAllGames').mockResolvedValue({ data: [{ Name: gameName }] })
 
     wrapper.vm.getGames()
 
-    expect(axios.get).toHaveBeenCalledTimes(1)
+    expect(gamesServices.getAllGames).toHaveBeenCalledTimes(1)
 
     await flushPromises()
 

@@ -87,7 +87,7 @@
 		<v-row justify="end">
 			<v-sheet class="pa-2 ma-2 pt-10">
 				<v-btn 
-					color="primary" 
+					color="secondary" 
 					@click.stop="downloadGame(gameData.Id, gameData.DownloadLink)"
 					prepend-icon="mdi-download"
 				>
@@ -95,7 +95,7 @@
 				</v-btn>
 				<v-btn
 					class="ml-2"
-					color="primary" 
+					color="secondary" 
 					@click.stop="playGame(gameData.Id)"
 					prepend-icon="mdi-play"
 				>
@@ -190,7 +190,7 @@
 			this.getGameInfo(this.$route.params.id);
 		},
 		updated() {
-			if (this.gameData.Id !== this.$route.params.id){
+			if (this.gameData && this.gameData.Id !== this.$route.params.id){
 				this.getGameInfo(this.$route.params.id);
 			}
 		}

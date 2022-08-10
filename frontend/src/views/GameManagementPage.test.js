@@ -1,4 +1,4 @@
-import { mount  } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import GameManagementPage from './GameManagementPage.vue'
 
 test('Verify close new game leaves empty data in selectGame', () => {
@@ -18,8 +18,10 @@ test('Verify close new game leaves empty data in selectGame', () => {
                 },
                 error: ''
             }
-        }, 
+        },
+        created() {
 
+        }
     })
 
     const cancelB = wrapper.find('#cancel')
@@ -51,7 +53,9 @@ test('Verify close leaves empty data in selectGame', () => {
                 error: ''
             }
         }, 
+        created() {
 
+        }
     })
 
     const cancelB = wrapper.find('#cancel')

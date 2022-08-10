@@ -94,7 +94,7 @@ export default defineComponent({
     uniqueVals(a){
       var prims = {"boolean":{}, "number":{}, "string":{}}, objs = [];
 
-      return a.filter(function(item) {
+      return a?.filter(function(item) {
         var type = typeof item;
         if(type in prims)
             return prims[type].hasOwnProperty(item) ? false : (prims[type][item] = true);
@@ -110,7 +110,7 @@ export default defineComponent({
       await GamesServices.getAllTags()
         .then(response => {
           this.genres = this.uniqueVals(response?.data);
-          this.genres.sort().forEach(genre => this.getGamesWithGenre(genre))
+          this.genres?.sort().forEach(genre => this.getGamesWithGenre(genre))
         }).catch(error => {
           console.log(error);
           this.dataLoading = false
