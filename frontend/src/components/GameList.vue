@@ -2,9 +2,9 @@
 <div v-for = "item in gameInfo" :key="item.id"
 >
   <GameCard 
-  :title="item.title" 
-  :author="Game Author" 
-  :description="item.description" />
+    :title="item.title" 
+    :author="item.author" 
+    :description="item.description" />
   </div>
 </template>
 
