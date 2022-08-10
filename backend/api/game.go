@@ -131,8 +131,8 @@ func getGamesWithFirstLetter(c echo.Context) error {
 	games, err := _db.GetGamesByFirstLetter(letter)
 
 	if err != nil {
-		log.WithError(err).Error("Database GetGamesByTags error in API getGamesWithTags")
-		return c.JSON(http.StatusInternalServerError, "Database fetch games with tags error")
+		log.WithError(err).Error("Database function GetGamesByFirstLetter error")
+		return c.JSON(http.StatusInternalServerError, "Database fetch games with first letter error")
 	}
 
 	return c.JSON(http.StatusOK, games)
@@ -172,5 +172,5 @@ func init() {
 	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGame})
 	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
 	registerRoute(route{method: http.MethodGet, path: "/games/sort", handler: sortAllGame})
-	registerRoute(route{method: http.MethodGet, path: "/games/getByFirstLetter", handler: getGamesWithFirstLetter})
+	registerRoute(route{method: http.MethodGet, path: "/games/firstLetter", handler: getGamesWithFirstLetter})
 }
