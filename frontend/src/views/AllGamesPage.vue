@@ -8,7 +8,7 @@
 		</div>
 		<v-table
 			data-test="data-table"
-			height="80vh"
+			height="70vh"
 		>
 			<thead>
 				<tr>
@@ -25,10 +25,10 @@
 					<th class="text-left" width="7%">
 					Created
 					</th>
-					<th class="text-left" width="10%">
+					<th class="text-left" width="20%">
 					Tags
 					</th>
-					<th class="text-left" width="10%">
+					<th class="text-left" width="15%">
 					Times Played/Downloads
 					</th>
 					<th class="text-left" width="10%">
@@ -40,6 +40,7 @@
 			<tbody>
 				<tr	
 					v-for="item in allGames.slice(((page - 1) * perPage), ((page - 1) * perPage) + perPage)"
+					class="pt-2"
 					:key="item.Id"
 					:id="item.Id"
 					@click.stop="handleClickGame(item.Id, item.Name)">
@@ -66,7 +67,7 @@
 						<div v-if="item.TimesPlayed != null">
 							Times Played: {{ item.TimesPlayed }}
 						</div>
-						<div v-if="item.downloads != null">
+						<div v-if="item.Downloads != null">
 							Downloads: {{ item.Downloads }}
 						</div>
 						<div v-if="item.TimesPlayed == null && item.downloads == null">
@@ -115,7 +116,9 @@
 	import Loading from '../components/Loading.vue';
 	import Footer from '../components/Footer.vue';
 	import NoData from '../components/NoData.vue';
-	import axios from "axios";
+
+	import * as GamesServices from '../services/gamesServices';
+	import Game from '../models/game';
 	export default {
 		name: 'AllGamesPage',
 		components: {
@@ -138,13 +141,12 @@
 			},
 			async getGames() {
 				this.dataLoading = true;
-				// we may want to configure a base-url for this, because it won't work on production
-				await axios.get('http://127.0.0.1:8080/games')
+				await GamesServices.getAllGames()
 					.then(response => {
-						this.allGames = response.data[0];
+						this.allGames = response?.data.map(g => Game.populateFromObject(g));
 						this.dataLoading = false
 					}).catch(error => {
-						console.log(error.response.data);
+						console.log(error);
 						this.allGames = [];
 						this.dataLoading = false
 					});

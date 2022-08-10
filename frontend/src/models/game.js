@@ -26,4 +26,21 @@ export default class Game {
         this.Downloads = Downloads;
         this.DownloadLink = DownloadLink;
     }
+
+    static populateFromObject(gameObj) {
+        return new Game(
+            gameObj.Id ? gameObj.Id : "",
+            gameObj.Name ? gameObj.Name : "",
+            gameObj.Developer ? gameObj.Developer : "",
+            gameObj.Rating ? gameObj.Rating : 0,
+            gameObj.TimesPlayed ? gameObj.TimesPlayed : 0,
+            gameObj.ImagePath ? gameObj.ImagePath : "",
+            gameObj.Description ? gameObj.Description : "",
+            gameObj.Tags ? gameObj.Tags : [],
+            gameObj.CreationDate ? gameObj.CreationDate : new Date(),
+            gameObj.Version ? gameObj.Version : "0.0.0",
+            gameObj.Downloads ? gameObj.Downloads : 0,
+            gameObj.DownloadLink ? gameObj.DownloadLink : ""
+        )
+    }
 }

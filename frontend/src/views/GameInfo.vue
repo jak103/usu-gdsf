@@ -61,6 +61,7 @@
 					<v-sheet class="pa-2 ma-2">
 						<Rating
 							:rating="gameData.Rating"
+							:isDense=true
 							:isReadOnly=true
 							:isHalfIncrements="true"/>
 					</v-sheet>
@@ -103,7 +104,8 @@
 			</v-sheet>
 		</v-row>
 		<v-row v-if="similarGames && similarGames.length > 0">
-			<h3 data-test="title" class="ml-10 pb-5 pt-10">More Games Like {{ gameData.Name }}...</h3>
+			<div data-test="title" class="ml-10 pb-3 text-h5">More Games Like {{ gameData.Name }}...</div>
+			<GameList :games="similarGames"/>
 		</v-row>
 	</v-container>
 
@@ -117,29 +119,30 @@
 	import Loading from '../components/Loading.vue';
 	import Footer from '../components/Footer.vue';
 	import NoData from '../components/NoData.vue';
-	import Game from '../models/game';
+	import GameList from '../components/GameList.vue';
 
-	import axios from "axios";
+	import * as GamesServices from '../services/gamesServices';
+	import Game from '../models/game';
 	export default {
 		name: 'GameInfo',
 		data: () => ({
 			dataLoading: true,
-			gameData: null,
-			similarGames: null
+			gameData: Game,
+			similarGames: []
 		}),
 		components:{
 			Rating,
 			Loading,
 			Footer,
-			NoData
+			NoData,
+			GameList
 		},
 		methods: {
 			async getGameInfo(id) {
 				this.dataLoading = true;
-				await axios.get(`http://127.0.0.1:8080/info/${id}`)
+				await GamesServices.getGameInfo(id)
 					.then(response => {
-						this.gameData = response.data;
-						this.gameData = new Game();
+						this.gameData = Game.populateFromObject(response.data);
 						if (this.gameData.Tags){
 							this.getGamesLikeThis(this.gameData.Tags);
 						}
@@ -147,24 +150,20 @@
 							this.dataLoading = false
 						}
 					}).catch(error => {
-						console.log(error.response.data);
+						console.log(error);
 						this.dataLoading = false
 						this.gameData = null;
 					});
 			},
 			async getGamesLikeThis(tags) {
-				this.dataLoading = false
-
-				// TODO: FINISH THIS ONCE THE EP IS AVAILABLE
-
-				// await axios.get(`http://127.0.0.1:8080/games/tags?tags=${tags}`)
-				// 	.then(response => {
-				// 		this.similarGames = response.data;
-				// 		this.dataLoading = false
-				// 	}).catch(error => {
-				// 		console.log(error.response.data);
-				// 		this.dataLoading = false
-				// 	});
+				await GamesServices.getGamesWithTags(tags)
+					.then(response => {
+						this.similarGames = response?.data.filter(g => g.Id !== this.gameData.Id).map(g => Game.populateFromObject(g));
+						this.dataLoading = false
+					}).catch(error => {
+						console.log(error);
+						this.dataLoading = false
+					});
 			},
 			downloadGame(id, link){
 				// Download this game with id

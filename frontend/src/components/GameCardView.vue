@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="240" @click.stop="OnClick(game.Id, game.Name)">
+  <v-card width="240" height="375" @click.stop="onClick(game.Id, game.Name)">
     <v-img
         height="160"
         :src="game.ImagePath"
@@ -13,6 +13,8 @@
 		:rating="game.Rating"
 		:isHover="true"
 		:isHalfIncrements="true"
+		:isReadOnly="true"
+		:isDense="true"
 		>
 	</Rating>
     <v-card-text>{{ game.Description }}</v-card-text>
@@ -28,17 +30,14 @@ export default {
 	props: {
 		game: {
 			type: Game,
-			required: true,
-			default() {
-				return new Game() // This will need to be removed at some point once we've only created one of these Game Cards if there is data.
-			}
+			required: true
 		}
 	},
 	components: {
 		Rating,
 	},
 	methods: {
-		OnClick(id, name) {
+		onClick(id, name) {
 			this.$router.push(`/games/info/${name}/${id}`)
 		}
 	}

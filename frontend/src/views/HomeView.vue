@@ -1,5 +1,5 @@
 <template>
-  <!-- <v-container> -->
+  <v-container v-if="!dataLoading">
     <v-row>
       <v-card height="165" width="2000" color=primary>
         <p class="text-center font-weight-thin" style="color:#FFFFFF;font-size: 100px">
@@ -33,42 +33,34 @@
       </v-col>    
     </v-row>
 
-    <!-- Break out Games by: Semester, Type -->
-    <!-- These will be the GameList Components-->
+    <v-row v-for="genre in genres" class="mt-4">
+      <v-sheet v-if="getGenreGames(genre).length > 0">
+        <v-row>
+          <div :data-test="`${genre}-title`" class="ml-10 pb-3 text-h5">{{ genre }}</div>
+        </v-row>
+        <v-row class="ma-2">
+          <GameList :games='sortedGames[genre]'></GameList>
+        </v-row>
+      </v-sheet>
+    </v-row>
     <v-row>
-      <h1>Spring 2022</h1>
+      <Footer></Footer>
     </v-row>
-    <v-row class="ma-2">
-      <GameList tag="spring2022"></GameList>
-    </v-row>
-
-    <v-row>
-      <h1>Puzzles</h1>
-    </v-row>
-    <v-row class="ma-2">
-      <GameList tag="puzzle"></GameList>
-    </v-row>
-
-    <v-row>
-      <h1>Shooters</h1>
-    </v-row>
-    <v-row class="ma-2">
-      <GameList tag="shooter"></GameList>
-    </v-row>
-  <v-row>
-    <Footer></Footer>
-  </v-row>
-  <!-- </v-container> -->
+  </v-container>
+  
+	<Loading data-test="loadbar" v-if="dataLoading" text="Game Data" containerStyle="height: 75vh"/>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
 import GameCarousel from '../components/GameCarousel.vue';
-import Game from '../models/game.js'
 import GameList from '../components/GameList.vue';
 import GameCardView from '../components/GameCardView.vue';
 import Footer from "../components/Footer.vue";
+import Loading from '../components/Loading.vue';
 
+import Game from '../models/game.js'
+import * as GamesServices from '../services/gamesServices.js';
 
 export default defineComponent({
   name: 'HomeView',
@@ -77,21 +69,58 @@ export default defineComponent({
     GameCarousel,
     GameList,
     GameCardView,
-    Footer
+    Footer,
+    Loading
   },
 
   data() {
     return {
-      exampleGame: new Game()
+      genres: [],
+      sortedGames: {},
+      dataLoading: false
     }
   },
 
-  computed: {
+  methods: {
+    uniqueVals(a){
+      var prims = {"boolean":{}, "number":{}, "string":{}}, objs = [];
 
+      return a.filter(function(item) {
+        var type = typeof item;
+        if(type in prims)
+            return prims[type].hasOwnProperty(item) ? false : (prims[type][item] = true);
+        else
+            return objs.indexOf(item) >= 0 ? false : objs.push(item);
+      });
+    },
+    getGenreGames(genre){
+      return this.sortedGames[genre] ? this.sortedGames[genre] : []
+    },
+    async getGenres(){
+      this.dataLoading = true;
+      await GamesServices.getAllTags()
+        .then(response => {
+          this.genres = this.uniqueVals(response?.data);
+          this.genres.sort().forEach(genre => this.getGamesWithGenre(genre))
+        }).catch(error => {
+          console.log(error);
+          this.dataLoading = false
+        })
+    },
+    async getGamesWithGenre(genre){
+      await GamesServices.getGamesWithTags([ genre ])
+        .then(response => {
+          this.sortedGames[genre] = response?.data.map(g => Game.populateFromObject(g));
+          this.dataLoading = false;
+        }).catch(error => {
+          console.log(error);
+          this.dataLoading = false
+        })
+    }
   },
 
-  methods: {
-
+  created() {
+    this.getGenres();
   }
 });
 </script>

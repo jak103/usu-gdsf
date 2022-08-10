@@ -75,6 +75,27 @@ func getAllGames(c echo.Context) error {
 	}
 }
 
+func getAllTags(c echo.Context) error {
+	_db, err := db.NewDatabaseFromEnv()
+
+	if err != nil {
+		log.WithError(err).Error("Unable to use database")
+		return err
+	}
+
+	if result, err := _db.GetAllGames(); err != nil {
+		log.Error("An error occurred while getting game records: %v", err)
+		return err
+	} else {
+		// Loop through the games and grab all the tags, make the list unique
+		tags := make([]string, 0)
+		for i := range result {
+			tags = append(tags, result[i].Tags...)
+		}
+		return c.JSON(http.StatusOK, tags)
+	}
+}
+
 func newGameHandler(c echo.Context) error {
 	// create new game model
 	// TODO need a security layer in between the form and our new game struct
@@ -108,4 +129,5 @@ func init() {
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 	registerRoute(route{method: http.MethodGet, path: "/info/:id", handler: gameInfoHandler})
 	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
+	registerRoute(route{method: http.MethodGet, path: "/games/tags", handler: getAllTags})
 }
