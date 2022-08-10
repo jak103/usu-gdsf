@@ -282,7 +282,7 @@ func TestGameByFirstLetter(t *testing.T) {
 		fmt.Printf("%+v", err)
 	}
 
-	assert.LessOrEqual(t, 8, len(gameObjectResponse))
+	assert.LessOrEqual(t, len(gameObjectResponse), 11)
 	assert.Greater(t, len(gameObjectResponse), 0)
 
 }
