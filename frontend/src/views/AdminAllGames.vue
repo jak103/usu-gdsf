@@ -7,7 +7,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="game in testGames" :key="game.ID">
+                <tr v-for="game in games" :key="game.ID">
                     <td>{{ game.ID }}</td>
                     <td>{{ game.title }}</td>
                     <td>{{ game.description }}</td>
@@ -28,6 +28,7 @@ export default {
   name: 'AdminAllUsers',
   data: () => ({
     loading: false,
+    games: [],
     headers: [
       { text: 'ID', value: 'ID' },
       { text: 'Title', value: 'title' },
@@ -67,22 +68,13 @@ export default {
       }
     ]
   }),
-  methods: {
-    async games() {
-      //this needs to be checked once backend is merged in
-      this.loading = true;
-      await axios.get('http://127.0.0.1:8080/game')
-        .then(response => {
-          this.users = response.data[0];
-          this.loading = false
-        }).catch(error => {
-          console.log(error.response.data);
-          this.dataLoading = false
-      });
-    },
+  asyncComputed: {
+    games: function () {
+      return axios.get("http://localhost:8080/game")
+        .then(resp => {
+          this.games = resp.data;
+        })
+    }
   },
-  created() {
-    this.games();
-  }
 }
 </script> 
