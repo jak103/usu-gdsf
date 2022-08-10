@@ -117,6 +117,28 @@ func sortAllGame(c echo.Context) error {
 
 }
 
+func getGamesWithFirstLetter(c echo.Context) error {
+	// connect the db
+	_db, err := db.NewDatabaseFromEnv()
+	if err != nil {
+		log.WithError(err).Error("Database connection error in API getGamesWithFirstLetter")
+		return c.JSON(http.StatusInternalServerError, "Database connection error")
+	}
+
+	// grab tags from context
+	letter := c.QueryParam("ltr")
+	// split string into array    // fetch games with tags
+	games, err := _db.GetGamesByFirstLetter(letter)
+
+	if err != nil {
+		log.WithError(err).Error("Database function GetGamesByFirstLetter error")
+		return c.JSON(http.StatusInternalServerError, "Database fetch games with first letter error")
+	}
+
+	return c.JSON(http.StatusOK, games)
+}
+
+
 func newGameHandler(c echo.Context) error {
 	// create new game model
 	// TODO need a security layer in between the form and our new game struct
@@ -177,4 +199,7 @@ func init() {
 	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGame})
 	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
 	registerRoute(route{method: http.MethodGet, path: "/games/sort", handler: sortAllGame})
+
+	registerRoute(route{method: http.MethodGet, path: "/games/firstLetter", handler: getGamesWithFirstLetter})
+
 }
