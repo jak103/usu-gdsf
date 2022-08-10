@@ -57,8 +57,10 @@ func TestGetGamesByTags(t *testing.T) {
 	}
 
 	gamesWithTag1, _ := mock.GetGamesByTags([]string{"tag1"})
+	gamesWithTag2, _ := mock.GetGamesByTags([]string{"tag2"})
 
 	assert.Equal(t, 8, len(gamesWithTag1))
+	assert.Equal(t, 3, len(gamesWithTag2))
 }
 
 func TestGetAllGames(t *testing.T) {
@@ -194,7 +196,7 @@ func TestGetUserByID(t *testing.T) {
 	assert.Equal(t, randUser.ID, id)
 }
 
-func TestGetUserByRole(t *testing.T) {
+func TestGetUsersByRole(t *testing.T) {
 	mock := Mock{}
 	mock.users = make(map[uuid.UUID]models.User)
 	user := models.User{
@@ -220,9 +222,9 @@ func TestGetUserByRole(t *testing.T) {
 	assert.Equal(t, halfUsers, len(admins))
 	assert.Equal(t, halfUsers, len(publishers))
 	_, err := mock.GetUsersByRole(3)
-	assert.Equal(t, nil, err)
+	assert.NotEqual(t, nil, err)
 	_, err = mock.GetUsersByRole(-1)
-	assert.Equal(t, nil, err)
+	assert.NotEqual(t, nil, err)
 
 }
 
@@ -298,7 +300,7 @@ func TestGetRatingByID(t *testing.T) {
 	mock := Mock{}
 	mock.ratings = make(map[uuid.UUID]models.GameRating)
 	rating := models.GameRating{
-		RatingValue:       "5",
+		RatingValue:       5,
 		RatingDescription: "good",
 		RatingTimestamp:   "1234567890",
 		GameId:            uuid.New(),
@@ -322,7 +324,7 @@ func TestGetRatingsByGame(t *testing.T) {
 	mock.ratings = make(map[uuid.UUID]models.GameRating)
 	gameID := uuid.New()
 	rating := models.GameRating{
-		RatingValue:       "5",
+		RatingValue:       5,
 		RatingDescription: "good",
 		RatingTimestamp:   "1234567890",
 		GameId:            gameID,
@@ -342,7 +344,7 @@ func TestGetRatingsByUser(t *testing.T) {
 	mock.ratings = make(map[uuid.UUID]models.GameRating)
 	userID := uuid.New()
 	rating := models.GameRating{
-		RatingValue:       "5",
+		RatingValue:       5,
 		RatingDescription: "good",
 		RatingTimestamp:   "1234567890",
 		GameId:            uuid.New(),
@@ -363,7 +365,7 @@ func TestCreateRating(t *testing.T) {
 	ratingID := uuid.New()
 	newRating := models.GameRating{
 		ID:                ratingID,
-		RatingValue:       "5",
+		RatingValue:       5,
 		RatingDescription: "good",
 		RatingTimestamp:   "1234567890",
 		GameId:            uuid.New(),
@@ -385,7 +387,7 @@ func TestDeleteRating(t *testing.T) {
 	ratingID := uuid.New()
 	newRating := models.GameRating{
 		ID:                ratingID,
-		RatingValue:       "5",
+		RatingValue:       5,
 		RatingDescription: "good",
 		RatingTimestamp:   "1234567890",
 		GameId:            uuid.New(),
@@ -407,7 +409,7 @@ func TestDeleteRatingsByGame(t *testing.T) {
 	mock.ratings = make(map[uuid.UUID]models.GameRating)
 	gameID := uuid.New()
 	newRating := models.GameRating{
-		RatingValue:       "5",
+		RatingValue:       5,
 		RatingDescription: "good",
 		RatingTimestamp:   "1234567890",
 		GameId:            gameID,
@@ -435,7 +437,7 @@ func TestUpdateRating(t *testing.T) {
 	ratingID := uuid.New()
 	newRating := models.GameRating{
 		ID:                ratingID,
-		RatingValue:       "5",
+		RatingValue:       5,
 		RatingDescription: "good",
 		RatingTimestamp:   "1234567890",
 		GameId:            uuid.New(),
