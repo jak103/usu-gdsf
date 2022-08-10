@@ -8,8 +8,7 @@ import (
 	"testing"
 	"time"
 	"github.com/labstack/echo/v4"
-	// "github.com/jak103/usu-gdsf/db"
-
+	
 	"github.com/jak103/usu-gdsf/auth"
 	"github.com/jak103/usu-gdsf/models"
 	"github.com/stretchr/testify/assert"
@@ -17,8 +16,7 @@ import (
 )
 
 var (
-	// _db, _ = db.NewDatabaseFromEnv()
-
+	
 	game0 = models.Game{
 		Name:         "game0",
 		Rating:       3.5,
@@ -48,7 +46,7 @@ var (
 	}
 )
 
-func Test_Get_a_Game(t *testing.T) {
+func TestGetGame(t *testing.T) {
 	e := echo.New()
 	t.Cleanup(func() {
 		_db.RemoveGame(game0)
@@ -76,7 +74,7 @@ func Test_Get_a_Game(t *testing.T) {
 	c.SetParamNames("id")
 	c.SetParamValues(id0)
 
-	if assert.NoError(t, gameInfoHandler(c)) {		
+	if assert.NoError(t, getGame(c)) {		
 		response := recorder.Body.String()
 		gameObjectResponse := models.Game{}
 		in := []byte(response)

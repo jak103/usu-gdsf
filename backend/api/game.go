@@ -23,7 +23,7 @@ const (
 
 var v = validator.New()
 
-func gameInfoHandler(c echo.Context) error {
+func getGame(c echo.Context) error {
 	
 	// get id from path
 	_id := c.Param("id")
@@ -111,6 +111,6 @@ func init() {
 	log.Info("Running game init")
 	registerRoute(route{method: http.MethodGet, path: "/games", handler: getAllGames})
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
-	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: gameInfoHandler})
+	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGame})
 	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
 }
