@@ -113,7 +113,7 @@ export default defineComponent({
 					});
 			},
       handleClickGame(id) {
-				this.$router.push("/info/" + id)
+				this.$router.push("/games/info/" + id)
 			},
   },
   created() {
