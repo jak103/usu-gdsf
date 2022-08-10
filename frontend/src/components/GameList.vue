@@ -37,8 +37,12 @@
 
     methods: {
       async getData() {
-        let res = await this.$axios.get('/game')
-        this.gameInfo = res.data[0]
+        try {
+          let res = await this.$axios.get('/game');
+          this.gameInfo = res.data[0]
+        } catch {
+          console.log('Error reading database');
+        }
       }
     }
   }
