@@ -119,7 +119,7 @@ export default defineComponent({
     async getGamesWithGenre(genre){
       await GamesServices.getGamesWithTags([ genre ])
         .then(response => {
-          this.sortedGames[genre] = response?.data.map(g => Game.populateFromObject(g));
+          this.sortedGames[genre] = response.data;
           this.dataLoading = false;
         }).catch(error => {
           console.log(error);

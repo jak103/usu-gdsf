@@ -1,7 +1,7 @@
 <template>
 	<div
 		data-test="table"
-		v-if="!dataLoading && allGames.length > 0"
+		v-if="!dataLoading && allGames && allGames.length > 0"
 	>
 		<div data-test="title" class="ml-10 pb-3 text-h4">
 			All Games
@@ -109,7 +109,7 @@
 		></v-pagination>
 	</div>
 	<Loading data-test="loadbar" v-if="dataLoading" text="Game Data" containerStyle="height: 75vh"/>
-	<NoData data-test="noData" v-if="!dataLoading && (allGames === null || allGames.length === 0)" text="All Games" containerStyle="height: 75vh"/>
+	<NoData data-test="noData" v-if="!dataLoading && (!allGames || allGames?.length === 0)" text="All Games" containerStyle="height: 75vh"/>
 	<Footer />
 </template>
 
@@ -131,7 +131,7 @@
 		},
 		data() {
 			return {
-				allGames: [],
+				allGames: [Game],
 				dataLoading: false,
 				page: 1,
 				perPage: 13
@@ -145,7 +145,7 @@
 				this.dataLoading = true;
 				await GamesServices.getAllGames()
 					.then(response => {
-						this.allGames = response?.data.map(g => Game.populateFromObject(g));
+						this.allGames = response.data
 						this.dataLoading = false
 					}).catch(error => {
 						console.log(error);

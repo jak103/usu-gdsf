@@ -143,7 +143,7 @@
 				this.dataLoading = true;
 				await GamesServices.getGameInfo(id)
 					.then(response => {
-						this.gameData = Game.populateFromObject(response.data);
+						this.gameData = response.data;
 						if (this.gameData.Tags){
 							this.getGamesLikeThis(this.gameData.Tags);
 						}
@@ -159,7 +159,7 @@
 			async getGamesLikeThis(tags) {
 				await GamesServices.getGamesWithTags(tags)
 					.then(response => {
-						this.similarGames = response?.data.filter(g => g.Id !== this.gameData.Id).map(g => Game.populateFromObject(g));
+						this.similarGames = response?.data?.filter(g => g.Id !== this.gameData.Id);
 						this.dataLoading = false
 					}).catch(error => {
 						console.log(error);
