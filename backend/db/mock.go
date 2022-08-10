@@ -15,6 +15,7 @@ var _ Database = (*Mock)(nil)
 type Mock struct {
 	games     map[string]models.Game
 	downloads map[string]models.Download
+	users     map[string]models.User
 }
 
 // RemoveGame removes the given game from the db
@@ -134,16 +135,10 @@ func (db Mock) UpdateGame(newGameInfo models.Game, id string) (models.Game, erro
 	return game, nil
 }
 
-func (db Mock) CreateUser(newUser models.User) (models.User, error) {
-	// users := db.database.Collection("users")
-
-	// newUserDoc, err := users.InsertOne(context.Background(), newUser, nil)
-	// if err != nil {
-	// 	log.WithError(err).Error("Failed to insert new user")
-	// 	return nil, err
-	// }
-
-	return newUser, nil
+func (db Mock) CreateUser(newUser models.User) (string, error) {
+	var id = strconv.Itoa(len(db.users) + 1)
+	db.users[id] = newUser
+	return id, nil
 }
 
 func (db Mock) Connect() error {

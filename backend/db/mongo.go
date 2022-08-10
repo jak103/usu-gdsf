@@ -422,16 +422,12 @@ func (db Mongo) UpdateGame(newGameInfo models.Game, id string) (models.Game, err
 	return newGameInfo, nil
 }
 
-func (db Mongo) CreateUser(newUser models.User) (models.User, error) {
-	// users := db.database.Collection("users")
-
-	// newUserDoc, err := users.InsertOne(context.Background(), newUser, nil)
-	// if err != nil {
-	// 	log.WithError(err).Error("Failed to insert new user")
-	// 	return nil, err
-	// }
-
-	return newUser, nil
+func (db Mongo) CreateUser(newUser models.User) (string, error) {
+	newUserDoc, err := db.database.Collection("users").InsertOne(context.Background(), newUser)
+	if err != nil {
+		log.WithError(err).Error("Failed to insert new user into Mongo DB")
+	}
+	return newUserDoc.InsertedID.(primitive.ObjectID).Hex(), nil
 }
 
 // disconnect disconnects from the remote database

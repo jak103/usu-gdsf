@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -86,6 +87,8 @@ func register(c echo.Context) error {
 		return err
 	}
 
+	// All users are currently hardcoded as admins since I am not sure if
+	// we are implementing multiple user types
 	newUser := models.User{
 		c.FormValue("email"),
 		passwordHash,
@@ -93,16 +96,30 @@ func register(c echo.Context) error {
 		c.FormValue("lastName"),
 		birthday,
 		time.Now(),
+		"admin",
+		// c.FormValue("role"),
 	}
 
-	db.CreateUser(newUser)
+	idString, err := db.CreateUser(newUser)
+	if err != nil {
+		log.WithError(err).Error("Database insertion error")
+		return err
+	}
+	id, _ := strconv.ParseUint(string(idString), 10, 64)
 
 	//Generate authentication tokens
+	accessToken, refreshToken := GenerateTokenPair(newUser, id)
+
+	//Create and return login cookie
+	cookieError := createLoginCookie(c, accessToken, refreshToken)
+	if cookieError != nil {
+		log.WithError(err).Error("cookie not set")
+		return err
+	}
 
 	return c.JSON(http.StatusOK, "User registration handler")
 }
 
-// https://www.alexedwards.net/blog/how-to-hash-and-verify-passwords-with-argon2-in-go
 func generateEncodedPassword(password string, p hashParams) (encodedHash string, err error) {
 
 	salt, err := generateSalt(p.saltLength)
@@ -200,6 +217,44 @@ func decodeHash(encodedHash string) (p *hashParams, salt, hash []byte, err error
 	p.keyLength = uint32(len(hash))
 
 	return p, salt, hash, nil
+}
+
+func GenerateTokenPair(user models.User, id uint64) (string, string) {
+	// NOTE: This logic handles multiple user types which may or may not be needed.
+	// All users are currently hardcoded as admins in the CreateUser function above
+	var userType auth.UserType
+	if user.Role == "admin" {
+		userType = auth.ADMIN_USER
+	} else {
+		userType = auth.REGULAR_USER
+	}
+
+	accessToken := auth.GenerateToken(auth.TokenParams{
+		Type:      auth.ACCESS_TOKEN,
+		UserId:    id,
+		UserType:  userType,
+		UserEmail: user.Email,
+	})
+
+	refreshToken := auth.GenerateToken(auth.TokenParams{
+		Type:      auth.REFRESH_TOKEN,
+		UserId:    id,
+		UserType:  userType,
+		UserEmail: user.Email,
+	})
+
+	return accessToken, refreshToken
+}
+
+func createLoginCookie(c echo.Context, accessToken, refreshToken string) error {
+	loginCookie := new(http.Cookie)
+	loginCookie.Name = "UserAuth"
+	loginCookie.Value = fmt.Sprintf("%s,%s", accessToken, refreshToken)
+	loginCookie.HttpOnly = true
+	loginCookie.Secure = true
+
+	c.SetCookie(loginCookie)
+	return c.String(http.StatusOK, "wrote a login cookie with access tokens")
 }
 
 func downloads(c echo.Context) error {

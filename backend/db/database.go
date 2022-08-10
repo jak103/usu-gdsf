@@ -35,7 +35,7 @@ type Database interface {
 
 	// User Methods
 
-	CreateUser(models.User) (models.User, error)
+	CreateUser(models.User) (string, error)
 	// VerifyUserLogin(string, string) (models.User, error)
 
 	// General DB Methods

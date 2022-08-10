@@ -223,16 +223,13 @@ func (db Firestore) UpdateGame(newGameInfo models.Game, id string) (models.Game,
 	return newGameInfo, nil
 }
 
-func (db Firestore) CreateUser(newUser models.User) (models.User, error) {
-	// users := db.database.Collection("users")
-
-	// newUserDoc, err := users.InsertOne(context.Background(), newUser, nil)
-	// if err != nil {
-	// 	log.WithError(err).Error("Failed to insert new user")
-	// 	return nil, err
-	// }
-
-	return newUser, nil
+func (db Firestore) CreateUser(newUser models.User) (string, error) {
+	userDocRef, _, err := db.client.Collection("users").Add(context.Background(), newUser)
+	if err != nil {
+		log.WithError(err).Error("Failed to insert new user into Firestore DB")
+		return userDocRef.ID, err
+	}
+	return userDocRef.ID, nil
 }
 
 // Disconnect disconnects from the remote database
