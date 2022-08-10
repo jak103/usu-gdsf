@@ -1,4 +1,5 @@
 <template>
+  <div>
   <h3>Filtered Games</h3>
   <v-sheet
     class="mx-auto"
@@ -21,6 +22,7 @@
       </v-slide-group-item>
     </v-slide-group>
   </v-sheet>
+  </div>
 </template>
 
 <script>
@@ -32,34 +34,34 @@ export default {
         getTopRated() {
           //TODO run some query or something
           return [
-            { 
-              title: 'Cat Attack', 
-              description: 'Craig the cat embarks on an adventure', 
+            {
+              title: 'Cat Attack',
+              description: 'Craig the cat embarks on an adventure',
               author: 'Craig',
             },
-            { 
+            {
               title: 'Big Blue Game',
-              description: 'This game is big. This game is blue. This game is fun.', 
+              description: 'This game is big. This game is blue. This game is fun.',
               author: 'Big Blue',
             },
-                        { 
-              title: 'Cat Attack', 
-              description: 'Craig the cat embarks on an adventure', 
+                        {
+              title: 'Cat Attack',
+              description: 'Craig the cat embarks on an adventure',
               author: 'Craig',
             },
-            { 
+            {
               title: 'Big Blue Game',
-              description: 'This game is big. This game is blue. This game is fun.', 
+              description: 'This game is big. This game is blue. This game is fun.',
               author: 'Big Blue',
             },
-                        { 
-              title: 'Cat Attack', 
-              description: 'Craig the cat embarks on an adventure', 
+                        {
+              title: 'Cat Attack',
+              description: 'Craig the cat embarks on an adventure',
               author: 'Craig',
             },
-            { 
+            {
               title: 'Big Blue Game',
-              description: 'This game is big. This game is blue. This game is fun.', 
+              description: 'This game is big. This game is blue. This game is fun.',
               author: 'Big Blue',
             }
           ];
