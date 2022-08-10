@@ -25,23 +25,11 @@ services:
     ports:
       - 8080:8080
     environment:
-      - DB_TYPE=firestore
+      - DB_TYPE=mock
       - RUN_ENV=mock
       - MONGO_URI=mongodb://gdsf:gdsf@db:27017
-      - FIRESTORE_URI=fsemudb://gdsf:gdsf@firestore_emulator:28017
       - USUGDSF_AUTH_TOKEN=fakeHwVJzEu2wTRBK4wNu80C
-      - FIRESTORE_EMULATOR_HOST=firestore_emulator:8080
-      - FIRESTORE_PROJECT_ID=dummy-project-id
     command: gin --appPort 8080 -i run .
-
-  firestore_emulator:
-    image: mtlynch/firestore-emulator
-    container_name: 'firestore_emu'
-    environment:
-      - FIRESTORE_PROJECT_ID=dummy-project-id
-      - PORT=28017
-    ports:
-      - 28017:28017
 
   db:
     image: 'mongo'
