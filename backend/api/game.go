@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
 	"github.com/jak103/usu-gdsf/db"
 	"github.com/jak103/usu-gdsf/log"
 	"github.com/jak103/usu-gdsf/models"
@@ -22,6 +21,7 @@ const (
 )
 
 var v = validator.New()
+
 
 func getGame(c echo.Context) error {
 	
@@ -67,17 +67,56 @@ func getAllGames(c echo.Context) error {
 	_db, err := db.NewDatabaseFromEnv()
 
 	if err != nil {
-		log.WithError(err).Error("Unable to use database")
-		return err
+		return c.JSON(http.StatusInternalServerError, "Database connection error")
+
 	}
 
 	if result, err := _db.GetAllGames(); err != nil {
-		log.Error("An error occurred while getting game records: %v", err)
-		return err
+		return c.JSON(http.StatusInternalServerError, "error in GetAllGameS API")
+
 	} else {
 		return c.JSON(http.StatusOK, result)
 	}
 }
+
+func sortAllGame(c echo.Context) error{
+
+	_db, err := db.NewDatabaseFromEnv()
+
+	if err != nil{
+		return c.JSON(http.StatusInternalServerError, "Database connection error")
+	}
+
+	// srt=name-desc 
+	sortConfig := c.QueryParam("srt")
+	sortConfigArray := strings.Split(sortConfig, "-")
+
+	if len(sortConfigArray) !=2{
+		return c.JSON(http.StatusInternalServerError, "not enough parameter to address sorting job")
+	}
+
+	if (sortConfigArray[1] == "ASC") || (sortConfigArray[1] == "asc") || (sortConfigArray[1] == "DSC") || (sortConfigArray[1] == "dsc") {
+		order := 1
+
+		if(sortConfigArray[1] == "asc" || sortConfigArray[1] != "ASC"){
+			order = -1
+		}
+	
+		games, err := _db.SortGames(sortConfigArray[0], order)
+		
+		if err != nil{
+			log.WithError(err).Error("Sort data error in API SortGame")
+			return c.JSON(http.StatusInternalServerError, "couldn't get sorted data because of server error")
+		}
+	
+		return c.JSON(http.StatusOK, games)
+	
+	}
+
+	return c.JSON(http.StatusInternalServerError, "not a valid order of sorting")
+
+}
+
 
 func newGameHandler(c echo.Context) error {
 	// create new game model
@@ -113,4 +152,5 @@ func init() {
 	registerRoute(route{method: http.MethodPost, path: "/game", handler: newGameHandler})
 	registerRoute(route{method: http.MethodGet, path: "/game/:id", handler: getGame})
 	registerRoute(route{method: http.MethodGet, path: "/game/tags", handler: getGamesWithTags})
+	registerRoute(route{method: http.MethodGet, path:"/games/sort", handler: sortAllGame})
 }
