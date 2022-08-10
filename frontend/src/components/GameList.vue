@@ -18,6 +18,7 @@
         title: String,
         author: String,
         description: String,
+        image: String,
 
     },
 
