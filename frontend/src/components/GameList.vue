@@ -1,9 +1,9 @@
 <template>
-<div v-for = "item in gameInfo">
+<div v-for = "item in gameInfo" :key="item.id">
   <GameCard 
-    :title="'title'" 
-    :author="'author'" 
-    :description="'game description'" 
+    :title="item.title" 
+    :author="item.title" 
+    :description="item.description" 
     image="https://cdn.cloudflare.steamstatic.com/steam/apps/489830/capsule_616x353.jpg?t=1650909796"/>
 
   </div>
@@ -31,8 +31,10 @@
     },
 
     methods: {
-      getData() {
-        let res =  this.$axios.get('/game')
+      async getData() {
+        let res = await this.$axios.get('/game')
+        
+        this.gameInfo = res.data[0]
       }
     }
   }

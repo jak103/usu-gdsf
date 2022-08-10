@@ -23,7 +23,7 @@
       Need an account? Create one here
     </router-link>
     <v-card-actions>
-      <v-btn to="/admin" class="bg-teal" elevation="7"> Login </v-btn>
+      <v-btn to="/admin" class="bg-teal" elevation="7" @click="save"> Login </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -41,7 +41,7 @@ export default {
   methods: {
     async save() {
       await this.$axios.post({
-        url: '/register',
+        url: '/login',
         data: {
           username: this.username,
           password: this.password
