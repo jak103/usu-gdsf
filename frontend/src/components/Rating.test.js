@@ -1,0 +1,47 @@
+import { mount } from '@vue/test-utils'
+import rating from './Rating.vue'
+
+test('Rating component is visible', () => {
+    const wrapper = mount(rating)
+    const ratingElement = wrapper.get('[data-test="rating-main"]')
+    expect(ratingElement.isVisible());
+})
+
+test('renders rating componenet', () => {
+    const wrapper = mount(rating, {
+        propsData: {
+            starBackgroundColor:"#8A8D8F",
+            isClearable:"false",
+            closeDelay:"0",
+            starColor:"#8A8D8F",
+            isDark:"false",
+            isDense:"true",
+            isLight:"false",
+            openDelay:"0",
+            isReadOnly:"false",
+            isRipple:"false",
+            isHalfIncrements:"false",
+            isHover:"false",
+            isSamll:"false",
+            starSize:"64",
+            starValue:"3",
+            isXLarge:"false",
+            isXSmall:"false"
+        }
+      })
+      const vRating = wrapper.findAll('v-rating')
+      expect(vRating.length).toBe(1)
+    })
+
+test('rendering on click for rating component', async () => {
+    const wrapper = mount(rating)
+
+    await wrapper.find('v-rating').trigger('click')
+
+    console.log(wrapper.emitted().click[0][0])
+
+    expect(wrapper.emitted().click[0][0]).toBe("MouseEvent")
+    
+})
+
+

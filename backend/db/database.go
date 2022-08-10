@@ -41,6 +41,7 @@ type Database interface {
   // General DB Methods
   Disconnect() error
 	Connect() error
+	GetGamesByFirstLetter(string)([]models.Game, error)
 }
 
 func NewDatabaseFromEnv() (Database, error) {

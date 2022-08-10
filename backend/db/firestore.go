@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	_ "os"
+	"strings"
 
 	"cloud.google.com/go/firestore"
 	"github.com/jak103/usu-gdsf/config"
@@ -79,6 +80,31 @@ func (db Firestore) GetGamesByTags(tags []string, matchAll bool) ([]models.Game,
 		games[i] = game
 	}
 
+	return games, nil
+}
+
+// GetGameByFirstLetter find and return the game with the given First Letter
+func (db Firestore) GetGamesByFirstLetter(letter string) ([]models.Game, error) {
+	games := make([]models.Game, 0)
+	gc := db.client.Collection("games")
+
+	documents := gc.DocumentRefs(context.Background())
+	for {
+		docRef, docRefErr := documents.Next()
+		if docRefErr == iterator.Done {
+			break
+		}
+
+		var game models.Game
+
+		if docSnapshot, _ := docRef.Get(context.Background()); docSnapshot != nil {
+			_ = docSnapshot.DataTo(&game)
+			game.Id = docRef.ID
+		}
+		if strings.EqualFold(game.Name[0:1], letter) {
+			games = append(games, game)
+		}
+	}
 	return games, nil
 }
 
@@ -232,6 +258,57 @@ func (db *Firestore) Connect() error {
 
 	// Etablish Database Collection object
 	db.client = client
+
+	return nil
+}
+
+// AddReview Add a new review to the remote database and update average score. Returns unique review ID
+func (db Firestore) AddReview(review models.Review) (string, error) {
+	docRef, _, err := db.client.Collection("reviews").Add(context.Background(), review)
+
+	if err != nil {
+		log.WithError(err).Error("Failed to add review to firestore db")
+		return docRef.ID, err
+	}
+	game, err := db.GetGameByID(review.GameId)
+	game.ReviewIds = append(game.ReviewIds, review.Id)
+
+	totalScore := game.AverageReview * (float64((len(game.ReviewIds) - 1)))
+	game.AverageReview = ((totalScore + review.Score) / (float64(len(game.ReviewIds))))
+
+	return docRef.ID, nil
+}
+
+// GetReviewByID find and return the Review with the given db ID
+func (db Firestore) GetReviewByID(id string) (models.Review, error) {
+	snapShot, err := db.client.Collection("reviews").Doc(id).Get(context.Background())
+	if status.Code(err) == codes.NotFound {
+		return models.Review{}, err
+	}
+	review := models.Review{}
+	convErr := snapShot.DataTo(&review)
+	review.Id = snapShot.Ref.ID
+	if convErr != nil {
+		log.WithError(convErr).Error("Cannot convert firestore snapshot to review struct")
+	}
+	return review, nil
+}
+
+// RemoveReview removes the given review from the db
+func (db Firestore) RemoveReview(review models.Review) error {
+	// query
+
+	snapShot, err := db.client.Collection("reviews").Doc(review.Id).Get(context.Background())
+	if err != nil {
+		log.WithError(err).Error("Firestore query error in RemoveReview")
+	}
+
+	// delete doc
+	_, err = snapShot.Ref.Delete(context.Background())
+	if err != nil {
+		log.WithError(err).Error("Firestore deletion error in RemoveReview")
+		return err
+	}
 
 	return nil
 }

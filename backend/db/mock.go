@@ -82,6 +82,11 @@ func containsTag(a []string, el string) bool {
 	return false
 }
 
+func (db Mock) GetGamesByFirstLetter(letter string ) ([]models.Game, error) {
+
+	return nil,nil
+}
+
 func (db Mock) GetGameByID(id string) (models.Game, error) {
 	return db.games[id], nil
 }
