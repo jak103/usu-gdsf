@@ -282,3 +282,22 @@ func (db Firestore) GetReviewByID(id string) (models.Review, error) {
 	}
 	return review, nil
 }
+
+// RemoveReview removes the given review from the db
+func (db Firestore) RemoveReview(review models.Review) error {
+	// query
+
+	snapShot, err := db.client.Collection("reviews").Doc(review.Id).Get(context.Background())
+	if err != nil {
+		log.WithError(err).Error("Firestore query error in RemoveReview")
+	}
+
+	// delete doc
+	_, err = snapShot.Ref.Delete(context.Background())
+	if err != nil {
+		log.WithError(err).Error("Firestore deletion error in RemoveReview")
+		return err
+	}
+
+	return nil
+}
