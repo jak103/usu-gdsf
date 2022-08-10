@@ -31,28 +31,28 @@ func user(c echo.Context) error {
 }
 
 func logout(c echo.Context) error {
-    invalidatedAccessCookie := http.Cookie{
-        Name: auth.ACCESS_TOKEN_COOKIE_KEY,
-        Value: "",
-        Secure: true,
-        HttpOnly: true,
-        Expires: time.Unix(0, 0),
-    }
+	invalidatedAccessCookie := http.Cookie{
+		Name:     auth.ACCESS_TOKEN_COOKIE_KEY,
+		Value:    "",
+		Secure:   true,
+		HttpOnly: true,
+		Expires:  time.Unix(0, 0),
+	}
 
-    invalidatedRefreshCookie := http.Cookie{
-        Name: auth.REFRESH_TOKEN_COOKIE_KEY,
-        Value: "",
-        Secure: true,
-        HttpOnly: true,
-        Expires: time.Unix(0, 0),
-    }
+	invalidatedRefreshCookie := http.Cookie{
+		Name:     auth.REFRESH_TOKEN_COOKIE_KEY,
+		Value:    "",
+		Secure:   true,
+		HttpOnly: true,
+		Expires:  time.Unix(0, 0),
+	}
 
-    c.SetCookie(&invalidatedAccessCookie)
-    c.SetCookie(&invalidatedRefreshCookie)
+	c.SetCookie(&invalidatedAccessCookie)
+	c.SetCookie(&invalidatedRefreshCookie)
 
-    // TODO: Blacklist refresh token by adding it to the database
+	// TODO: Blacklist refresh token by adding it to the database
 
-    return c.String(http.StatusOK, "")
+	return c.String(http.StatusOK, "")
 }
 
 func register(c echo.Context) error {
@@ -87,6 +87,8 @@ func register(c echo.Context) error {
 		return err
 	}
 
+	// All users are currently hardcoded as admins since I am not sure if
+	// we are implementing multiple user types
 	newUser := models.User{
 		c.FormValue("email"),
 		passwordHash,
@@ -94,6 +96,8 @@ func register(c echo.Context) error {
 		c.FormValue("lastName"),
 		birthday,
 		time.Now(),
+		"admin",
+		// c.FormValue("role"),
 	}
 
 	idString, err := db.CreateUser(newUser)
@@ -216,17 +220,26 @@ func decodeHash(encodedHash string) (p *hashParams, salt, hash []byte, err error
 }
 
 func GenerateTokenPair(user models.User, id uint64) (string, string) {
+	// NOTE: This logic handles multiple user types which may or may not be needed.
+	// All users are currently hardcoded as admins in the CreateUser function above
+	var userType auth.UserType
+	if user.Role == "admin" {
+		userType = auth.ADMIN_USER
+	} else {
+		userType = auth.REGULAR_USER
+	}
+
 	accessToken := auth.GenerateToken(auth.TokenParams{
 		Type:      auth.ACCESS_TOKEN,
 		UserId:    id,
-		UserType:  auth.ADMIN_USER,
+		UserType:  userType,
 		UserEmail: user.Email,
 	})
 
 	refreshToken := auth.GenerateToken(auth.TokenParams{
 		Type:      auth.REFRESH_TOKEN,
 		UserId:    id,
-		UserType:  auth.ADMIN_USER,
+		UserType:  userType,
 		UserEmail: user.Email,
 	})
 
@@ -241,7 +254,7 @@ func createLoginCookie(c echo.Context, accessToken, refreshToken string) error {
 	loginCookie.Secure = true
 
 	c.SetCookie(loginCookie)
-	return c.String(http.StatusOK, "wrote a login cookie with access token")
+	return c.String(http.StatusOK, "wrote a login cookie with access tokens")
 }
 
 func downloads(c echo.Context) error {
